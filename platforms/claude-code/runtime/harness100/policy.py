@@ -60,11 +60,10 @@ def gate(action, decision, target=None, workspace=None, approvals=()):
         return result("deny", "Target is outside the allowed workspace")
     if action == "create_file" and path.exists():
         return result("deny", "Existing user files cannot be overwritten by create_file")
-    needs_approval = action in ALWAYS_APPROVAL or (action == "run_tests" and decision.get("risk") == "high")
-    if "confirm_first" in constraints and needed != "read":
-        needs_approval = True
     approved = any(isinstance(item, Approval) and item.action == action and Path(item.target).resolve() == path
                    for item in approvals)
-    if needs_approval and not approved:
+    if needed != "read" and not approved:
+        # v3.2 fix 4 (gate = hook): an action with side effects is allowed only by a user approval that names this
+        # exact action and target (the gate's equivalent of a grant). Sentence interpretation never allows.
         return result("approval_required", "Approval must name this exact action and target")
     return result("allow", "Within task scope and user constraints; host must re-check immediately before acting")

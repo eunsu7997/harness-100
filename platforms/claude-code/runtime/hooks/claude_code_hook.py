@@ -16,8 +16,10 @@ Decisions (docs/GRANT-SPEC.md):
 import json
 import os
 import re
+import hashlib
 import shlex
 import sys
+import threading
 from datetime import datetime
 from pathlib import Path
 
@@ -37,6 +39,7 @@ DENY_CONSTRAINTS = {"read_only", "analyze_only", "prompt_only", "no_modify", "no
                     "no_delete", "no_install", "no_network", "no_commit"}
 ALL_RESTRICTIONS = ["read_only", "no_modify", "no_create", "no_execute", "no_deploy", "no_delete", "no_install",
                     "no_network", "no_commit"]
+DEADLINE_SECONDS = min(2.0, float(os.environ.get("HARNESS100_HOOK_DEADLINE", "2") or 2))  # can only be lowered (tests)
 NO_PROMPT_MODES = {"auto", "dontAsk", "bypassPermissions"}
 KNOWN_MODES = {"default", "manual", "plan", "acceptEdits"} | NO_PROMPT_MODES  # "manual": CLI 2.1.x name of the prompting mode
 READONLY_CMDS = {
@@ -80,12 +83,18 @@ def state_dir():
     return Path(os.environ.get("HARNESS100_HOOK_STATE") or (default_state_dir() / "claude-code-sessions"))
 
 
+def session_key(session_id):
+    """v3.2: the state file name is a hash of the raw session id, so "x_y" and "x/y" never share a record."""
+    raw = session_id if isinstance(session_id, str) else repr(session_id)
+    return hashlib.sha256(raw.encode("utf-8", "surrogatepass")).hexdigest()
+
+
 def state_path(session_id):
-    safe = re.sub(r"[^A-Za-z0-9_.-]", "_", session_id or "unknown")[:120]
-    return state_dir() / f"{safe}.json"
+    return state_dir() / f"{session_key(session_id)}.json"
 
 
 def load_state(session_id):
+    """present=False: no record yet (the session never sent UserPromptSubmit); corrupt / foreign: unusable record."""
     path = state_path(session_id)
     if not path.exists():
         return {"constraints": [], "grants": [], "present": False}
@@ -93,6 +102,8 @@ def load_state(session_id):
         data = json.loads(path.read_text(encoding="utf-8"))
         if not isinstance(data.get("constraints"), list) or not isinstance(data.get("grants", []), list):
             raise ValueError("bad state")
+        if data.get("session_id") != session_id:
+            return {"constraints": list(ALL_RESTRICTIONS), "grants": [], "present": True, "foreign": True}
         return dict(data, present=True)
     except (OSError, ValueError):
         return {"constraints": list(ALL_RESTRICTIONS), "grants": [], "present": True, "corrupt": True}
@@ -125,7 +136,11 @@ def is_readonly_command(command):
             return False, "unparseable command"
         if not words:
             continue
-        first = re.sub(r"\.exe$", "", os.path.basename(words[0])).lower()
+        if re.search(r"[\\/]", words[0]):
+            return False, "program given by path (could be a project file, not the system command)"
+        if re.search(r"[{}]|\$[A-Za-z_{(]|@[({]", seg):
+            return False, "script block, variable or expression (PowerShell / shell code)"
+        first = re.sub(r"\.exe$", "", words[0]).lower()
         if first not in READONLY_CMDS:
             return False, f"not an allowlisted read command: {first}"
         rule = DENY_OPTIONS.get(first)
@@ -180,25 +195,15 @@ def touches_hook_state(tool_input):
 
 
 # ---------------------------------------------------------------- decisions
-def grant_decision(state, tool, tool_input, cwd):
-    """The single place that can return "allow": an exact match with an explicit user grant."""
-    if state.get("corrupt") or "confirm_first" in state.get("constraints", []):
+def grant_decision(state, tool, tool_input, cwd, target_real=None):
+    """The single place that can return "allow": an exact match with an explicit user grant.
+
+    v3.2: run grants match the exact full command in the exact granting folder; edit grants match the real path
+    that already passed the protected / ambiguous path checks. A missing, corrupt or foreign record has no grants."""
+    if (not state.get("present") or state.get("corrupt") or state.get("foreign")
+            or "confirm_first" in state.get("constraints", [])):
         return None, None
-    candidates = grants_mod.matches(state.get("grants", []), tool, tool_input, cwd)
-    if candidates and tool in SHELL_TOOLS:
-        # Rule A: a risky action (push/deploy/delete/network/install/commit) is allowed only when the grant names
-        # that action; a bare program prefix ("승인: 실행 git") never covers it. Classification runs on the normalized
-        # command (git global options removed, "python -m pip" -> "pip"); a risky command that needed normalizing
-        # (-C, --git-dir, -c alias.* ...) is never allowed.
-        command = tool_input.get("command", "")
-        tokens, flags = grants_mod.normalize_command(command)
-        risky = (classify_command(command) | classify_command(" ".join(tokens or []))) & RISKY
-        if risky and (flags["global_opts"] or flags["config_override"]):
-            candidates = []
-        elif flags["config_override"]:
-            candidates = []  # git -c alias.* / core.* can turn any subcommand into anything
-        elif risky:
-            candidates = [c for c in candidates if risky <= classify_command(c.split(" ", 1)[1])]
+    candidates = grants_mod.matches(state.get("grants", []), tool, tool_input, cwd, target_real)
     clause = candidates[0] if candidates else None
     if clause:
         return "allow", f"사용자 승인 범위와 일치: {clause}"
@@ -263,36 +268,103 @@ def invalid_input(tool, tool_input):
     return tool in SHELL_TOOLS and not isinstance(tool_input.get("command"), str)
 
 
-def outside_project(tool_input, cwd):
+AMBIGUOUS_PATH = [
+    (re.compile(r"^~"), "~ 경로"),
+    (re.compile(r"%[^%\\/]+%"), "환경 변수 %VAR%"),
+    (re.compile(r"\$\{?[A-Za-z_]"), "환경 변수 $VAR"),
+    (re.compile(r"^[A-Za-z]:(?![\\/])"), "드라이브 상대 경로"),
+    (re.compile(r"^(?:\\\\|//)"), "UNC·장치 경로(\\\\server, \\\\?\\, \\\\.\\)"),
+    (re.compile(r"\x00"), "NUL 문자"),
+]
+PROTECTED_PARTS = {".claude", ".git"}
+
+
+def _inside(child, parent):
+    child, parent = os.path.normcase(child), os.path.normcase(parent)
+    try:
+        return os.path.commonpath([child, parent]) == parent
+    except ValueError:  # different drives
+        return False
+
+
+def path_verdict(tool_input, cwd):
+    """v3.2 fix 1. Return (real_absolute_path, None) for a writable target, or (None, reason) to deny.
+    The path is resolved to its real absolute location before the work-folder check; any form whose real location
+    can differ from its text (~, env vars, drive-relative, UNC, 8.3 names, NTFS streams, links/junctions) is denied,
+    and .claude/, .git/, harness runtime/state and the home folder are never writable."""
+    from harness100.context import is_junction
     target = tool_input.get("file_path") or tool_input.get("notebook_path")
     if not isinstance(cwd, str) or not cwd:
-        return True
+        return None, "작업 폴더를 알 수 없어 쓰기 위치를 판정할 수 없음"
+    for pattern, label in AMBIGUOUS_PATH:
+        if pattern.search(target):
+            return None, f"실제 위치가 달라질 수 있는 경로({label}): 쓰기 차단"
+    body = target[2:] if re.match(r"^[A-Za-z]:[\\/]", target) else target
+    if ":" in body:
+        return None, "NTFS 스트림·콜론이 든 경로: 쓰기 차단"
+    parts = [part for part in re.split(r"[\\/]+", target) if part]
+    if any(re.search(r"~\d", part) for part in parts):
+        return None, "8.3 짧은 이름이 든 경로: 쓰기 차단"
+    for part in (p for p in parts if p not in (".", "..") and not re.fullmatch(r"[A-Za-z]:", p)):
+        # Windows rewrites or reinterprets these names, so the real target can differ from the text
+        if part != part.rstrip(" ."):
+            return None, "이름 끝의 공백·점(Windows가 지워 다른 이름이 됨): 쓰기 차단"
+        if re.search(r'[<>"|?*\x01-\x1f]', part):
+            return None, "Windows 파일 이름 금지 문자: 쓰기 차단"
+        if re.fullmatch(r"(?i)(?:con|prn|aux|nul|com[0-9¹²³]|lpt[0-9¹²³]|conin\$|conout\$)(?:\..*)?", part):
+            return None, "Windows 예약 장치 이름(CON·NUL·COM1 등): 쓰기 차단"
     try:
-        root = Path(cwd).resolve()
-        path = Path(target)
-        path = (path if path.is_absolute() else root / path).resolve()
-        path.relative_to(root)
-    except (OSError, ValueError):
-        return True
-    return False
+        root = os.path.realpath(cwd)
+        joined = os.path.normpath(os.path.join(root, target))
+        home = os.path.realpath(str(Path.home()))
+    except (OSError, ValueError, TypeError):
+        return None, "경로 해석 실패: 쓰기 차단"
+    if _inside(home, root):
+        return None, "작업 폴더가 홈 폴더이거나 그 상위: 쓰기 차단"
+    if not _inside(joined, root) or os.path.normcase(joined) == os.path.normcase(root):
+        return None, "작업 폴더 밖 경로: 쓰기 차단(승인 범위는 작업 폴더 안만)"
+    rel_parts = os.path.relpath(joined, root).split(os.sep)
+    if any(part.casefold() in PROTECTED_PARTS for part in rel_parts):
+        return None, "보호 경로(.claude/ 또는 .git/): 어떤 승인으로도 쓸 수 없음"
+    current = root
+    for part in rel_parts:
+        current = os.path.join(current, part)
+        if os.path.lexists(current) and (os.path.islink(current) or is_junction(current)):
+            return None, "경로 중간이나 끝이 심볼릭 링크·정션: 쓰기 차단"
+    real = os.path.realpath(joined)
+    if not _inside(real, root):
+        return None, "실제 위치가 작업 폴더 밖: 쓰기 차단"
+    for protected in (PACKAGE, state_dir()):
+        try:
+            if _inside(real, os.path.realpath(str(protected))):
+                return None, "하네스 런타임·상태 폴더: 어떤 승인으로도 쓸 수 없음"
+        except (OSError, ValueError):
+            return None, "경로 해석 실패: 쓰기 차단"
+    return real, None
 
 
 def decide(state, tool, tool_input, mode="default", cwd=None):
     if invalid_input(tool, tool_input):
         return "deny", "판정할 수 없는 입력 형식(문자열이 아닌 도구 이름·경로·명령)"
     acts = tool_actions(tool, tool_input)
-    if acts - {"read"} and touches_hook_state(tool_input):
+    mutating = bool(acts - {"read"})
+    if mutating and (not state.get("present") or state.get("corrupt") or state.get("foreign")):
+        return "deny", "이 세션의 기록이 없거나 손상됐거나 다른 세션의 것: 쓰기·실행 차단(새 메시지를 보내면 기록이 생김)"
+    if mutating and touches_hook_state(tool_input):
         return "deny", "Harness-100 상태·hook 파일은 변경할 수 없음"
-    if tool in WRITE_TOOLS and outside_project(tool_input, cwd):
-        return "deny", "작업 폴더 밖 파일 쓰기 차단(승인 범위는 프로젝트 안 상대 경로만)"
-    if not acts - {"read"}:
+    target_real = None
+    if tool in WRITE_TOOLS:
+        target_real, reason = path_verdict(tool_input, cwd)
+        if target_real is None:
+            return "deny", reason
+    if not mutating:
         # Read/Glob/Grep, read-only Bash, Skill, TodoWrite have no side effects: never denied. A read-only command
-        # that the user granted explicitly is allowed like any other granted call (no re-confirmation).
+        # that the user granted exactly is allowed like any other granted call (no re-confirmation).
         return grant_decision(state, tool, tool_input, cwd) if tool in SHELL_TOOLS else (None, None)
     reason = restriction_denial(state.get("constraints", []), acts)
     if reason:
         return "deny", reason
-    decision, why = grant_decision(state, tool, tool_input, cwd)
+    decision, why = grant_decision(state, tool, tool_input, cwd, target_real)
     if decision:
         return decision, why
     turn_caps = ["read"] if state.get("corrupt") else state.get("turn_caps")
@@ -345,7 +417,7 @@ def on_prompt(payload):
         turn_caps = None  # a message that only grants/revokes carries no task interpretation
     path = state_path(session)
     path.parent.mkdir(parents=True, exist_ok=True)
-    record = {"constraints": sorted(constraints), "grants": grants, "turn_caps": turn_caps,
+    record = {"session_id": session, "constraints": sorted(constraints), "grants": grants, "turn_caps": turn_caps,
               "cwd": cwd, "updated": datetime.now().astimezone().isoformat()}
     path.write_text(json.dumps(record, ensure_ascii=False), encoding="utf-8")
     log({"event": "UserPromptSubmit", "session": session, "constraints": record["constraints"], "grants": grants,
@@ -399,9 +471,43 @@ def main():
     event = payload.get("hook_event_name") or (sys.argv[1] if len(sys.argv) > 1 else "")
     if event not in ("UserPromptSubmit", "PreToolUse"):
         raise ValueError(f"unknown hook event {event!r}")  # fail closed (exit 2) instead of silently deferring
+    finished = threading.Event()
+    lock = threading.Lock()
+
+    def expire():
+        """v3.2 fix 3: past the internal deadline the hook decides for safety instead of letting Claude Code's own
+        hook timeout (non-blocking) pass the call through."""
+        with lock:
+            if finished.is_set():
+                return
+            finished.set()
+            if event == "PreToolUse":
+                out = {"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "deny",
+                                              "permissionDecisionReason": f"Harness-100 판정이 제한 시간({DEADLINE_SECONDS:g}초)을 넘김: 안전을 위해 차단"}}
+                sys.stdout.buffer.write(json.dumps(out, ensure_ascii=False).encode("utf-8"))
+            else:
+                session = payload.get("session_id")
+                try:  # do not block the user's message; leave the session fully restricted with no grants
+                    path = state_path(session if isinstance(session, str) else "invalid-session")
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_text(json.dumps({"session_id": session, "constraints": list(ALL_RESTRICTIONS), "grants": [],
+                                                "turn_caps": ["read"], "cwd": None, "timeout": True}), encoding="utf-8")
+                except OSError:
+                    pass
+            sys.stdout.flush()
+            os._exit(0)
+
+    timer = threading.Timer(DEADLINE_SECONDS, expire)
+    timer.daemon = True
+    timer.start()
     result = on_prompt(payload) if event == "UserPromptSubmit" else on_tool(payload)
-    if result:
-        sys.stdout.buffer.write(json.dumps(result, ensure_ascii=False).encode("utf-8"))
+    with lock:
+        if finished.is_set():
+            return 0
+        finished.set()
+        timer.cancel()
+        if result:
+            sys.stdout.buffer.write(json.dumps(result, ensure_ascii=False).encode("utf-8"))
     return 0
 
 

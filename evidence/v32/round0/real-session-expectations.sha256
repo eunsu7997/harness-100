@@ -1,0 +1,3 @@
+recorded_at=2026-11-13T13:53:12+09:00 (before first v3.2 real session)
+c64db61335592a085ab9dec57a43507adc1e32468f77bc7d8b11e57e0e155ed8 *evidence/v32/round0/real-session-expectations.json
+869fea9578b3d32faf018d6f4b428f83d253245cf5cddde9b9a7926be19a914b *tools/v32_real_sessions.py

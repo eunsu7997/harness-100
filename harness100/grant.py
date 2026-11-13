@@ -14,8 +14,8 @@ spaces / newlines) is exactly one grant line:
 - a grant is bound to the working folder at the time it was given
 Anything else is not a grant. Parsing never widens on doubt.
 
-Rule A helper: normalize_command() strips git global options and maps "python -m pip" to "pip" so the hook can
-classify risky actions on the command that will really run.
+v3.2: a run grant allows exactly the granted command (token for token) in the work folder where it was given;
+an edit grant matches the real path (checked by the hook first) with a linear-time glob matcher.
 """
 
 import os
@@ -35,11 +35,6 @@ EDIT_TOOLS = {"Write", "Edit", "MultiEdit", "NotebookEdit"}
 SHELL_TOOLS = {"Bash", "PowerShell"}
 MAX_GLOB_LEN = 200
 MAX_GLOB_STARS = 12
-GIT_OPTS_WITH_VALUE = {"-C", "-c", "--git-dir", "--work-tree", "--namespace", "--exec-path", "--super-prefix",
-                       "--config-env", "--attr-source"}
-GIT_FLAG_OPTS = {"-P", "-p", "--no-pager", "--paginate", "--bare", "--literal-pathspecs", "--glob-pathspecs",
-                 "--noglob-pathspecs", "--icase-pathspecs", "--no-replace-objects", "--no-optional-locks",
-                 "--no-advice", "--html-path", "--man-path", "--info-path", "--version", "--help"}
 
 
 def _strict_text(text):
@@ -109,7 +104,7 @@ def parse_prompt(text, cwd=None):
     whole = text.strip(" \n\r")
     grant = parse_line(whole) if "\n" not in whole and "\r" not in whole else None
     if grant:
-        grant["cwd"] = str(cwd) if isinstance(cwd, str) and cwd else None
+        grant["cwd"] = os.path.realpath(cwd) if isinstance(cwd, str) and cwd else None  # unusable without a folder
         return [grant], False, False, ""
     lines = text.replace("\r\n", "\n").split("\n")
     revoke = any(REVOKE_LINE.match(line) for line in lines)
@@ -118,116 +113,129 @@ def parse_prompt(text, cwd=None):
     return [], revoke, task_end, rest.strip()
 
 
-def _glob_regex(pattern):
-    out, i = [], 0
-    while i < len(pattern):
-        if pattern.startswith("**/", i):
-            out.append(r"(?:[^/]+/)*")
-            i += 3
-        elif pattern.startswith("**", i):
-            out.append(r".*")
-            i += 2
-        elif pattern[i] == "*":
-            out.append(r"[^/]*")
-            i += 1
-        elif pattern[i] == "?":
-            out.append(r"[^/]")
-            i += 1
+def _segment_match(pattern, text):
+    """One path segment against * and ? (iterative two-pointer; no regex, no exponential backtracking)."""
+    p = t = 0
+    star, mark = -1, 0
+    while t < len(text):
+        if p < len(pattern) and (pattern[p] == "?" or pattern[p] == text[t]):
+            p += 1
+            t += 1
+        elif p < len(pattern) and pattern[p] == "*":
+            star, mark = p, t
+            p += 1
+        elif star != -1:
+            p = star + 1
+            mark += 1
+            t = mark
         else:
-            out.append(re.escape(pattern[i]))
-            i += 1
-    return re.compile("^" + "".join(out) + "$", re.I if os.name == "nt" else 0)
+            return False
+    while p < len(pattern) and pattern[p] == "*":
+        p += 1
+    return p == len(pattern)
 
 
-def _relative_inside(root_dir, file_path):
-    if not root_dir or not isinstance(file_path, str) or not file_path.strip() or "\x00" in file_path:
-        return None
-    if re.search(r":(?![\\/])", file_path[2:]):
-        return None  # NTFS alternate data streams ("a.py::$DATA") and other colon forms are never matched
+def glob_match(pattern, rel):
+    """v3.2: segment-wise dynamic programming. `**` as a whole segment matches zero or more segments; `*` and `?`
+    never cross '/'. Time is bounded by len(segments) x len(path segments) x segment length."""
+    fold = (lambda s: s.casefold()) if os.name == "nt" else (lambda s: s)
+    ps = [fold(s) for s in pattern.split("/") if s]
+    ts = [fold(s) for s in rel.split("/") if s]
+    reach = [True] + [False] * len(ts)
+    for seg in ps:
+        nxt = [False] * (len(ts) + 1)
+        if seg == "**":
+            acc = False
+            for j in range(len(ts) + 1):
+                acc = acc or reach[j]
+                nxt[j] = acc
+        else:
+            seg = re.sub(r"\*+", "*", seg)
+            for j in range(1, len(ts) + 1):
+                if reach[j - 1] and _segment_match(seg, ts[j - 1]):
+                    nxt[j] = True
+        reach = nxt
+    return reach[len(ts)]
+
+
+def _same_folder(a, b):
     try:
-        root = Path(root_dir).resolve()
-        path = Path(file_path)
-        path = (path if path.is_absolute() else root / path).resolve()
-        rel = path.relative_to(root)
-    except (OSError, ValueError):
+        return os.path.normcase(os.path.realpath(a)) == os.path.normcase(os.path.realpath(b))
+    except (OSError, ValueError, TypeError):
+        return False
+
+
+def edit_matches(grants, target_real, cwd):
+    """target_real: the real absolute path already checked by the hook (protected / ambiguous paths never get here).
+    A grant applies only in the work folder where it was given."""
+    if not isinstance(target_real, str) or not target_real:
         return None
-    rel = rel.as_posix()
-    return None if rel in ("", ".") else rel
-
-
-def edit_matches(grants, tool_input, cwd):
-    target = tool_input.get("file_path") or tool_input.get("notebook_path")
     for grant in grants:
-        root = grant.get("cwd") or cwd  # a grant is bound to the folder where it was given
-        if grant.get("cwd") and cwd and Path(grant["cwd"]).resolve() != Path(cwd).resolve():
-            continue  # the session moved to another folder: the grant does not follow it
-        rel = _relative_inside(root, target)
-        if rel is None:
+        root = grant.get("cwd")
+        if not root or not _same_folder(root, cwd):
+            continue
+        try:
+            rel = os.path.relpath(target_real, os.path.realpath(root))
+        except ValueError:
+            continue
+        rel = rel.replace("\\", "/")
+        if rel == "." or rel.startswith("../") or rel == ".." or os.path.isabs(rel):
             continue
         for pattern in grant.get("edit", []):
-            if _glob_regex(pattern).match(rel):
+            if glob_match(pattern, rel):
                 return f"수정 {pattern}"
     return None
 
 
-def normalize_command(command):
-    """(tokens, flags) for the command that will really run. flags: global_opts (git options that retarget the
-    repository or config were present), config_override (git -c alias.*/core.* etc.)."""
-    flags = {"global_opts": False, "config_override": False}
-    try:
-        tokens = shlex.split(command)
-    except ValueError:
-        return None, flags
-    if not tokens:
-        return tokens, flags
-    program = os.path.basename(tokens[0]).lower()
-    if program in ("git", "git.exe"):
-        i = 1
-        while i < len(tokens) and tokens[i].startswith("-"):
-            opt = tokens[i]
-            name = opt.split("=", 1)[0]
-            if name in GIT_OPTS_WITH_VALUE:
-                flags["global_opts"] = True
-                value = opt.split("=", 1)[1] if "=" in opt else (tokens[i + 1] if i + 1 < len(tokens) else "")
-                if name in ("-c", "--config-env"):
-                    flags["config_override"] = True
-                i += 1 if "=" in opt else 2
-            elif name in GIT_FLAG_OPTS:
-                flags["global_opts"] = True
-                i += 1
-            else:
-                flags["global_opts"] = True  # unknown leading option: treat as retargeting
-                i += 1
-        tokens = ["git"] + tokens[i:]
-    elif program in ("python", "python3", "py", "python.exe") and tokens[1:3] == ["-m", "pip"]:
-        tokens = ["pip"] + tokens[3:]
-    return tokens, flags
-
-
-def run_matches(grants, command):
-    """All matching run clauses (normalized command), longest prefix first."""
+def command_tokens(command):
     if not isinstance(command, str) or not command.strip() or CONTROL.search(command):
-        return []
-    tokens, _ = normalize_command(command)
+        return None
+    try:
+        return shlex.split(command)
+    except ValueError:
+        return None
+
+
+POWERSHELL_PLAIN = re.compile(r"[\w .=/:,@+\-]+")
+
+
+def run_matches(grants, command, cwd, tool="Bash"):
+    """v3.2: exact (work folder, full command) match. No prefix matching.
+
+    Bash commands are compared token by token after POSIX shell unquoting (`"git" push` == `git push`).
+    PowerShell does not treat a backslash as an escape, so its commands are never unescaped: only a plain command
+    (letters, digits, spaces and . = / : , @ + -) whose whitespace-separated words equal the grant can match."""
+    if tool == "PowerShell":
+        if not isinstance(command, str) or not POWERSHELL_PLAIN.fullmatch(command.strip() or "\\"):
+            return None
+        tokens = command.split()
+    else:
+        tokens = command_tokens(command)
     if not tokens:
-        return []
-    found = [prefix for grant in grants for prefix in grant.get("run", []) if tokens[:len(prefix)] == prefix]
-    return ["실행 " + " ".join(prefix) for prefix in sorted(found, key=len, reverse=True)]
+        return None
+    for grant in grants:
+        root = grant.get("cwd")
+        if not root or not _same_folder(root, cwd):
+            continue
+        for granted in grant.get("run", []):
+            if tokens == granted:
+                return "실행 " + " ".join(granted)
+    return None
 
 
-def matches(grants, tool, tool_input, cwd):
-    """Every grant clause (str) that covers this tool call, most specific first. Pure function, no side effects."""
+def matches(grants, tool, tool_input, cwd, target_real=None):
+    """Every grant clause (str) that covers this tool call. Pure function, no side effects."""
     if not grants or not isinstance(tool_input, dict):
         return []
     if tool in EDIT_TOOLS:
-        clause = edit_matches(grants, tool_input, cwd)
-        return [clause] if clause else []
-    if tool in SHELL_TOOLS:
-        return run_matches(grants, tool_input.get("command"))
-    return []
+        clause = edit_matches(grants, target_real, cwd)
+    elif tool in SHELL_TOOLS:
+        clause = run_matches(grants, tool_input.get("command"), cwd, tool)
+    else:
+        clause = None
+    return [clause] if clause else []
 
 
-def match(grants, tool, tool_input, cwd):
-    """First (most specific) matching grant clause, or None."""
-    found = matches(grants, tool, tool_input, cwd)
+def match(grants, tool, tool_input, cwd, target_real=None):
+    found = matches(grants, tool, tool_input, cwd, target_real)
     return found[0] if found else None

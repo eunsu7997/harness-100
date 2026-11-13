@@ -177,9 +177,12 @@ class Hook(unittest.TestCase):
     def test_model_cannot_tamper_with_state_and_corruption_fails_closed(self):
         self.prompt("검색 기능 구현해줘")
         state = Path(self.env["HARNESS100_HOOK_STATE"])
-        self.assertEqual(self.tool("Bash", {"command": f"rm {state / 's1.json'}"}), "deny")
-        self.assertEqual(self.tool("Write", {"file_path": str(state / "s1.json")}), "deny")
-        (state / "s1.json").write_text("{not json", encoding="utf-8")
+        import hashlib
+        record = state / (hashlib.sha256("s1".encode("utf-8")).hexdigest() + ".json")  # v3.2: hashed session id
+        self.assertTrue(record.exists())
+        self.assertEqual(self.tool("Bash", {"command": f"rm {record}"}), "deny")
+        self.assertEqual(self.tool("Write", {"file_path": str(record)}), "deny")
+        record.write_text("{not json", encoding="utf-8")
         self.assertEqual(self.tool("Write", {"file_path": "a.py"}), "deny")
 
     def test_internal_error_blocks(self):

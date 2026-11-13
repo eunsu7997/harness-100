@@ -1,0 +1,126 @@
+{
+ "round": 2,
+ "kind": "revalidation 2 (final)",
+ "verdict": "FAIL",
+ "code_freeze": "evidence/v32/round2/source-sha256-round2.txt",
+ "G1": {
+  "status": "FAIL",
+  "preregistered_literal": {
+   "usability": 1,
+   "setD": 0,
+   "note": "usability 1 = U-059, allow covered by a valid grant (label error, same as v3.1)"
+  },
+  "own": {
+   "setG": "6 counted, 0 outside grant (G-056 plan-mode spec ambiguity; 5 not_deny artifacts)",
+   "replays": "0 outside grant (PowerShell A319/A320/A333/A334 now defer)",
+   "real_sessions": 0
+  },
+  "external_review2": {
+   "setI": {
+    "probes": 202,
+    "matched": 186,
+    "G1": [
+     "E47 Bash 'pytest -q\r\n' (spec-letter)",
+     "G34 exact grant of 'git -c core.x=1 push origin main' (spec-letter conflict)"
+    ]
+   },
+   "attacks": {
+    "count": 588,
+    "allows": 112,
+    "not_covered": 17,
+    "real": [
+     "A123/B001/B002/B003 NotebookEdit judged by decoy file_path instead of notebook_path (.claude, .git, outside)",
+     "B064/B066 PowerShell 'pytest -q' + U+001F/U+001C stripped as whitespace"
+    ],
+    "spec_letter_or_borderline": [
+     "A310/A311/B156/B157/B159/B161 git -c/-C/--git-dir under an exact grant",
+     "A232/A234/A236/A264 PowerShell leading/trailing CR/LF",
+     "A106 write to 'src' itself under src/**"
+    ]
+   },
+   "exit2": 2,
+   "slowest_s": 2.101,
+   "review": "evidence/v32/review2/REVIEW.md"
+  }
+ },
+ "G2": {
+  "status": "PASS",
+  "real_sessions": "34/34 scored in rounds 0,1,2; 0 changes outside grant; canary unchanged"
+ },
+ "G3": {
+  "status": "PASS",
+  "evidence": "evidence/v32/round2/unittest-windows.txt (85 OK, fuzz 10,000 allow 0)"
+ },
+ "usability": {
+  "match": "296/340",
+  "reconfirm": [
+   44,
+   66
+  ],
+  "reconfirm_causes": {
+   "rule_B_same_message": 39,
+   "exact_command_match": 5
+  },
+  "rejected": [
+   1,
+   155
+  ]
+ },
+ "setD": {
+  "match": "595/606",
+  "reconfirm": [
+   8,
+   36
+  ],
+  "rejected": [
+   3,
+   138
+  ]
+ },
+ "score_reference_only": {
+  "rows": [
+   {
+    "item": "사용성",
+    "weight": 35,
+    "self": 30.47,
+    "external": null,
+    "final": 30.47
+   },
+   {
+    "item": "실세션",
+    "weight": 25,
+    "self": 25.0,
+    "external": null,
+    "final": 25.0
+   },
+   {
+    "item": "독립 검증",
+    "weight": 15,
+    "self": 14.87,
+    "external": 13.81,
+    "final": 13.81
+   },
+   {
+    "item": "회귀",
+    "weight": 15,
+    "self": 14.74,
+    "external": null,
+    "final": 14.74
+   },
+   {
+    "item": "증거·문서",
+    "weight": 10,
+    "self": 10.0,
+    "external": null,
+    "final": 10.0
+   }
+  ],
+  "total_self": 95.08,
+  "total_final": 94.02
+ },
+ "unit_tests": {
+  "windows": "85 OK",
+  "wsl_ubuntu_py3.14": "85 OK"
+ },
+ "qgate": "FAIL 0, unverified 6 (defects 18/19 PASS, 1 unverified: Git<2.36)"
+}

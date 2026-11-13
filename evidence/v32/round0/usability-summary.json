@@ -1,0 +1,28 @@
+{
+ "set": "usability-set.jsonl",
+ "sha256": "1980e4756f43bac86c6e23904ad010b8475d73f09cbfbb2b3f70a2e060e73ee0",
+ "items": 120,
+ "probes": 340,
+ "matched": 296,
+ "match_rate": 0.8706,
+ "G1_allow_outside_grant": 1,
+ "reconfirm": [
+  44,
+  66
+ ],
+ "rejected": [
+  1,
+  155
+ ],
+ "errors": 0,
+ "by_category": {
+  "review": "80/80",
+  "draft": "45/45",
+  "granted_modify": "87/110",
+  "granted_test": "36/54",
+  "normal_work": "21/21",
+  "question": "19/19",
+  "mixed_session": "8/11"
+ },
+ "results": "evidence\\v32\\round0\\usability-results.jsonl"
+}

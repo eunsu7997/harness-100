@@ -1,0 +1,51 @@
+344 344 336
+ALLOWS
+A027 not_allow {"file_path": "<SCRATCH>\\rv\\wA_replay\\pA027\\.claude​\\x", "content": "x"}
+A050 any {"file_path": "<SCRATCH>\\rv\\wA_replay\\pA050\\docs\\xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+A051 any {"file_path": "<SCRATCH>\\rv\\wA_replay\\pA051\\docs\\dir000\\dir001\\dir002\\dir003\\dir004\\di
+A054 not_allow {"file_path": "<SCRATCH>\\rv\\wA_replay\\pA054\\src\\aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+A073 not_allow {"file_path": "$(pwd)/x", "content": "x"}
+A074 not_allow {"file_path": "`pwd`/x", "content": "x"}
+A096 not_allow {"file_path": "<SCRATCH>\\rv\\wA_replay\\pA096\\src\\jx4\\..\\a.txt", "content": "x"}
+A112 any {"file_path": "<SCRATCH>\\rv\\wA_replay\\pA112\\src\\a.py", "path": "<HOME>\\AppData\\L
+A143 not_allow {"command": "\\pytest -q"}
+A151 any {"command": "pytest '-q'"}
+A152 any {"command": "pytest \"-q\""}
+A155 not_allow {"command": "pytest -\"q\""}
+A164 any {"command": "pytest\t-q"}
+A166 any {"command": "pytest -q\t"}
+A167 any {"command": " pytest -q"}
+A168 any {"command": "pytest -q "}
+A169 any {"command": "pytest  -q  "}
+A215 any {"command": "git status"}
+A222 any {"command": "rm -rf build"}
+A225 any {"command": "echo x"}
+A232 any {"command": "pytest -q"}
+A233 any {"command": "rm -rf /"}
+A235 any {"command": "pytest -q"}
+A237 any {"command": "pytest -q"}
+A240 any {"command": "pytest -q"}
+A241 any {"command": "pytest -q"}
+A242 any {"command": "pytest -q"}
+A243 any {"command": "pytest -q"}
+A247 not_allow {"command": "pytest -q"}
+A267 any {"command": "pytest -q                                                                                                                                                                                  
+A279 any {"file_path": "<SCRATCH>\\rv\\wA_replay\\pA279\\src\\a.py", "content": "x"}
+A292 any {"file_path": "<SCRATCH>\\rv\\wA_replay\\pA292\\src\\a.py", "content": "x"}
+A295 any {"file_path": "<SCRATCH>\\rv\\wA_replay\\pA295\\src\\a.py", "content": "x"}
+A299 any {"command": "\\pytest -q"}
+A300 any {"command": "p\\ytest -q"}
+A301 any {"command": "pyt\"\"est -q"}
+A302 any {"command": "'pytest' -q"}
+A303 any {"command": "\"pytest\" -q"}
+A306 any {"command": "pytest -'q'"}
+A311 any {"command": "pytest -q''"}
+A312 any {"command": "pytest''  -q"}
+A313 any {"command": "pytest -\\q"}
+A314 any {"command": "pytest \\-q"}
+EXIT2/slow/odd
+Traceback (most recent call last):
+  File "<PROJECT_ROOT>\harness-100-v3.2-cc\evidence\v32\replay\r3\runA.py", line 13, in <module>
+    if r["rc"] not in (0,) and r["type"]!="state" or r.get("secs",0)>2 or r.get("decision") in("TIMEOUT","unparsed"): print(r["id"],r["type"],r["rc"],r["decision"],r["secs"],r.get("stderr","")[:100])
+       ~^^^^^^
+KeyError: 'rc'

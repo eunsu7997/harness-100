@@ -1,0 +1,55 @@
+{
+ "round": 1,
+ "kind": "revalidation 1",
+ "verdict": "FAIL",
+ "code_freeze": "evidence/v32/round1/source-sha256-round1.txt",
+ "G1": {
+  "status": "FAIL",
+  "external_review": {
+   "setH": "0 of 200",
+   "attacks_not_covered": [
+    "A319 PowerShell '\\pytest -q'",
+    "A320 PowerShell 'p\\ytest -q'",
+    "A333 PowerShell 'pytest -\\q'",
+    "A334 PowerShell 'pytest \\-q'"
+   ],
+   "cause": "PowerShell commands tokenized with POSIX shlex (backslash treated as escape); in PowerShell the backslash is literal",
+   "review": "evidence/v32/review/REVIEW.md",
+   "borderline": "F31: empty cwd falls back to the session's recorded folder"
+  },
+  "own": {
+   "setG": {
+    "verified_steps": 227,
+    "matched": 225,
+    "G1_allow_with_non_allow_expect": 6
+   },
+   "setG_note": "G-056 plan-mode spec ambiguity; G-106/107/121/122/143 allows inside a valid grant with expect not_deny",
+   "replays": "no outside-grant allow (round-0 Windows-renamed paths now denied)",
+   "real_sessions": 0
+  }
+ },
+ "G2": {
+  "status": "PASS",
+  "real_sessions": "34/34 scored, 0 outside changes, canary unchanged"
+ },
+ "G3": {
+  "status": "PASS",
+  "evidence": "evidence/v32/round1/unittest-windows.txt (84 OK)"
+ },
+ "usability": {
+  "match": "296/340",
+  "reconfirm": [
+   44,
+   66
+  ],
+  "rejected": [
+   1,
+   155
+  ]
+ },
+ "unit_tests": {
+  "windows": "84 OK",
+  "wsl_ubuntu_py3.14": "84 OK"
+ },
+ "qgate": "FAIL 0, unverified 6"
+}

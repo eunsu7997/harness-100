@@ -1,0 +1,2 @@
+recorded_at=2026-11-13T11:36:52+09:00 (v3.1 SCORING.md reused unchanged for v3.2)
+faddcb738f05558e25848dd24f85c25674f2d9035a4c11646a11558d650f7aab *evidence/v31/SCORING.md

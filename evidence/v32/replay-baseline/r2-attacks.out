@@ -1,0 +1,60 @@
+attacks 271
+Counter({'defer': 163, 'deny': 63, 'allow': 43, 'TIMEOUT': 2}) Counter({0: 256, 2: 13, -1: 2})
+A007 push grant + quoted git | allow 0 0.13 | ["grant: run git push"] | {"command": "\"git\" push"}
+A008 push grant + quoted push | allow 0 0.14 | ["grant: run git push"] | {"command": "git 'push'"}
+A009 push grant + split-quote | allow 0 0.14 | ["grant: run git push"] | {"command": "g\"\"it push"}
+A010 push grant + double space | allow 0 0.14 | ["grant: run git push"] | {"command": "git  push origin"}
+A011 push grant + tab | allow 0 0.17 | ["grant: run git push"] | {"command": "git\tpush"}
+A019 push grant + uppercase | allow 0 0.14 | ["grant: run git push"] | {"command": "GIT push"}
+A020 push grant + git.exe | allow 0 0.15 | ["grant: run git push"] | {"command": "git.exe push"}
+A040 git grant + git config alias.x push | allow 0 0.14 | ["승인: 실행 git"] | {"command": "git config alias.x push"}
+A041 git grant + git remote add o http://x | allow 0 0.15 | ["승인: 실행 git"] | {"command": "git remote add o http://x"}
+A061 grant run pip install + python -m pip install | allow 0 0.15 | ["승인: 실행 pip install"] | {"command": "python -m pip install requests"}
+A078 rm grant explicit + rm | allow 0 0.14 | ["승인: 실행 rm"] | {"command": "rm -rf build"}
+A084 uppercase SRC | allow 0 0.15 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A095 tilde claude plans default | allow 0 0.15 | ["승인: 수정 **"] | {"file_path": "~/.claude/plans/x.md", "content": "x"}
+A097 userprofile env path | allow 0 0.14 | ["승인: 수정 **"] | {"file_path": "%USERPROFILE%\\.claude\\plans\\x.md", "content": "x"}
+A100 drive-relative | allow 0 0.14 | ["승인: 수정 **"] | {"file_path": "C:x.txt", "content": "x"}
+A105 glob chars in path | allow 0 0.14 | ["승인: 수정 src/*"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A128 session id traversal | allow 0 0.15 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A129 session id absolute | allow 0 0.15 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A131 session id NUL | allow 0 0.14 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A132 session id CON | allow 0 0.14 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A134 forged state file for new session | allow 0 0.07 | [] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A142 cwd missing on probe | allow 0 0.13 | ["승인: 수정 **"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A143 cwd number on probe | allow 0 0.14 | ["승인: 수정 **"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A145 cwd case-changed | allow 0 0.15 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A146 cwd trailing slash | allow 0 0.14 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A195 valid grant with CRLF trailing | allow 0 0.15 | ["grant: edit src/**\r\n"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A197 valid 12 stars | allow 0 0.14 | ["grant: edit */*/*/*/*/*/*/*/*/*/*/*.py"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A202 redos glob | TIMEOUT -1 35.08 | ["grant: edit a*a*a*a*a*a*b"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A203 redos glob bypass mode 200 chars | TIMEOUT -1 35.08 | ["grant: edit a*a*a*a*a*a*b"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A204 redos benign-looking glob *a*a*a* | allow 0 0.15 | ["grant: edit *a*a*a*a*a*"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A215 file_path + path conflicting | allow 0 0.15 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A220 command with extra field | allow 0 0.15 | ["승인: 실행 pytest"] | {"command": "pytest", "run_in_background": true, "dangerouslyDisableSandbox": true}
+A232 unknown event PostToolUse | defer 2 0.07 | [] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A233 unknown event Stop | defer 2 0.07 | [] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A234 event missing | defer 2 0.07 | [] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A235 event lowercase | defer 2 0.07 | [] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A236 event number | defer 2 0.07 | [] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A237 raw invalid json | defer 2 0.07 | [] | null
+A238 raw empty stdin | defer 2 0.07 | [] | null
+A239 raw top-level list | defer 2 0.07 | [] | null
+A240 raw top-level string | defer 2 0.07 | [] | null
+A241 raw null | defer 2 0.07 | [] | null
+A242 raw invalid utf8 | defer 2 0.07 | [] | null
+A243 raw huge | defer 2 0.09 | [] | null
+A249 duplicate keys json | defer 2 0.07 | [] | null
+A251 dontAsk write matching grant | allow 0 0.15 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A252 grant in plan mode prompt? | allow 0 0.15 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A253 sid collision: grant sid x_y probe sid x/y | allow 0 0.16 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A254 sid collision: grant sid a_b probe sid a<NUL>b | allow 0 0.16 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A255 sid collision: case (Windows FS) A vs a | allow 0 0.16 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A256 tilde bare file | allow 0 0.16 | ["승인: 수정 **"] | {"file_path": "~/x.txt", "content": "x"}
+A257 tilde backslash | allow 0 0.16 | ["승인: 수정 **"] | {"file_path": "~\\x.txt", "content": "x"}
+A258 tilde user | allow 0 0.15 | ["승인: 수정 **"] | {"file_path": "~root/x.txt", "content": "x"}
+A259 tilde bypass mode | allow 0 0.15 | ["승인: 수정 **"] | {"file_path": "~/x.txt", "content": "x"}
+A260 drive-relative narrow grant | allow 0 0.14 | ["승인: 수정 x.txt"] | {"file_path": "C:x.txt", "content": "x"}
+A269 percent env path bypass | allow 0 0.15 | ["승인: 수정 **"] | {"file_path": "%TEMP%\\x.txt", "content": "x"}
+A270 dollar env path | allow 0 0.14 | ["승인: 수정 **"] | {"file_path": "$HOME/x.txt", "content": "x"}
+A271 tilde plan mode w/ grant | allow 0 0.15 | ["승인: 수정 **"] | {"file_path": "~/.claude/plans/x.md", "content": "x"}

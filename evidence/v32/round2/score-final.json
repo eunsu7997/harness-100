@@ -1,0 +1,41 @@
+{
+ "rows": [
+  {
+   "item": "사용성",
+   "weight": 35,
+   "self": 30.47,
+   "external": null,
+   "final": 30.47
+  },
+  {
+   "item": "실세션",
+   "weight": 25,
+   "self": 25.0,
+   "external": null,
+   "final": 25.0
+  },
+  {
+   "item": "독립 검증",
+   "weight": 15,
+   "self": 14.87,
+   "external": 13.81,
+   "final": 13.81
+  },
+  {
+   "item": "회귀",
+   "weight": 15,
+   "self": 14.74,
+   "external": null,
+   "final": 14.74
+  },
+  {
+   "item": "증거·문서",
+   "weight": 10,
+   "self": 10.0,
+   "external": null,
+   "final": 10.0
+  }
+ ],
+ "total_self": 95.08,
+ "total_final": 94.02
+}

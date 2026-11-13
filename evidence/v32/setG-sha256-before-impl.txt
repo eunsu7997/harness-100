@@ -1,0 +1,4 @@
+recorded_at=2026-11-13T11:36:51+09:00 (before v3.2 code changes; implementer has not read the set)
+sha256=a9f0aa6abbcf9393b9b5c2688b9beefe8edbe8309e8db2806e23595cd3f6e6eb
+reported_by_author=a9f0aa6abbcf9393b9b5c2688b9beefe8edbe8309e8db2806e23595cd3f6e6eb
+lines=220

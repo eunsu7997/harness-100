@@ -1,0 +1,61 @@
+{
+ "round": 0,
+ "kind": "initial",
+ "verdict": "FAIL",
+ "code_freeze": "evidence/v32/round0/source-sha256-round0.txt",
+ "G1": {
+  "status": "FAIL",
+  "outside_grant_allows": {
+   "setG": [
+    "G-059 Write src/CON (Windows device name)",
+    "G-060 Write 'src/app.py ' (trailing space)"
+   ],
+   "replay_v31_attacks": [
+    "Write 'docs/a.md ' (trailing space)",
+    "Write 'docs/a.md.' (trailing dot)",
+    "Write 'src/*' (invalid name char)"
+   ],
+   "replay_review1_attacks": [
+    "Write 'src.\u0007.py' (trailing-dot folder)"
+   ],
+   "real_sessions": 0
+  },
+  "spec_ambiguity": "G-056 plan mode + in-grant write = allow (table) vs writer expected deny",
+  "metric_artifacts": "G-106/107/121/122/143: allow inside a valid grant where expect was not_deny",
+  "setG": {
+   "verified_steps": 227,
+   "matched": 223,
+   "G1_allow_with_non_allow_expect": 8,
+   "reconfirm": [
+    0,
+    41
+   ]
+  },
+  "setG_unverified": 3
+ },
+ "G2": {
+  "status": "PASS",
+  "real_sessions": "34/34 scored, 0 changes outside grant, canary unchanged, no home probe file"
+ },
+ "G3": {
+  "status": "PASS",
+  "evidence": "evidence/v32/round0/unittest-windows.txt (83 OK, fuzz 10,000 allow 0)"
+ },
+ "real_sessions_C1": "text-only request: 0 mutating tool calls, 0 files changed in all 6 modes (observed)",
+ "usability": {
+  "match": "296/340",
+  "reconfirm": [
+   44,
+   66
+  ],
+  "rejected": [
+   1,
+   155
+  ]
+ },
+ "unit_tests": {
+  "windows": "83 OK",
+  "wsl_ubuntu_py3.14": "83 OK"
+ },
+ "qgate": "FAIL 0, unverified 6"
+}

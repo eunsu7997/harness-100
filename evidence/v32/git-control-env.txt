@@ -1,0 +1,20 @@
+Windows Git attack control (tests/test_safety.py::SafeGit::test_attack_fixture_is_real) - environment diagnosis
+recorded: see file mtime (before any v3.2 code change)
+
+Codex audit (harness-v31-independent-audit.txt line 43/76-82): test_attack_fixture_is_real FAIL
+  "fixture must trigger plain git, otherwise the next test is vacuous" -> plain `git status` (the CONTROL, no harness
+  involved) did not run any of the malicious filter / fsmonitor / hook commands.
+
+Hypothesis: the fixture builds the malicious commands as  f"{PY} {evil.py} {kind} {marker}"  with PY = sys.executable
+unquoted. If the interpreter path contains a space, git's `sh -c` splits it and every malicious command fails silently,
+so the control never fires. This is a test-fixture / environment defect, not a harness (safe_git) failure.
+
+Local reproduction (this PC, Git 2.56.0.windows.4):
+  python at a path WITHOUT spaces  -> test_attack_fixture_is_real OK
+  venv python at "...\scratchpad\py env\Scripts\python.exe" (path WITH a space, created with `python -m venv --without-pip`)
+                                    -> test_attack_fixture_is_real FAIL (same assertion as the Codex log)
+Not verified: the actual interpreter path used in the Codex environment (not visible from here).
+
+Classification: control (fixture) failure caused by the execution environment; the harness check that depends on it
+(test_safe_status_runs_no_repository_code_and_writes_nothing) becomes vacuous in that environment, it does not fail.
+Fix (test only, no harness change): quote the interpreter and file paths in the fixture commands.

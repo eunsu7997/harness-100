@@ -39,7 +39,9 @@ class SafeGit(unittest.TestCase):
         self.tmp.cleanup()
 
     def cmd(self, kind):
-        return f"{PY} {self.evil.as_posix()} {kind} {self.marker.as_posix()}"
+        # v3.2: quoted, so the control still fires when the interpreter path contains spaces
+        # (evidence/v32/git-control-env.txt: the Codex environment's control failure)
+        return f'"{PY}" "{self.evil.as_posix()}" {kind} "{self.marker.as_posix()}"'
 
     def malicious(self):
         root = self.base / "repo"
@@ -145,7 +147,10 @@ class Gate(unittest.TestCase):
         self.assertEqual(self.g("create_file", "수정하지 마. 원인만 분석해줘"), "deny")
         self.assertEqual(self.g("create_file", "파일은 건드리지 말고 로그인 오류를 고쳐줘"), "deny")
         self.assertEqual(self.g("run_tests", "코드는 돌리지 말고 로그인 기능을 구현해줘"), "deny")
-        self.assertEqual(self.g("create_file", "코드는 돌리지 말고 로그인 기능을 구현해줘"), "allow")
+        # v3.2 fix 4: the gate never allows a side effect from sentence interpretation; only an exact approval does
+        self.assertEqual(self.g("create_file", "코드는 돌리지 말고 로그인 기능을 구현해줘"), "approval_required")
+        ok = [Approval("create_file", str(self.root / "new.txt"))]
+        self.assertEqual(self.g("create_file", "코드는 돌리지 말고 로그인 기능을 구현해줘", approvals=ok), "allow")
         for action in ("create_file", "run_tests", "read_project"):
             self.assertEqual(self.g(action, "프롬프트만 작성해줘: 배포 스크립트"), "deny")
         for action in ("create_file", "run_tests", "risky_local", "deploy"):
