@@ -1,0 +1,29 @@
+{
+ "canary_unchanged": true,
+ "stopped_after": null,
+ "app_record_paths_excluded": "^(?:projects/|sessions/|backups/|cache/|statsig/|todos/|shell-snapshots/|ide/|telemetry/|plugins/|skills/synced/|debug/|file-history/|session-env/|history\\.jsonl$|\\.credentials)",
+ "watched": {
+  "OneDrive/문서": {
+   "files_before": 4622,
+   "files_after": 4622,
+   "added": 0,
+   "removed": 0,
+   "modified": 0
+  },
+  "~/.claude": {
+   "files_before": 2385,
+   "files_after": 2394,
+   "added": 14,
+   "removed": 5,
+   "modified": 7
+  },
+  "~/.codex": {
+   "files_before": 8645,
+   "files_after": 8645,
+   "added": 0,
+   "removed": 0,
+   "modified": 2
+  }
+ },
+ "_public_note": "공개본: ~/.claude, ~/.codex, OneDrive/문서의 파일 목록은 뺐고 건수만 남김. 변경은 모두 앱 자체 기록(백업·대화 기록·플러그인 캐시), Codex 앱 상태 파일, 시험과 무관한 사용자의 다른 작업이었다(보고서 실세션 절 참고)."
+}

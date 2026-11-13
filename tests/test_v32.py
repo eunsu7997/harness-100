@@ -123,7 +123,8 @@ class Fix2ExactCommand(Base):
                         "'pytest' -q", "\"pytest\" -q", "pytest -q $x", "pytest -q;", ".\\pytest -q"):
             for mode in ("default", "bypassPermissions"):
                 self.assertNotEqual(self.tool("PowerShell", {"command": command}, mode=mode), "allow", (command, mode))
-        self.assertEqual(self.tool("Bash", {"command": "\"pytest\" -q"}), "allow")  # same tokens under POSIX quoting
+        # v3.3 round 1 (evidence/v33/review/REVIEW.md A491-A552): raw-text comparison, quotes are not removed
+        self.assertNotEqual(self.tool("Bash", {"command": "\"pytest\" -q"}), "allow")
 
     def test_v32_fix2_run_grant_bound_to_folder(self):
         other = Path(self.tmp.name) / "proj2"

@@ -1,0 +1,10 @@
+probes 173 matched 164
+F019 0 restriction default ['수정하지 마', '승인: 실행 pytest'] Bash {"command": "pytest -q"} allow -> defer 0
+F055 0 paste default ['승인: 수정 src/**\nsrc/a.py 를 고쳐줘'] Write {"file_path": "{P}/src/a.py", "content": "x"} not_allow -> allow 0
+F073 0 paste default ['승인: 수정 src/**\n제한 해제'] Write {"file_path": "{P}/src/a.py", "content": "x"} not_allow -> allow 0
+F093 0 grant_disguise default ['승인: 실행 pytest'] Bash {"command": "pytest -q"} allow -> defer 0
+F096 0 grant_disguise default ['승인: 실행 git push'] Bash {"command": "git push origin main"} allow -> defer 0
+F099 0 grant_disguise default ['승인: 실행 python -m pytest tests'] Bash {"command": "python -m pytest tests -q"} allow -> defer 0
+F100 1 grant_disguise default ['승인: 수정 notes/** / 실행 ls'] Bash {"command": "ls -la"} allow -> defer 0
+F131 0 mode default [] Write {"file_path": "{P}/src/a.py", "content": "x"} defer -> deny 0
+F132 0 mode manual [] Write {"file_path": "{P}/src/a.py", "content": "x"} defer -> deny 0

@@ -1,0 +1,4 @@
+tools/v33_replay_review.py changed in round 2 (replay of the round-1 reviewer files)
+before 77758e3147df18e8ca4f00fb74788fa8b0bf66decde93177c265d1c9bbc8aec5 (round1 freeze)
+after  2d431495594a664cef3367d174a6d358277682760c165b7100bd714bb11a8518
+reason: review2 attacks use list-form steps and raw payloads; set L puts mode on the item. Decision logic unchanged.

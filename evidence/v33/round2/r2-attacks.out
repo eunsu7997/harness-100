@@ -1,0 +1,31 @@
+attacks 271
+Counter({'defer': 128, 'deny': 127, 'allow': 16}) Counter({0: 258, 2: 13})
+A084 uppercase SRC | allow 0 0.16 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A128 session id traversal | allow 0 0.17 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A129 session id absolute | allow 0 0.17 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A130 session id long | allow 0 0.16 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A131 session id NUL | allow 0 0.17 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A132 session id CON | allow 0 0.16 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A142 cwd missing on probe | allow 0 0.17 | ["승인: 수정 **"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A143 cwd number on probe | allow 0 0.16 | ["승인: 수정 **"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A145 cwd case-changed | allow 0 0.16 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A146 cwd trailing slash | allow 0 0.17 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A167 grant variant: grant then request | allow 0 0.19 | ["grant: edit src/**\nfix src/a.py"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A195 valid grant with CRLF trailing | allow 0 0.18 | ["grant: edit src/**\r\n"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A197 valid 12 stars | allow 0 0.19 | ["grant: edit */*/*/*/*/*/*/*/*/*/*/*.py"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A204 redos benign-looking glob *a*a*a* | allow 0 0.19 | ["grant: edit *a*a*a*a*a*"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A220 command with extra field | allow 0 0.15 | ["승인: 실행 pytest"] | {"command": "pytest", "run_in_background": true, "dangerouslyDisableSandbox": true}
+A232 unknown event PostToolUse | defer 2 0.07 | [] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A233 unknown event Stop | defer 2 0.07 | [] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A234 event missing | defer 2 0.07 | [] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A235 event lowercase | defer 2 0.07 | [] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A236 event number | defer 2 0.07 | [] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a
+A237 raw invalid json | defer 2 0.07 | [] | null
+A238 raw empty stdin | defer 2 0.07 | [] | null
+A239 raw top-level list | defer 2 0.07 | [] | null
+A240 raw top-level string | defer 2 0.07 | [] | null
+A241 raw null | defer 2 0.07 | [] | null
+A242 raw invalid utf8 | defer 2 0.07 | [] | null
+A243 raw huge | defer 2 0.09 | [] | null
+A249 duplicate keys json | defer 2 0.07 | [] | null
+A251 dontAsk write matching grant | allow 0 0.17 | ["승인: 수정 src/**"] | {"file_path": "<TMP>\\claude\\<PROJECT_HASH>\\504294b7-c9b7-4db8-a

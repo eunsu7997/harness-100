@@ -37,6 +37,11 @@ MAX_GLOB_LEN = 200
 MAX_GLOB_STARS = 12
 
 
+def raw_words(text):
+    """v3.3 round 1: split on ASCII spaces only. Quotes and backslashes stay part of the words."""
+    return [word for word in text.split(" ") if word] if isinstance(text, str) else []
+
+
 def _strict_text(text):
     """Rule B character checks on the whole message."""
     if "\t" in text or unicodedata.normalize("NFKC", text) != text:
@@ -48,7 +53,8 @@ def _strict_text(text):
 def _valid_glob(pattern):
     p = pattern.strip(" ")
     if (not p or len(p) > MAX_GLOB_LEN or p.count("*") > MAX_GLOB_STARS or "***" in p or "\\" in p
-            or p.startswith(("/", "~")) or re.match(r"^[A-Za-z]:", p) or ".." in p.split("/")):
+            or p.startswith(("/", "~")) or re.match(r"^[A-Za-z]:", p) or ".." in p.split("/")
+            or p.endswith("/") or "//" in p):  # v3.3 round 1: empty segments (`src/**/`) are not defined -> invalid
         return None
     if not re.fullmatch(r"[\w.\-/*?@+=]+", p):
         return None  # path characters and * ? only: no spaces, quotes, shell or brace syntax
@@ -77,9 +83,10 @@ def parse_line(line):
             if CONTROL.search(rest):
                 return None
             try:
-                prefix = shlex.split(rest)
+                shlex.split(rest)  # must still be a well-formed command
             except ValueError:
                 return None
+            prefix = raw_words(rest)  # v3.3 round 1: compared as raw text, never unquoted / unescaped
             if not prefix:
                 return None
             run.append(prefix)
@@ -94,6 +101,36 @@ def parse_line(line):
     return {"edit": edit, "run": run, "scope": scope}
 
 
+FIRST_LINE_MAX_LINES = 5
+FIRST_LINE_MAX_CHARS = 400
+PASTE_LINE = re.compile(
+    r"^\s*(?:>|```|~~~|-{5,})|(?:승인|grant)\s*[:：]|[:：]\s*$|^\s*(?:from|to|cc|bcc|subject|date|sent|보낸\s*사람|받는\s*사람|제목)\s*[:：]|"
+    r"\[(?:info|error|warn|warning|debug|trace|fatal)\]|^\s*\d{4}[-/.]\d{1,2}[-/.]\d{1,2}|^\s*\d{1,2}:\d{2}", re.I)
+
+
+def first_line_grant(text):
+    """v3.3 fix 4. (grant, request) when the message's FIRST line is an exact grant line and the rest is a short,
+    plain request; otherwise None. Pasted material that merely starts with a grant line is rejected by the request
+    checks (length, blank lines, quotes/fences, other grant lines, ':'-ended preambles, mail/log headers)."""
+    lines = text.replace("\r\n", "\n").split("\n")
+    if len(lines) < 2 or "\r" in text.replace("\r\n", ""):
+        return None
+    grant = parse_line(lines[0].strip(" "))
+    if not grant:
+        return None
+    rest_lines = lines[1:]
+    while rest_lines and rest_lines[-1].strip(" ") == "":
+        rest_lines.pop()  # trailing newline(s) at the end of the message
+    rest = "\n".join(rest_lines)
+    if not rest_lines or len(rest_lines) > FIRST_LINE_MAX_LINES or len(rest) > FIRST_LINE_MAX_CHARS:
+        return None
+    if any(not line.strip() or PASTE_LINE.search(line) for line in rest_lines):
+        return None
+    if any(REVOKE_LINE.match(line) or TASK_END_LINE.match(line) for line in rest_lines):
+        return None  # v3.3 round 1: grant and revoke / task end in one message is ambiguous -> not a grant
+    return grant, rest
+
+
 def parse_prompt(text, cwd=None):
     """Return (grants, revoke, task_end, remaining_text).
 
@@ -106,6 +143,13 @@ def parse_prompt(text, cwd=None):
     if grant:
         grant["cwd"] = os.path.realpath(cwd) if isinstance(cwd, str) and cwd else None  # unusable without a folder
         return [grant], False, False, ""
+    first_line = first_line_grant(text)
+    if first_line:
+        grant, rest = first_line
+        grant["cwd"] = os.path.realpath(cwd) if isinstance(cwd, str) and cwd else None
+        rest_lines = rest.split("\n")
+        return ([grant], any(REVOKE_LINE.match(line) for line in rest_lines),
+                any(TASK_END_LINE.match(line) for line in rest_lines), rest.strip())
     lines = text.replace("\r\n", "\n").split("\n")
     revoke = any(REVOKE_LINE.match(line) for line in lines)
     task_end = any(TASK_END_LINE.match(line) for line in lines)
@@ -142,9 +186,13 @@ def glob_match(pattern, rel):
     ps = [fold(s) for s in pattern.split("/") if s]
     ts = [fold(s) for s in rel.split("/") if s]
     reach = [True] + [False] * len(ts)
-    for seg in ps:
+    for index, seg in enumerate(ps):
         nxt = [False] * (len(ts) + 1)
-        if seg == "**":
+        if seg == "**" and index == len(ps) - 1:
+            # v3.3 decision 2: a trailing "**" covers the folder's contents only, never the folder itself
+            for j in range(1, len(ts) + 1):
+                nxt[j] = any(reach[:j])
+        elif seg == "**":
             acc = False
             for j in range(len(ts) + 1):
                 acc = acc or reach[j]
@@ -187,6 +235,24 @@ def edit_matches(grants, target_real, cwd):
     return None
 
 
+def folder_itself(grants, target_real, cwd):
+    """v3.3 decision 2: the `dir/**` clause whose folder `dir` IS the write target (a write there is denied)."""
+    if not isinstance(target_real, str) or not target_real:
+        return None
+    for grant in grants:
+        root = grant.get("cwd")
+        if not root or not _same_folder(root, cwd):
+            continue
+        try:
+            rel = os.path.relpath(target_real, os.path.realpath(root)).replace("\\", "/")
+        except ValueError:
+            continue
+        for pattern in grant.get("edit", []):
+            if pattern.endswith("/**") and glob_match(pattern[:-3], rel):
+                return f"수정 {pattern}"
+    return None
+
+
 def command_tokens(command):
     if not isinstance(command, str) or not command.strip() or CONTROL.search(command):
         return None
@@ -202,15 +268,18 @@ POWERSHELL_PLAIN = re.compile(r"[\w .=/:,@+\-]+")
 def run_matches(grants, command, cwd, tool="Bash"):
     """v3.2: exact (work folder, full command) match. No prefix matching.
 
-    Bash commands are compared token by token after POSIX shell unquoting (`"git" push` == `git push`).
-    PowerShell does not treat a backslash as an escape, so its commands are never unescaped: only a plain command
-    (letters, digits, spaces and . = / : , @ + -) whose whitespace-separated words equal the grant can match."""
+    v3.3 round 1: both sides are compared as raw text split on ASCII spaces only (only the number of spaces is
+    ignored). Quotes and backslashes are never removed, so `"pytest" -q` or `p\\ytest -q` differ from `pytest -q`.
+    Bash commands must still pass the shell-control check; PowerShell commands must be plain (letters, digits,
+    spaces and . = / : , @ + -)."""
+    if not isinstance(command, str):
+        return None
     if tool == "PowerShell":
-        if not isinstance(command, str) or not POWERSHELL_PLAIN.fullmatch(command.strip() or "\\"):
+        if not POWERSHELL_PLAIN.fullmatch(command.strip(" ") or "\\"):
             return None
-        tokens = command.split()
-    else:
-        tokens = command_tokens(command)
+    elif command_tokens(command) is None:
+        return None
+    tokens = raw_words(command)
     if not tokens:
         return None
     for grant in grants:
@@ -218,6 +287,11 @@ def run_matches(grants, command, cwd, tool="Bash"):
         if not root or not _same_folder(root, cwd):
             continue
         for granted in grant.get("run", []):
+            if any(q in part for part in granted + tokens for q in "'\""):
+                # v3.3 round 2: spaces inside quotes are data -> with a quote anywhere only the exact text matches
+                if command.strip(" ") == " ".join(granted):
+                    return "실행 " + " ".join(granted)
+                continue
             if tokens == granted:
                 return "실행 " + " ".join(granted)
     return None

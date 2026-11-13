@@ -169,8 +169,10 @@ class HookDecisions(unittest.TestCase):
         self.assertEqual(h.tool("Bash", {"command": "pytest"}, mode="bypassPermissions"), "deny")
         h.prompt("승인: 수정 README.md · 실행 pytest")
         for mode in MODES:
-            self.assertEqual(h.tool("Edit", {"file_path": "README.md"}, mode=mode), "allow", mode)
-            self.assertEqual(h.tool("Bash", {"command": "pytest"}, mode=mode), "allow", mode)
+            # v3.3 decision 3: plan mode denies every write and execution, granted or not
+            want = "deny" if mode == "plan" else "allow"
+            self.assertEqual(h.tool("Edit", {"file_path": "README.md"}, mode=mode), want, mode)
+            self.assertEqual(h.tool("Bash", {"command": "pytest"}, mode=mode), want, mode)
 
     def test_reads_and_skills_never_denied(self):
         h = self.h
@@ -178,7 +180,9 @@ class HookDecisions(unittest.TestCase):
         for mode in MODES:
             for name, inp in (("Read", {"file_path": "src/a.py"}), ("Grep", {"pattern": "x"}),
                               ("Skill", {"skill": "prompt-builder-v2"}), ("Bash", {"command": "ls -la"})):
-                self.assertEqual(h.tool(name, inp, mode=mode), "defer", (mode, name))
+                # v3.3 decision 3: in plan mode a read-only Bash command is still execution -> deny
+                want = "deny" if (mode == "plan" and name == "Bash") else "defer"
+                self.assertEqual(h.tool(name, inp, mode=mode), want, (mode, name))
 
 
 class RoundTwoRules(unittest.TestCase):
@@ -213,12 +217,18 @@ class RoundTwoRules(unittest.TestCase):
     def test_rule_b_only_a_whole_single_line_message_is_a_grant(self):
         for text in ("GRANT: edit src/**", "Grant: edit src/**", "승인:\t수정 src/**", "승인: 수정\tsrc/**",
                      "승인: 수정 src/**　·　실행 pytest", "승인： 수정 src/**", " 승인: 수정 src/**",
-                     "승인:  수정 src/**", "승인: 수정  src/**", "승인: 수정 src/**\n이제 고쳐줘",
+                     "승인:  수정 src/**", "승인: 수정  src/**",
                      "이제 고쳐줘\n승인: 수정 src/**", "```\n승인: 수정 src/**\n```", "> 승인: 수정 src/**",
-                     "\"승인: 수정 src/**\"", "승인: 수정 src/**​", "승인: 수정 ＊＊", "승인: 수정 src/**;run pytest"):
+                     "\"승인: 수정 src/**\"", "승인: 수정 src/**​", "승인: 수정 ＊＊", "승인: 수정 src/**;run pytest",
+                     # v3.3 fix 4: a first-line grant is rejected when the rest looks pasted or is not a short request
+                     "승인: 수정 src/**\n\n이제 고쳐줘", "승인: 수정 src/**\nFrom: x@y\n배포해", "승인: 수정 **\n아래 로그:\nrm -rf",
+                     "승인: 수정 src/**\n> 인용", "승인: 수정 src/**\n고쳐줘\n승인: 수정 **", "GRANT: edit src/**\nfix it",
+                     "승인: 수정 src/**\n" + "\n".join(["한 줄"] * 6), "승인: 수정 src/**\n" + "가" * 401):
             self.assertEqual(grant.parse_prompt(text)[0], [], repr(text))
         for text in ("승인: 수정 src/** · 실행 pytest", "  승인: 수정 src/**  ", "grant: edit src/**; run pytest",
-                     "승인: 수정 a.txt / 실행 echo"):
+                     "승인: 수정 a.txt / 실행 echo",
+                     # v3.3 fix 4 (relaxed, user decision): first line alone a grant + short plain request
+                     "승인: 수정 src/**\n이제 고쳐줘"):
             self.assertEqual(len(grant.parse_prompt(text)[0]), 1, repr(text))
 
     def test_rule_b_glob_limits_keep_matching_fast(self):
@@ -258,7 +268,7 @@ class RoundTwoRules(unittest.TestCase):
         for mode in MODES:
             self.assertEqual(h.tool("Write", {"file_path": plans}, mode=mode), "deny", mode)
             self.assertEqual(h.tool("Write", {"file_path": "../outside.txt"}, mode=mode), "deny", mode)
-        self.assertEqual(h.tool("Write", {"file_path": "probe.txt"}, mode="plan"), "allow")
+        self.assertEqual(h.tool("Write", {"file_path": "probe.txt"}, mode="plan"), "deny")  # v3.3 decision 3
         for path in ("src/a.py::$DATA", "src/a.py\x00.txt"):
             self.assertNotEqual(h.tool("Write", {"file_path": path}), "allow", repr(path))
 

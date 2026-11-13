@@ -1,0 +1,37 @@
+{
+  "enforced": true,
+  "store": "evidence\\ledger-state",
+  "rounds": [
+    {
+      "evidence": "evidence/v33/round0/ROUND0-SUMMARY.json",
+      "evidence_sha256": "eeab4384200d09e8df697f4e3a017040ae61ee3eefe5d73e2556e909dc6a31de",
+      "kind": "initial",
+      "note": "round0: G1 FAIL (setJ J-186/J-187 attached git opts; review 66 attack allows: plan variants 40, quote/backslash 25, glob trailing slash 1). G2 PASS 48/48, G3 PASS 94 OK win+wsl",
+      "prev": "genesis",
+      "seq": 0,
+      "status": "FAIL",
+      "time": "2026-11-13T16:10:22.547106+09:00"
+    },
+    {
+      "evidence": "evidence/v33/round1/ROUND1-SUMMARY.json",
+      "evidence_sha256": "82b961659a39e7ce1fcc3febf21d32d99b8d928842e32562df20bafda730d117",
+      "kind": "revalidation",
+      "note": "round1: G1 FAIL by external review2 AT-214 (permission_mode empty string allowed). Own sets/replays 0 outside grant, setJ 223/223, round0 review 66 -> 0. G2 PASS 48/48, G3 PASS 100 OK win+wsl",
+      "prev": "46364c3cb7dc2918f36eafe9f38b3fef9e1544953a21ec0e89f042a086754782",
+      "seq": 1,
+      "status": "FAIL",
+      "time": "2026-11-13T16:29:57.873727+09:00"
+    },
+    {
+      "evidence": "evidence/v33/round2/ROUND2-SUMMARY.json",
+      "evidence_sha256": "38ce835353720a2556ce23d1d571a75ce4f6dae03350348e86f795ec80ed3852",
+      "kind": "revalidation",
+      "note": "round2 (final): G1 FAIL by external review3 A208 (permission_mode null), A284/A285 (missing/empty cwd). Own sets/replays 0 outside grant, review2 AT-214 fixed. G2 PASS 48/48, G3 PASS 103 OK win+wsl. score ref 97.51",
+      "prev": "d1f971899d9362d811f0dfd6badbe1a5748634d1c7c8a87f0b338e791d01e558",
+      "seq": 2,
+      "status": "FAIL",
+      "time": "2026-11-13T16:51:07.029642+09:00"
+    }
+  ],
+  "remaining_revalidations": 0
+}

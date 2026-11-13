@@ -1,0 +1,15 @@
+<PROJECT_ROOT>\harness-100-v3.3-cc\evidence\v33\replay\r4\runI.py:12: SyntaxWarning: invalid escape sequence '\s'
+  S=W+"\state_setI2\\"+it["id"]; shutil.rmtree(S,ignore_errors=True); os.makedirs(S)
+symlink unavailable [WinError 1314] 클라이언트가 필요한 권한을 가지고 있지 않습니다: '<TMP>\\h100-v32-review2\\outside' -> '<TMP>\\h100-v32-review2\\proj/sl'
+probes 202 matched 192
+F10 deny defer {'file_path': '<TMP>\\h100-v32-review2 eview2\proj2 
+F17 not_allow allow {'file_path': 'src/a.py', 'content': 'x'} 2\proj2\back ", "permissionDecision": "allow", "permissionDecisionReason": "사용자 승인 범위와 일치: 수정 src/**"}}
+F18 not_allow allow {'command': 'pytest -q'} 2\proj2\back "permissionDecision": "allow", "permissionDecisionReason": "사용자 승인 범위와 일치: 실행 pytest -q"}}
+F19 not_allow allow {'file_path': 'src/a.py', 'content': 'x'} eview2\jproj ", "permissionDecision": "allow", "permissionDecisionReason": "사용자 승인 범위와 일치: 수정 src/**"}}
+F20 not_allow allow {'file_path': 'src/a.py', 'content': 'x'} REVIEW2\PROJ ", "permissionDecision": "allow", "permissionDecisionReason": "사용자 승인 범위와 일치: 수정 src/**"}}
+F21 not_allow allow {'command': 'pytest -q'} review2/proj "permissionDecision": "allow", "permissionDecisionReason": "사용자 승인 범위와 일치: 실행 pytest -q"}}
+F23 not_allow allow {'file_path': 'src/a.py', 'content': 'x'}  ", "permissionDecision": "allow", "permissionDecisionReason": "사용자 승인 범위와 일치: 수정 src/**"}}
+F26 not_allow allow {'file_path': 'src/a.py', 'content': 'x'} eview2\proj. ", "permissionDecision": "allow", "permissionDecisionReason": "사용자 승인 범위와 일치: 수정 src/**"}}
+F27 not_allow allow {'command': 'pytest -q'} eview2\proj  "permissionDecision": "allow", "permissionDecisionReason": "사용자 승인 범위와 일치: 실행 pytest -q"}}
+S23 not_allow allow {'file_path': 'src/a.py', 'content': 'x'} review2\proj ", "permissionDecision": "allow", "permissionDecisionReason": "사용자 승인 범위와 일치: 수정 src/**"}}
+max secs 0.17

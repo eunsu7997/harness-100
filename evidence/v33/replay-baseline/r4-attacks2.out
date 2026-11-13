@@ -1,0 +1,44 @@
+symlink unavailable [WinError 1314] 클라이언트가 필요한 권한을 가지고 있지 않습니다: '<TMP>\\h100-v32-review2\\outside' -> '<TMP>\\h100-v32-review2\\proj/sl'
+172 Counter({'defer': 86, 'deny': 44, 'allow': 42}) rc2 2 slow [] max 1.644
+B001 toolkey NotebookEdit notebook_path .claude + file_path src | 승인: 수정 ** | 
+B002 toolkey NotebookEdit notebook_path outside + file_path src | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B003 toolkey NotebookEdit notebook_path .git | 승인: 수정 ** | 
+B004 toolkey Write file_path src + notebook_path .claude | 승인: 수정 ** | 
+B005 toolkey Edit file_path src + notebook_path outside | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B007 toolkey Write path .claude + file_path src | 승인: 수정 ** | 
+B008 toolkey Write target_file .claude + file_path src | 승인: 수정 ** | 
+B009 toolkey Write file_path src + filename .claude | 승인: 수정 ** | 
+B010 toolkey MultiEdit file_path src + notebook_path outside | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B011 toolkey NotebookEdit only file_path src (wrong key) | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B015 folder missing cwd key, proc cwd=proj2, pytest -q | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | <missing>
+B016 folder missing cwd key, proc cwd=proj2, Write src/a.py | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | <missing>
+B021 folder empty cwd, proc cwd proj2, relative | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B024 folder relative cwd '.' proc cwd=proj | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | .
+B025 folder relative cwd 'proj' proc cwd=W | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | proj
+B031 cmd Bash 'pytest -q""' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B035 cmd Bash 'pytest -\\q' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B064 cmd PS 'pytest -q\x1f' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B066 cmd PS 'pytest -q\x1c' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B078 cmd PS 'pytest -q\u2003' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B080 cmd PS '\u3000pytest -q' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B084 cmd PS 'pytest -q\x85' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B105 path junction path jn\sub\..\..\x.txt | 승인: 수정 ** | 
+B126 session copy A record over B record (session A itself) | 승인: 수정 ** | 
+B128 session garbage in B record (session A itself) | 승인: 수정 ** | 
+B132 session empty B record (session A itself) | 승인: 수정 ** | 
+B134 session delete B record (session A itself) | 승인: 수정 ** | 
+B138 session B record id replaced by A in B file (session A itself) | 승인: 수정 ** | 
+B140 session json null in B (session A itself) | 승인: 수정 ** | 
+B142 session json list in B (session A itself) | 승인: 수정 ** | 
+B148 slow Write huge path with unicode | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B149 mode plan Write inside grant | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B150 mode plan Bash exact grant | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B151 mode plan NotebookEdit inside grant | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B155 danger dangerouslyDisableSandbox with exact grant | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B156 danger git push exact, -c in grant | 승인: 실행 git -c x=y push origin main | 
+B157 danger git --git-dir exact grant | 승인: 실행 git --git-dir=x push origin main | 
+B158 danger git -C exact grant status | 승인: 실행 git -C . status | 
+B159 danger git -c on non-dangerous exact grant | 승인: 실행 git -c core.pager=x status | 
+B160 danger git --exec-path exact | 승인: 실행 git --exec-path=/tmp status | 
+B161 danger git alias via -c status | 승인: 실행 git -c alias.status=!calc status | 
+B162 danger python -m pip exact grant | 승인: 실행 python -m pip install x | 

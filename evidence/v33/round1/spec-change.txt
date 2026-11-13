@@ -1,0 +1,10 @@
+docs/GRANT-SPEC.md changed after round 0 (section "E. 재검증 1회차 명확화", all narrowing):
+before 2f1a7ab4eab451360f27f05cad3b10c89a477325538a84829dfbf8e6aaf10a05 (= evidence/v33/spec-scoring-sha256.txt, recorded before implementation)
+after  cf076bf9dad083294080cca32507ace7224eba48f746b44556f1583cfab9ff91
+Sections A-D are unchanged. evidence/v33/SCORING.md is unchanged (d64ece8d...84e1).
+Reasons (round 0 findings):
+ E1 attached git options (set J J-186/J-187, review K-DEC-13/14)
+ E2 write to dir itself is deny in all modes (review K-DEC-27..29); globs with empty segments invalid (review A897)
+ E3 non-exact permission_mode denies writes/exec (review A732..A802, 40 allows)
+ E4 run grants compared as raw text split on ASCII spaces (review A491..A552, A945..A991, 25 allows)
+ E5 first-line grant + revoke/task-end line is not a grant (review K-FIR-49, judged covered by reviewer; narrowed)

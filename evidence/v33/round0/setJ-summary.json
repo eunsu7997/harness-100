@@ -1,0 +1,28 @@
+{
+ "items": 220,
+ "tool_steps": 223,
+ "verified_steps": 223,
+ "matched": 218,
+ "G1_allow_with_non_allow_expect": 2,
+ "g1_ids": [
+  "J-186",
+  "J-187"
+ ],
+ "reconfirm": [
+  0,
+  35
+ ],
+ "unverified": {
+  "steps": 0,
+  "items": [],
+  "reasons": [],
+  "allow_among_unverified": 0
+ },
+ "by_category": {
+  "path_fields": "60/60",
+  "control_chars": "55/55",
+  "first_line_grant": "60/60",
+  "decided_rules": "43/48"
+ },
+ "results": "evidence\\v33\\round0\\setJ-results.jsonl"
+}

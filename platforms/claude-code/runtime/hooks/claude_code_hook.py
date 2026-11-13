@@ -287,13 +287,15 @@ def _inside(child, parent):
         return False
 
 
-def path_verdict(tool_input, cwd):
+def path_verdict(tool_input, cwd, field="file_path"):
     """v3.2 fix 1. Return (real_absolute_path, None) for a writable target, or (None, reason) to deny.
     The path is resolved to its real absolute location before the work-folder check; any form whose real location
     can differ from its text (~, env vars, drive-relative, UNC, 8.3 names, NTFS streams, links/junctions) is denied,
     and .claude/, .git/, harness runtime/state and the home folder are never writable."""
     from harness100.context import is_junction
-    target = tool_input.get("file_path") or tool_input.get("notebook_path")
+    target = tool_input.get(field)
+    if not isinstance(target, str) or not target:
+        return None, "쓰기 대상 경로를 판정할 수 없음: 쓰기 차단"
     if not isinstance(cwd, str) or not cwd:
         return None, "작업 폴더를 알 수 없어 쓰기 위치를 판정할 수 없음"
     for pattern, label in AMBIGUOUS_PATH:
@@ -343,9 +345,93 @@ def path_verdict(tool_input, cwd):
     return real, None
 
 
+KNOWN_TOOLS = READ_TOOLS | WRITE_TOOLS | NET_TOOLS | SAFE_META | SHELL_TOOLS | {"Agent", "Task"}
+PATH_FIELD_OF = {"Write": "file_path", "Edit": "file_path", "MultiEdit": "file_path", "NotebookEdit": "notebook_path"}
+PATH_KEYS = ("file_path", "notebook_path", "path", "paths", "filepath", "filename", "file", "target", "target_file",
+             "destination", "dest", "output", "new_path", "old_path")
+GIT_RETARGET = re.compile(r"^(?:-c.*|-C.*|(?:--git-dir|--work-tree|--exec-path|--config-env)(?:=.*)?)$", re.S)
+
+
+PATH_LIKE_NAMES = {re.sub(r"[^a-z0-9]", "", k) for k in PATH_KEYS} | {
+    "out", "dir", "directory", "folder", "cwd", "workdir", "workingdirectory", "workingdir", "src", "source", "to",
+    "from", "uri", "url", "notebook", "location", "root"}
+
+
+def path_like_keys(value, own, depth=0):
+    """v3.3 round 2 (fix 1): path-capable keys compared after case / punctuation folding (FILE_PATH, filePath,
+    'file_path ', working_directory ...), also inside nested objects such as MultiEdit `edits`. The tool's own exact
+    path key at the top level is the only one allowed."""
+    found = []
+    if depth > 4:
+        return ["(너무 깊은 입력)"]
+    if isinstance(value, dict):
+        for key, inner in value.items():
+            name = re.sub(r"[^a-z0-9]", "", key.casefold()) if isinstance(key, str) else ""
+            if not (depth == 0 and key == own) and name in PATH_LIKE_NAMES:
+                found.append(repr(key))
+            if isinstance(inner, (dict, list)):
+                found += path_like_keys(inner, own, depth + 1)
+    elif isinstance(value, list):
+        for inner in value:
+            found += path_like_keys(inner, own, depth + 1)
+    return found
+
+
+def has_control_chars(text):
+    """v3.3 fix 2: C0/C1 controls, DEL, CR/LF (anywhere, incl. trailing) and format characters (Cf)."""
+    import unicodedata
+    return bool(re.search(r"[\x00-\x1f\x7f-\x9f]", text)) or any(unicodedata.category(ch) == "Cf" for ch in text)
+
+
+def git_retargets(command):
+    """v3.3 decision 1: git with -c / -C / --git-dir / --work-tree / --exec-path is denied even if granted exactly.
+    Round 1: attached forms (-ccore.x=y, -C.) and any word after a `git` word anywhere in the command count."""
+    try:
+        unquoted = shlex.split(command)
+    except ValueError:
+        unquoted = []
+    for words in (unquoted, command.split(), [w.strip("'\"") for w in command.split()]):
+        for index, word in enumerate(words):
+            name = re.sub(r"\.exe$", "", os.path.basename(word.replace("\\", "/")), flags=re.I).lower()
+            if name == "git" and any(GIT_RETARGET.match(later) for later in words[index + 1:]):
+                return True
+    return False
+
+
+def tool_shape_denial(tool, tool_input):
+    """v3.3 fix 1 and 2: unknown tools, extra / unknown path fields and control characters."""
+    if tool not in KNOWN_TOOLS:
+        return "알 수 없는 도구(MCP 포함): 부작용을 판정할 수 없어 차단"
+    if tool in WRITE_TOOLS:
+        own = PATH_FIELD_OF[tool]
+        others = [k for k in PATH_KEYS if k != own and k in tool_input] + path_like_keys(tool_input, own)
+        if others:
+            return f"알 수 없는 경로 필드 구성({tool}에 {', '.join(others)}): 쓰기 대상이 둘 이상이 될 수 있어 차단"
+        if not isinstance(tool_input.get(own), str):
+            return f"{tool}의 경로 필드({own})가 없음: 차단"
+        if has_control_chars(tool_input[own]):
+            return "경로에 제어 문자·줄바꿈·서식 문자: 차단"
+    if tool in SHELL_TOOLS:
+        extra = path_like_keys(tool_input, None)
+        if extra:
+            return f"실행 도구에 경로·작업 폴더 필드({', '.join(extra)}): 실행 위치를 판정할 수 없어 차단"
+        if has_control_chars(tool_input.get("command", "")):
+            return "명령에 제어 문자·줄바꿈·서식 문자: 차단"
+        if git_retargets(tool_input.get("command", "")):
+            return "git -c / -C / --git-dir / --work-tree / --exec-path: 승인과 관계없이 차단"
+    return None
+
+
 def decide(state, tool, tool_input, mode="default", cwd=None):
     if invalid_input(tool, tool_input):
         return "deny", "판정할 수 없는 입력 형식(문자열이 아닌 도구 이름·경로·명령)"
+    reason = tool_shape_denial(tool, tool_input)
+    if reason:
+        return "deny", reason
+    if mode == "plan" and tool in WRITE_TOOLS | SHELL_TOOLS:
+        return "deny", "plan 모드: 승인과 관계없이 모든 쓰기·실행 차단"  # v3.3 decision 3
+    if mode not in KNOWN_MODES and tool in WRITE_TOOLS | SHELL_TOOLS:
+        return "deny", f"알 수 없는 권한 모드({mode!r}): 승인과 관계없이 모든 쓰기·실행 차단"  # v3.3 round 1
     acts = tool_actions(tool, tool_input)
     mutating = bool(acts - {"read"})
     if mutating and (not state.get("present") or state.get("corrupt") or state.get("foreign")):
@@ -354,9 +440,12 @@ def decide(state, tool, tool_input, mode="default", cwd=None):
         return "deny", "Harness-100 상태·hook 파일은 변경할 수 없음"
     target_real = None
     if tool in WRITE_TOOLS:
-        target_real, reason = path_verdict(tool_input, cwd)
+        target_real, reason = path_verdict(tool_input, cwd, PATH_FIELD_OF[tool])
         if target_real is None:
             return "deny", reason
+        clause = grants_mod.folder_itself(state.get("grants", []), target_real, cwd)
+        if clause:
+            return "deny", f"'{clause}'는 폴더 안의 내용만 덮음: 폴더 자체에 쓰기 차단"  # v3.3 decision 2
     if not mutating:
         # Read/Glob/Grep, read-only Bash, Skill, TodoWrite have no side effects: never denied. A read-only command
         # that the user granted exactly is allowed like any other granted call (no re-confirmation).
@@ -442,7 +531,8 @@ def on_tool(payload):
     tool = payload.get("tool_name", "")
     tool_input = payload.get("tool_input", {})
     mode = payload.get("permission_mode")
-    mode = "default" if mode is None or mode == "" else mode if isinstance(mode, str) else "__invalid__"
+    # v3.3 round 2: only an ABSENT value means default; "" is a present, non-exact value (GRANT-SPEC E3)
+    mode = "default" if mode is None else mode if isinstance(mode, str) else "__invalid__"
     cwd = payload.get("cwd") if isinstance(payload.get("cwd"), str) and payload.get("cwd") else state.get("cwd")
     if not valid_session:
         decision, reason = "deny", "판정할 수 없는 입력 형식(session_id)"

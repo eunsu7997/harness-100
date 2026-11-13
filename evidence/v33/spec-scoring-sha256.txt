@@ -1,0 +1,3 @@
+recorded_at=2026-11-13T15:34:17+09:00 (v3.3 spec decisions applied before implementation)
+2f1a7ab4eab451360f27f05cad3b10c89a477325538a84829dfbf8e6aaf10a05 *docs/GRANT-SPEC.md
+d64ece8d4a66f3a682c128b569cf47a71594536869b7d06eab21bd1eb40c84e1 *evidence/v33/SCORING.md

@@ -1,0 +1,22 @@
+symlink unavailable [WinError 1314] 클라이언트가 필요한 권한을 가지고 있지 않습니다: '<TMP>\\h100-v32-review2\\outside' -> '<TMP>\\h100-v32-review2\\proj/sl'
+172 Counter({'deny': 84, 'defer': 68, 'allow': 20}) rc2 2 slow [('B147', 2.115)] max 2.115
+B015 folder missing cwd key, proc cwd=proj2, pytest -q | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | <missing>
+B016 folder missing cwd key, proc cwd=proj2, Write src/a.py | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | <missing>
+B021 folder empty cwd, proc cwd proj2, relative | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B024 folder relative cwd '.' proc cwd=proj | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | .
+B025 folder relative cwd 'proj' proc cwd=W | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | proj
+B031 cmd Bash 'pytest -q""' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B035 cmd Bash 'pytest -\\q' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B078 cmd PS 'pytest -q\u2003' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B080 cmd PS '\u3000pytest -q' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B105 path junction path jn\sub\..\..\x.txt | 승인: 수정 ** | 
+B126 session copy A record over B record (session A itself) | 승인: 수정 ** | 
+B128 session garbage in B record (session A itself) | 승인: 수정 ** | 
+B132 session empty B record (session A itself) | 승인: 수정 ** | 
+B134 session delete B record (session A itself) | 승인: 수정 ** | 
+B138 session B record id replaced by A in B file (session A itself) | 승인: 수정 ** | 
+B140 session json null in B (session A itself) | 승인: 수정 ** | 
+B142 session json list in B (session A itself) | 승인: 수정 ** | 
+B148 slow Write huge path with unicode | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B155 danger dangerouslyDisableSandbox with exact grant | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+B162 danger python -m pip exact grant | 승인: 실행 python -m pip install x | 

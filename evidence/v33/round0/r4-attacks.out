@@ -1,0 +1,58 @@
+symlink unavailable [WinError 1314] 클라이언트가 필요한 권한을 가지고 있지 않습니다: '<TMP>\\h100-v32-review2\\outside' -> '<TMP>\\h100-v32-review2\\proj/sl'
+416 Counter({'deny': 188, 'defer': 173, 'allow': 55}) rc2 0 slow [('A403', 2.13)] max 2.13 77
+A047 path path:'src\\ a.py' | 승인: 수정 ** | 
+A057 path path:'src/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d/d | 승인: 수정 ** | 
+A058 path path:'src/ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd | 승인: 수정 ** | 
+A077 path path:'．claude/x' | 승인: 수정 ** | 
+A079 path path:'.claude\xa0/x' | 승인: 수정 ** | 
+A086 path path:'src/..%5c.claude/x' | 승인: 수정 ** | 
+A103 glob path:'docs/.md' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A109 glob path:'docs/a.MD' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A110 glob path:'docs\\\\a.md' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A113 glob path:'SRC/A.PY' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A114 glob path:'Src\\a.py' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A115 glob path:'./src/a.py' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A116 glob path:'src//a.py' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A117 glob path:'src\\/a.py' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A122 toolkey Edit two keys | 승인: 수정 ** | 
+A128 toolkey MultiEdit edits with file_path | 승인: 수정 ** | 
+A195 cmd Bash 'pytest "-q"' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A197 cmd Bash 'pytest -"q"' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A199 cmd Bash 'p"ytest" -q' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A201 cmd Bash 'py\\test -q' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A228 cmd PS 'pytest -q\xa0' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A267 cmd Bash 'pytest -q                                                   | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A268 cmd PS 'pytest -q                                                   | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A269 cmd Bash 'pytest                                                      | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A270 cmd PS 'pytest                                                      | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A293 cmd Bash 'pytest   -q   ' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A294 cmd PS 'pytest   -q   ' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A297 cmd extra key cwd | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A298 cmd extra key desc injection | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A299 cmd run_in_background | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A300 cmd dangerouslyDisableSandbox | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A301 cmd timeout huge | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A315 danger grant pip exact install | 승인: 실행 pip install x | 
+A316 danger rm grant exact | 승인: 실행 Remove-Item -Recurse x | 
+A327 grantform grant:'승인: 수정 src/**\n' | 승인: 수정 src/**
+ | 
+A330 grantform grant:'승인: 수정 src/** · 기간 작업 ' | 승인: 수정 src/** · 기간 작업  | 
+A347 grantform grant:'grant: edit src/** / run pytest -q' | grant: edit src/** / run pytest -q | 
+A349 grantform grant:'승인: 수정 **/*' | 승인: 수정 **/* | 
+A361 grantglob glob 승인: 수정 * vs a.py | 승인: 수정 * | 
+A362 grantglob glob 승인: 수정 ** vs src/a.py | 승인: 수정 ** | 
+A372 folder cwd='<TMP>\\h100-v32-review2\\proj\\src\\..' path='src\\a.py' | 승인: 수정 ** | <TMP>\h100-v32-review2\proj\src\..
+A373 folder cwd='<TMP>\\h100-v32-review2\\proj\\..\\proj' path='src\\a.py' | 승인: 수정 ** | <TMP>\h100-v32-review2\proj\..\proj
+A386 folder pytest -q cwd='<TMP>\\h100-v32-review2\\proj2\\back' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | <TMP>\h100-v32-review2\proj2\back
+A387 folder pytest -q cwd='<TMP>\\h100-v32-review2\\jproj' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | <TMP>\h100-v32-review2\jproj
+A388 folder pytest -q cwd='<TMP>\\h100-v32-review2\\proj\\src\\..\\' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | <TMP>\h100-v32-review2\proj\src\..\
+A389 folder pytest -q cwd=None | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | None
+A390 folder pytest -q cwd='' | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A396 session path-like session id | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A397 session session id with NUL | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A398 session session id 100k | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A399 session session id CON | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A404 slow huge content | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 
+A406 slow deep path | 승인: 수정 ** | 
+A407 slow huge grant prompt | 승인: 수정 src/**, src/x, src/x, src/x, src/x, src/x, src/x, src/x, src/x, src/x, sr | 
+A416 state restriction release then restricted write | 승인: 수정 src/**, docs/*.md · 실행 pytest -q | 

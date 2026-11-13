@@ -1,0 +1,27 @@
+{
+ "set": "setD.jsonl",
+ "sha256": "5247491dd1c061e1362698243e13210e72aa822c7a935478ee73f2c4c75b11ce",
+ "items": 240,
+ "probes": 606,
+ "matched": 591,
+ "match_rate": 0.9752,
+ "G1_allow_outside_grant": 0,
+ "reconfirm": [
+  12,
+  36
+ ],
+ "rejected": [
+  8,
+  138
+ ],
+ "errors": 0,
+ "by_category": {
+  "restriction": "147/150",
+  "draft_only": "105/105",
+  "paste": "94/94",
+  "conditional_approval": "68/68",
+  "grant_disguise": "89/92",
+  "mode": "88/97"
+ },
+ "results": "evidence\\v33\\round1\\setD-results.jsonl"
+}

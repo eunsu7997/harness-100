@@ -1,0 +1,37 @@
+{
+ "items": 220,
+ "tool_steps": 230,
+ "verified_steps": 227,
+ "matched": 225,
+ "G1_allow_with_non_allow_expect": 4,
+ "g1_ids": [
+  "G-107",
+  "G-121",
+  "G-122",
+  "G-143"
+ ],
+ "reconfirm": [
+  1,
+  41
+ ],
+ "unverified": {
+  "steps": 3,
+  "items": [
+   "G-050",
+   "G-052",
+   "G-053"
+  ],
+  "reasons": [
+   "setup symlink failed: OSError"
+  ],
+  "allow_among_unverified": 3
+ },
+ "by_category": {
+  "protected_paths": "57/57",
+  "exact_command": "58/59",
+  "folder_move": "39/40",
+  "session_ids": "36/36",
+  "grant_disguise": "35/35"
+ },
+ "results": "evidence\\v33\\round1\\setG-results.jsonl"
+}

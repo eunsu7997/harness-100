@@ -1,0 +1,14 @@
+{
+ "cases": "evidence/v33/review2/setL.jsonl",
+ "tool_steps": 202,
+ "allows": 40,
+ "expect_steps": 202,
+ "matched": 199,
+ "allow_against_expect": [
+  "L-CON-032",
+  "L-FIR-004",
+  "L-FIR-040"
+ ],
+ "exit2": 0,
+ "slowest_s": 0.211
+}

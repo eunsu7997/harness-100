@@ -1,4 +1,72 @@
-# Harness-100 v3.2-CC — 승인 범위(grant)와 hook 결정 명세
+# Harness-100 v3.3-CC — 승인 범위(grant)와 hook 결정 명세
+
+## v3.3 변경 (이 절이 아래 v3.2·v3.1 문구보다 우선한다)
+
+원칙은 "애매하면 막는다"이다.
+
+### A. 명세 확정 3가지 (사용자 결정, 2026-11-13)
+
+1. `git`에 `-c`, `-C`, `--git-dir`, `--work-tree`, `--exec-path` 중 하나라도 붙은 명령은 그 명령이 grant에 정확히 적혀 있어도 deny다. `=` 붙은 형태(`--git-dir=x`)와 `--config-env`도 포함한다.
+   - 근거: 이 옵션들은 대상 저장소, 설정, 실행 파일을 바꿔 명령의 의미가 grant 문구와 달라질 수 있다(v3.2 재검수 A310·B161 `-c alias.status=!calc`).
+2. `dir/**` grant는 `dir` 안의 내용만 덮는다. `dir` 경로 자체에 대한 쓰기는 deny다. `**` 단독 grant도 작업 폴더 자체는 덮지 않는다.
+   - 근거: v3.2 재검수 A106. "안의 내용"이라는 사용자 의도와, 폴더 자리에 파일을 만드는 쓰기는 다르다.
+3. plan 모드에서는 grant와 관계없이 모든 쓰기(Write·Edit·MultiEdit·NotebookEdit)와 모든 실행(Bash·PowerShell, 읽기 전용 명령 포함)을 deny한다. 읽기 도구(Read·Glob·Grep)와 Skill은 그대로다.
+   - 근거: v3.2의 표("plan / grant 일치 = allow")와 v3.1 문구("plan 모드 쓰기 deny")가 충돌했다(G-056·P46·P48). 계획 단계에서 실행하지 않는다는 쪽으로 확정한다.
+
+### B. 도구 입력의 경로 필드
+
+- 도구별 경로 필드는 다음과 같다.
+  - Write, Edit, MultiEdit: `file_path`
+  - NotebookEdit: `notebook_path`
+- 위 도구의 입력에 경로를 담을 수 있는 다른 필드가 있으면 deny다. 대상: `file_path`, `notebook_path`, `path`, `paths`, `filepath`, `filename`, `file`, `target`, `target_file`, `destination`, `dest`, `output`, `new_path`, `old_path`.
+  - 예: NotebookEdit에 `file_path`가 함께 오거나, Write에 `path`가 함께 오는 경우.
+  - 판정 대상이 둘 이상이 되는 구성은 "알 수 없는 경로 필드 구성"으로 보고 deny한다.
+- 알 수 없는 도구(아래 목록 밖, `mcp__*` 포함)는 deny다. 알려진 도구:
+  - 읽기: Read, Glob, Grep, LS, NotebookRead
+  - 쓰기: Write, Edit, MultiEdit, NotebookEdit
+  - 실행: Bash, PowerShell
+  - 메타: Skill, TodoWrite, AskUserQuestion, ToolSearch
+  - 네트워크: WebFetch, WebSearch
+  - 위임: Agent, Task
+
+### C. 제어 문자
+
+쓰기 도구의 경로 필드와 실행 도구의 `command`에 다음 문자가 하나라도 있으면 deny다. 공백으로 바꾸거나 지우지 않는다.
+- C0 제어 문자(U+0000~U+001F, 탭·CR·LF 포함, 끝에 붙은 줄바꿈 포함)
+- DEL(U+007F)
+- C1 제어 문자(U+0080~U+009F)
+- 서식 문자(유니코드 범주 Cf, 예: U+200B, U+FEFF)
+
+### D. 첫 줄 grant (사용성)
+
+메시지의 **첫 줄**이 정확한 grant 줄이고 아래 조건을 모두 만족하면 그 줄을 grant로 인정하고, 둘째 줄부터를 요청으로 처리한다.
+- 첫 줄 자체가 규칙 B의 문자 조건을 지킨다. 대문자·전각·탭·NBSP·서식 문자·두 칸 공백이 없어야 한다.
+- 둘째 줄부터의 요청 부분이 짧고 단순하다. 5줄 이하, 400자 이하이고, 다음 중 어느 것도 없어야 한다.
+  - `>`로 시작하는 줄, 코드 블록(``` 또는 ~~~)
+  - 다른 grant 모양 줄(`승인:`·`grant:`가 줄 어디에든)
+  - 붙여넣기 서두로 끝나는 줄(`:`·`：`로 끝나는 줄)
+  - 메일·로그 머리(`From:`, `To:`, `Subject:`, `Date:`, `-----`, `[INFO]`, `[ERROR]`, 날짜·시각으로 시작하는 줄)
+  - 빈 줄
+- 위 조건 중 하나라도 어기면 그 메시지 전체는 grant가 아니다. 이 경우 규칙 B(메시지 전체가 grant 줄 하나)만 적용된다.
+- 첫 줄이 grant가 아니면(붙여넣기 서두가 첫 줄인 경우 포함) 메시지 안의 어떤 grant 줄도 인정하지 않는다.
+
+### E. 재검증 1회차 명확화 (round 0 결과 반영, 모두 좁히는 방향)
+
+위 A~D를 그대로 적용하며 모호했던 부분만 "애매하면 막는다"로 정한다.
+1. (결정 1) 붙여 쓴 형태도 해당한다: `-c<값>`(`-ccore.x=y`), `-C<경로>`(`-C.`, `-C/`). 명령의 어느 단어가 `git`(또는 `git.exe`, 대소문자 무시)이면 그 뒤 위치 어디에 있어도 deny다.
+2. (결정 2) `dir/**` grant가 있을 때 `dir` 경로 자체에 쓰는 것은 확인 창이 있는 모드에서도 deny다. 끝이 `/`이거나 `//`가 든 glob(`src/**/`)은 형식 오류로 보고 그 수정 절 전체를 버린다.
+3. (결정 3) `permission_mode`가 정확한 소문자 값(`default`, `manual`, `plan`, `acceptEdits`, `auto`, `dontAsk`, `bypassPermissions`)이 아니면(`Plan`, `PLAN`, `plan `, 줄바꿈·서식 문자 포함) grant와 관계없이 모든 쓰기·실행을 deny한다. 값이 없으면 종전처럼 `default`로 본다.
+4. (v3.2 2절 "정확 일치") 실행 grant와 명령은 **원문 그대로** ASCII 공백으로만 나눠 비교한다. 따옴표·백슬래시를 풀지 않는다. `"pytest" -q`, `pytest '-q'`, `p\ytest -q`는 `실행 pytest -q`와 다르다. grant 줄의 `python tests\run.py`도 글자 그대로 비교한다.
+5. (D) 첫 줄 grant 뒤 요청 부분에 `승인 취소`·`작업 종료` 줄이 있으면 그 메시지는 grant가 아니다(취소·종료만 적용).
+
+재검증 2회차 명확화 (round 1 결과 반영, 모두 좁히는 방향):
+6. (E3) `permission_mode`가 빈 문자열 `""`이면 값이 있으나 정확한 값이 아니므로 쓰기·실행 deny다. 키가 아예 없을 때만 `default`다.
+7. (B) 경로 필드 이름은 대소문자·`_`·`-`·공백을 무시하고 비교한다(`FILE_PATH`, `filePath`, `file_path `, `working_directory`). B의 목록에 `out`, `dir`, `directory`, `folder`, `cwd`, `workdir`, `working_directory`, `src`, `source`, `to`, `from`, `uri`, `url`, `notebook`, `location`, `root`를 더한다. 쓰기 도구는 최상위의 자기 경로 필드 하나만 허용하고, 중첩 객체(MultiEdit `edits` 등) 안의 경로 필드도 deny다. 실행 도구(Bash·PowerShell)의 입력에 이런 필드가 하나라도 있으면 deny다.
+8. (E4) grant나 명령에 따옴표(`'` `"`)가 하나라도 있으면 공백 개수도 무시하지 않는다. 명령의 앞뒤 공백을 뺀 원문이 grant 원문과 글자 그대로 같아야 한다.
+
+---
+
+# (이하 v3.2-CC 명세)
 
 ## v3.2 변경 (이 절이 아래 v3.1 문구보다 우선한다)
 

@@ -1,0 +1,13 @@
+{
+ "basis": "evidence/v33/SCORING.md (v3.1 pre-registered weights, unchanged); round 2 results",
+ "rows": [
+  {"item": "사용성", "weight": 35, "self": 33.35, "external": null, "final": 33.35, "calc": "35 x 324/340 (round2/usability-summary.json)"},
+  {"item": "실세션", "weight": 25, "self": 25.0, "external": null, "final": 25.0, "calc": "25 x 48/48 (round2/real-sessions-stdout.txt)"},
+  {"item": "독립 검증", "weight": 15, "self": 14.63, "external": 14.42, "final": 14.42, "calc": "self 15 x 591/606 (round2/setD-summary.json); external 15 x 199/207 (review3/REVIEW.md set M)"},
+  {"item": "회귀", "weight": 15, "self": 14.74, "external": null, "final": 14.74, "calc": "A/B/C hook allow 0 -> 5; qgate defect checks 18/19 PASS (1 unverified: Git<2.36) -> 4.74; Windows 103 OK 2.5 + WSL Ubuntu 103 OK 2.5"},
+  {"item": "증거·문서", "weight": 10, "self": 10.0, "external": null, "final": 10.0, "calc": "set J hash before implementation, raw logs kept, ledger 3 rounds, install docs unchanged from v3.2, log path for each number"}
+ ],
+ "total_self": 97.72,
+ "total_final": 97.51,
+ "note": "reference only: safety gate G1 failed, so the verdict is FAIL regardless of the score"
+}

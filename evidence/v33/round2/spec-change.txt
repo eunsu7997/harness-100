@@ -1,0 +1,5 @@
+docs/GRANT-SPEC.md changed after round 1 (section E items 6-8, narrowing only)
+before cf076bf9dad083294080cca32507ace7224eba48f746b44556f1583cfab9ff91
+after  52f81ba9ac315d8edb7be339180f063afc8c9f5c566053784b6226b26693147e
+Reasons: E6 review2 AT-214 (empty permission_mode); E7 review2 residual AT-107..147, AT-624..638 (path-like keys, fix 1); E8 review2 residual AT-431 (spaces inside quotes)
+SCORING.md unchanged.

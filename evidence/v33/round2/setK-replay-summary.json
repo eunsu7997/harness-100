@@ -1,0 +1,10 @@
+{
+ "cases": "evidence/v33/review/setK.jsonl",
+ "tool_steps": 202,
+ "allows": 31,
+ "expect_steps": 202,
+ "matched": 198,
+ "allow_against_expect": [],
+ "exit2": 0,
+ "slowest_s": 0.264
+}

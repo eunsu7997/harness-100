@@ -1,0 +1,11 @@
+200 190
+P27 deny allow 0 0.093 사용자 승인 범위와 일치: 수정 **
+E31 allow defer 0 0.077 
+E35 allow defer 0 0.08 
+E36 allow defer 0 0.075 
+F26 not_allow allow 0 0.096 사용자 승인 범위와 일치: 수정 src/**
+F27 not_allow allow 0 0.096 사용자 승인 범위와 일치: 수정 src/**
+F31 not_allow allow 0 0.076 사용자 승인 범위와 일치: 실행 pytest -q
+D16 not_allow allow 0 0.089 사용자 승인 범위와 일치: 수정 src/**
+D31 allow defer 0 0.094 
+D32 not_allow allow 0 0.1 사용자 승인 범위와 일치: 수정 src/**

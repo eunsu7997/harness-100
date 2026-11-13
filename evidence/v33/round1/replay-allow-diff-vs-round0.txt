@@ -1,0 +1,24 @@
+== r1-setE-results.jsonl: rows old 150 new 150; allow old 2 new 2
+  allow->not allow: 0 
+== r1-attacks-results.jsonl: rows old 282 new 282; allow old 6 new 5
+  allow->not allow: 1 ATK-249
+== attacks-results.jsonl: rows old 271 new 271; allow old 19 new 16
+  allow->not allow: 3 A007 A008 A009
+== setF-results.jsonl: rows old 173 new 173; allow old 27 new 27
+  allow->not allow: 0 
+== setH-results.jsonl: rows old 405 new 405; allow old 38 new 38
+  allow->not allow: 0 
+== attacks-results-r3.jsonl: rows old 705 new 705; allow old 39 new 25
+  allow->not allow: 14 A143 A151 A152 A155 A299 A300 A301 A302 A303 A306 A311 A312 A313 A314
+== usability-results.jsonl: rows old 340 new 340; allow old 51 new 51
+  allow->not allow: 0 
+== setD-results.jsonl: rows old 606 new 606; allow old 24 new 24
+  allow->not allow: 0 
+== setG-results.jsonl: rows old 230 new 230; allow old 48 new 47
+  allow->not allow: 1 G-106
+== setJ-results.jsonl: rows old 223 new 223; allow old 37 new 35
+  allow->not allow: 2 J-186 J-187
+== r4/setI-results.jsonl: rows old 202 new 202; allow old 45 new 43
+  allow->not allow: 2 E37 E38
+== r4/attacks-results.jsonl: rows old 588 new 588; allow old 75 new 66
+  allow->not allow: 9 A195 A197 A199 A201 A228 B031 B035 B078 B080
