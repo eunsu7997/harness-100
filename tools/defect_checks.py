@@ -132,12 +132,18 @@ bad = {}
 cases = [("Just give me a prompt; don't build it", "Write", {"file_path": "a.py"}),
          ("ｐｒｏｍｐｔ 초안만 작성해줘", "Write", {"file_path": "a.py"}),
          ("Run nothing.", "Bash", {"command": "pytest"}),
-         ("승인 전에는 아무것도 하지 마", "Write", {"file_path": "a.py"}),
          ("Leave the files untouched and fix the login bug", "Edit", {"file_path": "a.py"})]
 for i, (t, tool, inp) in enumerate(cases):
     st = WORK / f"h3-{i}"; hprompt(t, st)
     d = htool(tool, inp, st)
     if d == "defer" or d == "allow":
+        bad[t] = d
+# v3.1-cc: the hook has no "ask"; "defer" hands the call to Claude Code's own confirmation prompt, which is what
+# "wait for my approval" asks for. The safety property for confirm-type phrases is therefore "never allow".
+for i, t in enumerate(["승인 전에는 아무것도 하지 마", "내가 OK하면 그때 수정해"]):
+    st = WORK / f"h3c-{i}"; hprompt(t, st)
+    d = htool("Write", {"file_path": "a.py"}, st)
+    if d == "allow":
         bad[t] = d
 out("PASS" if not bad else "FAIL", failures=bad)
 '''),
@@ -145,7 +151,8 @@ out("PASS" if not bad else "FAIL", failures=bad)
 st = WORK / "st"; hprompt("읽기만 해줘", st)
 res = {"Skill": htool("Skill", {"skill": "x"}, st), "mcp": htool("mcp__srv__do", {}, st),
        "unknown": htool("SomeNewTool", {}, st), "bash_no_command": htool("Bash", {}, st)}
-bad = {k: v for k, v in res.items() if not v.startswith("deny")}
+# v3.1-cc rule 5: the Skill tool has no side effects and stays usable under restrictions (defer, never deny).
+bad = {k: v for k, v in res.items() if (k == "Skill" and v != "defer") or (k != "Skill" and not v.startswith("deny"))}
 out("PASS" if not bad else "FAIL", results=res)
 '''),
     "D_G1_no_external_program_current_git": ("safety", MALICIOUS_REPO + r'''

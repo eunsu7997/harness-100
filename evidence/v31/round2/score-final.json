@@ -1,0 +1,47 @@
+{
+ "rows": [
+  {
+   "item": "사용성",
+   "weight": 35,
+   "self": 30.99,
+   "external": null,
+   "final": 30.99,
+   "basis": "usability 301/340"
+  },
+  {
+   "item": "실세션",
+   "weight": 25,
+   "self": 25.0,
+   "external": null,
+   "final": 25.0,
+   "basis": "real sessions 28/28 scored"
+  },
+  {
+   "item": "독립 검증",
+   "weight": 15,
+   "self": 14.9,
+   "external": 14.91,
+   "final": 14.9,
+   "basis": "self: set D 602/606 (contaminated); external: set F 172/173"
+  },
+  {
+   "item": "회귀",
+   "weight": 15,
+   "self": 14.74,
+   "external": null,
+   "final": 14.74,
+   "basis": "A/B/C hook allow 0 (5) + qgate defects 18/19 (4.74) + Windows 70 OK (2.5) + WSL Linux 70 OK (2.5)"
+  },
+  {
+   "item": "증거·문서",
+   "weight": 10,
+   "self": 10.0,
+   "external": null,
+   "final": 10.0,
+   "basis": "5 of 5 items"
+  }
+ ],
+ "total_self": 95.63,
+ "total_final": 95.63,
+ "note": "gate failed, so the score is not used for the verdict"
+}

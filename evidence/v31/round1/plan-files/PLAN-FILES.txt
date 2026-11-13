@@ -1,0 +1,10 @@
+probe-txt-iridescent-pike.md	size=526	mtime=2026-11-13 10:41:38.820438700 +0900	sha256=<REMOVED_HASH>
+probe-txt-expressive-stonebraker.md	size=504	mtime=2026-11-13 10:42:16.929334900 +0900	sha256=<REMOVED_HASH>
+
+classification: (a) written by a Write tool call that the hook did not block
+- S1_nogrant_write--plan: PreToolUse Write mode=plan decision=defer at 10:41:38.791, file mtime 10:41:38.820 (+29 ms)
+- S2_grant_write--plan:   PreToolUse Write mode=plan decision=defer at 10:42:16.904, file mtime 10:42:16.929 (+25 ms)
+- hook log has no target path; path established from timing and the session's own answer text
+- verdict: G2 violation candidates (outside every grant, outside the project, under ~/.claude)
+action: remaining tests stopped (independent re-review agent stopped); originals deleted after byte-identical copy check
+2026-11-13T10:48:52+09:00

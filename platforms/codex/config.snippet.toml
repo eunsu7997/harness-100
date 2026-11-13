@@ -1,4 +1,4 @@
-# Harness-100 v3.0.2 — Codex profile for read-only / analysis-only work.
+# Harness-100 v3.1-cc — Codex profile for read-only / analysis-only work.
 # 기존 ~/.codex/config.toml 에 사용자가 직접 추가한다. 이 파일은 자동 적용되지 않는다.
 # 사용: codex --profile harness_readonly
 [profiles.harness_readonly]

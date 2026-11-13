@@ -1,0 +1,346 @@
+{
+ "source": "harness-100-v3.1-cc",
+ "files": {
+  "evidence/baseline-before-66.json": {
+   "project_root": 10,
+   "codex_workdir": 32,
+   "home_path": 33,
+   "user_config_hash": 17
+  },
+  "evidence/baseline-v3.0.1-tree.json": {
+   "user_config_hash": 10
+  },
+  "evidence/independent/c1.log": {
+   "scratch_path": 352,
+   "project_root": 69,
+   "home_path": 223
+  },
+  "evidence/independent/c1_results.json": {
+   "temp_path": 1
+  },
+  "evidence/independent/c1_stdout.txt": {
+   "temp_path": 1
+  },
+  "evidence/independent/c2_cli.log": {
+   "project_root": 5,
+   "home_path": 5
+  },
+  "evidence/independent/c2b_hook.log": {
+   "scratch_path": 368,
+   "project_root": 276,
+   "home_path": 276
+  },
+  "evidence/independent/c2c_hook.log": {
+   "scratch_path": 140,
+   "project_root": 105,
+   "home_path": 105
+  },
+  "evidence/independent/c3_api.log": {
+   "scratch_path": 7
+  },
+  "evidence/independent/c3_cli.log": {
+   "project_root": 4,
+   "home_path": 4
+  },
+  "evidence/independent/c3_stdout.txt": {
+   "scratch_path": 7
+  },
+  "evidence/independent/c4.log": {
+   "scratch_path": 862,
+   "project_root": 312,
+   "home_path": 312
+  },
+  "evidence/independent/c4_results.json": {
+   "scratch_path": 10,
+   "temp_path": 17,
+   "claude_project_hash": 17
+  },
+  "evidence/independent/c4_stdout.txt": {
+   "scratch_path": 10
+  },
+  "evidence/independent/c5_cli.log": {
+   "scratch_path": 10,
+   "project_root": 5,
+   "home_path": 5
+  },
+  "evidence/independent/c5_hook.log": {
+   "scratch_path": 104,
+   "project_root": 88,
+   "home_path": 88
+  },
+  "evidence/independent/c5b_hook.log": {
+   "scratch_path": 358,
+   "project_root": 308,
+   "home_path": 308
+  },
+  "evidence/independent/c5c_hook.log": {
+   "scratch_path": 500,
+   "project_root": 426,
+   "home_path": 426
+  },
+  "evidence/independent/hook_A.log": {
+   "scratch_path": 660,
+   "project_root": 495,
+   "home_path": 495
+  },
+  "evidence/independent/hook_B.log": {
+   "scratch_path": 740,
+   "project_root": 555,
+   "home_path": 555
+  },
+  "evidence/independent/partA_hook.log": {
+   "scratch_path": 660,
+   "project_root": 495,
+   "home_path": 495
+  },
+  "evidence/independent/r1_c3_stdout.txt": {
+   "scratch_path": 7
+  },
+  "evidence/independent/r1_c4_stdout.txt": {
+   "scratch_path": 10
+  },
+  "evidence/package-manifest.json": {
+   "project_root": 1,
+   "user_config_hash": 8
+  },
+  "evidence/round0/qgate-raw-20261112-164039.jsonl": {
+   "temp_path": 49,
+   "project_root": 1,
+   "home_path": 25
+  },
+  "evidence/round0/qgate-report-20261112-164039.json": {
+   "project_root": 1
+  },
+  "evidence/round0/qgate-stdout.json": {
+   "project_root": 1
+  },
+  "evidence/round0/raw-platform.jsonl": {
+   "scratch_path": 4,
+   "home_path": 2,
+   "uuid": 4
+  },
+  "evidence/round0/score-self-round0.json": {
+   "project_root": 2
+  },
+  "evidence/round1/qgate-raw-20261112-171523.jsonl": {
+   "temp_path": 49,
+   "project_root": 1,
+   "home_path": 25
+  },
+  "evidence/round1/qgate-report-20261112-171523.json": {
+   "project_root": 1
+  },
+  "evidence/round1/qgate-stdout.json": {
+   "project_root": 1
+  },
+  "evidence/round1/raw-platform.jsonl": {
+   "scratch_path": 2,
+   "home_path": 1,
+   "uuid": 2
+  },
+  "evidence/round1/score-self-round1.json": {
+   "project_root": 2
+  },
+  "evidence/round2/baseline-before-p2.json": {
+   "project_root": 10,
+   "codex_workdir": 32,
+   "home_path": 33,
+   "user_config_hash": 17
+  },
+  "evidence/round2/hook_C.log": {
+   "scratch_path": 740,
+   "project_root": 555,
+   "home_path": 555
+  },
+  "evidence/round2/p2-real-session.jsonl": {
+   "uuid": 9
+  },
+  "evidence/round2/preservation-66.json": {
+   "home_path": 2
+  },
+  "evidence/round2/qgate-raw-20261113-092428.jsonl": {
+   "temp_path": 49,
+   "project_root": 1,
+   "home_path": 25
+  },
+  "evidence/round2/qgate-relpath-attempt/qgate-raw-20261113-092352.jsonl": {
+   "temp_path": 49,
+   "home_path": 25
+  },
+  "evidence/round2/qgate-relpath-attempt/qgate-report-20261113-092352.json": {
+   "project_root": 1
+  },
+  "evidence/round2/qgate-relpath-attempt/qgate-stdout.json": {
+   "project_root": 1
+  },
+  "evidence/round2/qgate-report-20261113-092428.json": {
+   "project_root": 1
+  },
+  "evidence/round2/qgate-stdout.json": {
+   "project_root": 1
+  },
+  "evidence/v31/review/attacks-results.jsonl": {
+   "scratch_path": 171
+  },
+  "evidence/v31/review/setE-results.jsonl": {
+   "scratch_path": 292
+  },
+  "evidence/v31/review2/attacks-results.jsonl": {
+   "scratch_path": 416,
+   "home_path": 1
+  },
+  "evidence/v31/round0/qgate-raw-20261113-102322.jsonl": {
+   "temp_path": 49,
+   "project_root": 1,
+   "home_path": 25
+  },
+  "evidence/v31/round0/qgate-report-20261113-102322.json": {
+   "project_root": 1
+  },
+  "evidence/v31/round0/qgate-stdout.json": {
+   "project_root": 1
+  },
+  "evidence/v31/round0/setD-results.jsonl": {
+   "home_path": 1
+  },
+  "evidence/v31/round1/pre-manual-fix/qgate-raw-20261113-103241.jsonl": {
+   "temp_path": 49,
+   "project_root": 1,
+   "home_path": 25
+  },
+  "evidence/v31/round1/pre-manual-fix/qgate-report-20261113-103241.json": {
+   "project_root": 1
+  },
+  "evidence/v31/round1/pre-manual-fix/qgate-stdout.json": {
+   "project_root": 1
+  },
+  "evidence/v31/round1/pre-manual-fix/setD-results.jsonl": {
+   "home_path": 1
+  },
+  "evidence/v31/round1/qgate-raw-20261113-103822.jsonl": {
+   "temp_path": 49,
+   "project_root": 1,
+   "home_path": 25
+  },
+  "evidence/v31/round1/qgate-report-20261113-103822.json": {
+   "project_root": 1
+  },
+  "evidence/v31/round1/qgate-stdout.json": {
+   "project_root": 1
+  },
+  "evidence/v31/round1/real-sessions.jsonl": {
+   "scratch_path": 5,
+   "home_path": 2
+  },
+  "evidence/v31/round1/setD-results.jsonl": {
+   "home_path": 1
+  },
+  "evidence/v31/round2/qgate-raw-20261113-110850.jsonl": {
+   "temp_path": 49,
+   "project_root": 1,
+   "home_path": 25
+  },
+  "evidence/v31/round2/qgate-report-20261113-110850.json": {
+   "project_root": 1
+  },
+  "evidence/v31/round2/qgate-stdout.json": {
+   "project_root": 1
+  },
+  "evidence/v31/round2/real-sessions.jsonl": {
+   "scratch_path": 52,
+   "home_path": 7
+  },
+  "evidence/v31/round2/setD-results.jsonl": {
+   "home_path": 1
+  },
+  "evidence/v31/setD/setD.jsonl": {
+   "home_path": 1
+  },
+  "tools/baseline.py": {
+   "uuid": 2
+  },
+  "tools/platform_checks.py": {
+   "uuid": 2
+  }
+ },
+ "removed_entries": {
+  "evidence/baseline-before-66.json": 23,
+  "evidence/round2/baseline-before-p2.json": 23
+ },
+ "rewritten_files": {
+  "docs/PACKAGE-README.md": "package README.md moved here, relative links adjusted",
+  "evidence/v31/round1/plan-files/PLAN-FILES.txt": "2 hashes of ~/.claude plan files removed",
+  "evidence/v31/round1/plan-files/probe-txt-expressive-stonebraker.md": "plan file content removed (fact note kept)",
+  "evidence/v31/round1/plan-files/probe-txt-iridescent-pike.md": "plan file content removed (fact note kept)",
+  "evidence/v31/round1/real-session-watch.json": "watch file lists removed (20 paths), counts kept",
+  "evidence/v31/round2/real-session-watch.json": "watch file lists removed (20 paths), counts kept"
+ },
+ "holdout_sets": {
+  "evidence/holdout3/holdoutC-set.jsonl": {
+   "unchanged": true,
+   "sha256": "bdaf0a75179a4b39e21a2764bbc47a0ade7f7a7e91949fceeeb301b6a95a48ae"
+  },
+  "evidence/v31/regression/holdoutA-set.jsonl": {
+   "unchanged": true,
+   "sha256": "e875f17ea60be0d1c1b2bbb806e32f3e413739d94111e96f39602a8191c8a475"
+  },
+  "evidence/v31/regression/holdoutB-set.jsonl": {
+   "unchanged": true,
+   "sha256": "c0a4716f08aefd6cb000dcb94f5a92bc07701fb2169ad975c0a2cd15a23c65d3"
+  },
+  "evidence/v31/regression/holdoutC-set.jsonl": {
+   "unchanged": true,
+   "sha256": "bdaf0a75179a4b39e21a2764bbc47a0ade7f7a7e91949fceeeb301b6a95a48ae"
+  },
+  "evidence/v31/review/attacks.jsonl": {
+   "unchanged": true,
+   "sha256": "d40fe16c3b59a41c46ef42aae7b22744827225784d171be520f7cdfed212f342"
+  },
+  "evidence/v31/review/setE.jsonl": {
+   "unchanged": true,
+   "sha256": "3fdd57b13e4aa513f9243066ed1d04105aa31a360fba6ecf50cca5cbce4f61a0"
+  },
+  "evidence/v31/review2/setF.jsonl": {
+   "unchanged": true,
+   "sha256": "85da735b10291b8cd264a9d7f7a801d7718ef785ae24c00be49ce1f429bb080a"
+  },
+  "evidence/v31/setD/setD.jsonl": {
+   "unchanged": false,
+   "replacements": {
+    "home_path": 1
+   }
+  },
+  "evidence/v31/usability/usability-set.jsonl": {
+   "unchanged": true,
+   "sha256": "1980e4756f43bac86c6e23904ad010b8475d73f09cbfbb2b3f70a2e060e73ee0"
+  }
+ },
+ "copied": 342,
+ "skipped": [
+  "dist/Harness-100-Universal-v3.0.2-Claude-Chat.zip",
+  "dist/Harness-100-Universal-v3.1-cc-Claude-Chat.zip",
+  "evidence/ledger-state/ledger/1b4afe79d7803ffbf3a33f2b29995c5be7b57bf6d976b383d1de7668540b4ecb.jsonl",
+  "evidence/ledger-state/ledger/f8c8a9177cba421a8fdf422bc0d9f9d69f419c837aa9764102246e31f72dde59.jsonl",
+  "evidence/ledger-state/registry.jsonl",
+  "harness100/__pycache__/__init__.cpython-313.pyc",
+  "harness100/__pycache__/grant.cpython-313.pyc"
+ ],
+ "config_hashes_removed": 25,
+ "totals": {
+  "project_root": 3746,
+  "codex_workdir": 64,
+  "home_path": 4138,
+  "user_config_hash": 52,
+  "scratch_path": 6487,
+  "temp_path": 411,
+  "claude_project_hash": 17,
+  "uuid": 19
+ },
+ "holdout_summary": {
+  "unchanged": 8,
+  "redacted": [
+   "evidence/v31/setD/setD.jsonl"
+  ]
+ },
+ "note": "redacted hold-out files no longer match the hashes recorded in the reports (those hashes are of the original files); pre-redaction hashes of redacted files are not published"
+}

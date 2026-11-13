@@ -178,6 +178,8 @@ def normalize(text):
     text = "".join(ch for ch in text if unicodedata.category(ch) != "Cf")
     text = text.replace("\r\n", "\n").replace("\r", "\n").casefold()
     text = re.sub(r"[ \t 　]+", " ", text)
+    # "read-only로", "fix해줘": split Latin/digit runs from glued Hangul so English word boundaries still work.
+    text = re.sub(r"(?<=[a-z0-9])(?=[가-힣])|(?<=[가-힣])(?=[a-z])", " ", text)
     return _collapse_spaced_hangul(text.strip())
 
 

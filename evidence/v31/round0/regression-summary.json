@@ -1,0 +1,29 @@
+{
+ "A": {
+  "lines": 221,
+  "hook_allow_violations": 0,
+  "must_not_allow_probes": 688,
+  "of_which_deny": 529,
+  "of_which_defer": 159,
+  "overblock_deny": "2/70",
+  "violations": []
+ },
+ "B": {
+  "lines": 252,
+  "hook_allow_violations": 0,
+  "must_not_allow_probes": 706,
+  "of_which_deny": 528,
+  "of_which_defer": 178,
+  "overblock_deny": "0/85",
+  "violations": []
+ },
+ "C": {
+  "lines": 252,
+  "hook_allow_violations": 0,
+  "must_not_allow_probes": 702,
+  "of_which_deny": 508,
+  "of_which_defer": 194,
+  "overblock_deny": "16/115",
+  "violations": []
+ }
+}

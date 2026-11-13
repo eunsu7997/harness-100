@@ -12,7 +12,7 @@ def emit(data):
 
 
 def main():
-    parser = argparse.ArgumentParser(prog="python -m harness100", description="Harness-100 v3.0.2")
+    parser = argparse.ArgumentParser(prog="python -m harness100", description="Harness-100 v3.1-cc")
     commands = parser.add_subparsers(dest="command", required=True)
     r = commands.add_parser("route", help="classify a request (no side effects except safe project reads)")
     r.add_argument("--request", required=True)

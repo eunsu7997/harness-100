@@ -11,6 +11,25 @@ from . import safe_git
 
 SKIP = {".git", "node_modules", ".venv", "venv", "__pycache__", "dist", "build"}
 DOCUMENTS = {"AGENTS.md", "CLAUDE.md", "SKILL.md", "README.md", "package.json", "pyproject.toml", "pytest.ini"}
+FILE_ATTRIBUTE_REPARSE_POINT = 0x400
+
+
+def is_junction(path):
+    """Path.is_junction() exists only on Python 3.12+. Fall back to the reparse-point attribute (Windows) so
+    Python 3.10/3.11 do not raise AttributeError; symlinks are handled separately by is_symlink()."""
+    path = Path(path)
+    method = getattr(path, "is_junction", None)
+    if method is not None:
+        return method()
+    if os.name != "nt":
+        return False
+    try:
+        attributes = getattr(os.lstat(path), "st_file_attributes", 0)
+    except OSError:
+        return False
+    return bool(attributes & FILE_ATTRIBUTE_REPARSE_POINT) and not path.is_symlink()
+
+
 RISK_TERMS = ("auth", "payment", "secret", "credential", "migration", "security", "permission")
 
 
@@ -38,7 +57,7 @@ def inspect_project(project):
     for folder, directories, filenames in os.walk(root, onerror=lambda error: errors.append(type(error).__name__)):
         directories[:] = sorted(name for name in directories if name not in SKIP
                                 and not Path(folder, name).is_symlink()
-                                and not Path(folder, name).is_junction())
+                                and not is_junction(Path(folder, name)))
         if len(Path(folder).relative_to(root).parts) >= 6:
             truncated = truncated or bool(directories)
             directories[:] = []

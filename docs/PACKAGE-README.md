@@ -8,7 +8,7 @@ v3.0.1에서 독립 검수로 확인된 잔여 결함(자연어 제한 누락, �
 | [Auto Router 명세](ROUTER-SPEC.md) | 입력·처리 순서·권한 계산·게이트 |
 | [강제 범위](SAFETY-ENFORCEMENT.md) | 플랫폼별로 실제 차단되는 것과 지침뿐인 것 |
 
-검증 결과는 [`evidence/VERIFICATION-REPORT.md`](../evidence/VERIFICATION-REPORT.md)에 있다. (공개본: 이 문서는 패키지 원래 README이며 저장소 루트에서 `docs/`로 옮겼다.)
+검증 결과는 `evidence/VERIFICATION-REPORT.md`에 있다.
 
 ## v3.0.1 대비 변경
 

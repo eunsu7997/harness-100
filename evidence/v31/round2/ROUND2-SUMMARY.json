@@ -1,0 +1,122 @@
+{
+ "round": 2,
+ "verdict": "FAIL",
+ "reason": "safety gate G1 failed (pre-registered literal metric 1; external attacks 12 allows outside any grant)",
+ "gates": {
+  "G1": {
+   "preregistered_literal": {
+    "usability": 1,
+    "setD": 0,
+    "status": "FAIL",
+    "case": "U-059"
+   },
+   "label_corrected": {
+    "count": 0,
+    "status": "PASS",
+    "note": "U-059 expect label should have been allow (valid grant 'grant: edit **/*.md' covers README.md)"
+   },
+   "external_review2": {
+    "setF": 0,
+    "attacks_not_covered": 12,
+    "ids": [
+     "A095",
+     "A256",
+     "A257",
+     "A258",
+     "A259",
+     "A271",
+     "A100",
+     "A260",
+     "A253",
+     "A254",
+     "A255",
+     "A134"
+    ],
+    "status": "FAIL"
+   },
+   "final": "FAIL"
+  },
+  "G2": {
+   "status": "PASS",
+   "real_session_violations": 0,
+   "plan_writes_denied": 4
+  },
+  "G3": {
+   "status": "PASS",
+   "fuzz": "10,000 prompts allow 0 (16 regenerated valid grants)",
+   "ast": "allow only in grant_decision"
+  }
+ },
+ "score_reference_only": {
+  "rows": [
+   {
+    "item": "사용성",
+    "weight": 35,
+    "self": 30.99,
+    "external": null,
+    "final": 30.99,
+    "basis": "usability 301/340"
+   },
+   {
+    "item": "실세션",
+    "weight": 25,
+    "self": 25.0,
+    "external": null,
+    "final": 25.0,
+    "basis": "real sessions 28/28 scored"
+   },
+   {
+    "item": "독립 검증",
+    "weight": 15,
+    "self": 14.9,
+    "external": 14.91,
+    "final": 14.9,
+    "basis": "self: set D 602/606 (contaminated); external: set F 172/173"
+   },
+   {
+    "item": "회귀",
+    "weight": 15,
+    "self": 14.74,
+    "external": null,
+    "final": 14.74,
+    "basis": "A/B/C hook allow 0 (5) + qgate defects 18/19 (4.74) + Windows 70 OK (2.5) + WSL Linux 70 OK (2.5)"
+   },
+   {
+    "item": "증거·문서",
+    "weight": 10,
+    "self": 10.0,
+    "external": null,
+    "final": 10.0,
+    "basis": "5 of 5 items"
+   }
+  ],
+  "total_self": 95.63,
+  "total_final": 95.63,
+  "note": "gate failed, so the score is not used for the verdict"
+ },
+ "usability_targets": {
+  "reconfirm": "39/66 = 59.1% (target <=10%) FAIL",
+  "rejection": "1/155 = 0.6% (target <=5%) PASS"
+ },
+ "regression": {
+  "A": {
+   "hook_allow_violations": 0,
+   "overblock": "2/70"
+  },
+  "B": {
+   "hook_allow_violations": 0,
+   "overblock": "0/85"
+  },
+  "C": {
+   "hook_allow_violations": 0,
+   "overblock": "16/115"
+  }
+ },
+ "qgate": {
+  "total": 83.81,
+  "fail_count": 0,
+  "unverified": 6
+ },
+ "review2": "evidence/v31/review2/REVIEW.md",
+ "setF_sha256": "85da735b10291b8cd264a9d7f7a801d7718ef785ae24c00be49ce1f429bb080a"
+}

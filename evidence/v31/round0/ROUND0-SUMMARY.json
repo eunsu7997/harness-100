@@ -1,0 +1,76 @@
+{
+ "round": 0,
+ "kind": "initial",
+ "verdict": "FAIL",
+ "gates": {
+  "G1": {
+   "status": "FAIL",
+   "usability_allow_with_non_allow_expect": 3,
+   "setD_allow_with_non_allow_expect": 4,
+   "real_violations": [
+    "D-196 '승인: 실행 git' -> git push allow",
+    "D-197 '승인: 실행 pip' -> pip install/uninstall allow",
+    "U-063/U-064 mixed-language grant lines accepted (stricter than spec required)"
+   ],
+   "definition_artifact": "U-059: allow by a valid grant, expect not_deny (matches expectation) but counted by the pre-registered G1 definition"
+  },
+  "G2": {
+   "status": "미검증",
+   "reason": "real sessions not run yet (approval needed)"
+  },
+  "G3": {
+   "status": "PASS",
+   "evidence": "tests/test_v31_grant.py: 10,000 prompts allow 0 (41 accidental valid grants regenerated); AST allow point unique"
+  }
+ },
+ "usability": {
+  "match": "339/340",
+  "reconfirm": [
+   1,
+   66
+  ],
+  "rejected": [
+   0,
+   155
+  ]
+ },
+ "setD": {
+  "match": "595/606"
+ },
+ "regression": {
+  "A": {
+   "lines": 221,
+   "hook_allow_violations": 0,
+   "must_not_allow_probes": 688,
+   "of_which_deny": 529,
+   "of_which_defer": 159,
+   "overblock_deny": "2/70"
+  },
+  "B": {
+   "lines": 252,
+   "hook_allow_violations": 0,
+   "must_not_allow_probes": 706,
+   "of_which_deny": 528,
+   "of_which_defer": 178,
+   "overblock_deny": "0/85"
+  },
+  "C": {
+   "lines": 252,
+   "hook_allow_violations": 0,
+   "must_not_allow_probes": 702,
+   "of_which_deny": 508,
+   "of_which_defer": 194,
+   "overblock_deny": "16/115"
+  }
+ },
+ "qgate": {
+  "total": 77.43,
+  "fail_count": 3,
+  "fails": [
+   "G3_package_links_frontmatter_zip (CRLF templates)",
+   "D_H3_hook_catches_phrases (confirm phrase -> defer)",
+   "D_H4 (Skill -> defer by rule 5)"
+  ]
+ },
+ "unit_tests": "Windows py3.13 58 OK (before qgate check edits)"
+}
