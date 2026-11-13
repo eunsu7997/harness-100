@@ -1,0 +1,186 @@
+{
+ "source": "harness-100-universal-v3.0.1",
+ "files": {
+  "evidence/baseline-before.json": {
+   "project_root": 10,
+   "codex_workdir": 32,
+   "home_path": 33,
+   "user_config_hash": 17
+  },
+  "evidence/dev/dev1-adversarial.jsonl": {
+   "scratch_path": 48,
+   "home_path": 24
+  },
+  "evidence/dev/dev3-unittest.log": {
+   "project_root": 1
+  },
+  "evidence/dev/qgate-dry/qgate-raw-20261112-152919.jsonl": {
+   "temp_path": 49,
+   "project_root": 1,
+   "home_path": 25
+  },
+  "evidence/dev/qgate-dry/qgate-report-20261112-152919.json": {
+   "project_root": 1
+  },
+  "evidence/final/preservation-compare.json": {
+   "home_path": 1
+  },
+  "evidence/final/qgate-raw-20261112-153018.jsonl": {
+   "temp_path": 49,
+   "project_root": 1,
+   "home_path": 25
+  },
+  "evidence/final/qgate-report-20261112-153018.json": {
+   "project_root": 1
+  },
+  "evidence/final/qgate-stdout.json": {
+   "project_root": 1
+  },
+  "evidence/final/raw-platform.jsonl": {
+   "scratch_path": 2,
+   "home_path": 1,
+   "uuid": 1
+  },
+  "evidence/final/score-final.json": {
+   "project_root": 2
+  },
+  "evidence/independent/c1.log": {
+   "scratch_path": 224,
+   "project_root": 45,
+   "home_path": 139
+  },
+  "evidence/independent/c1_results.json": {
+   "temp_path": 1
+  },
+  "evidence/independent/c1_stdout.txt": {
+   "temp_path": 1
+  },
+  "evidence/independent/c2_cli.log": {
+   "project_root": 5,
+   "home_path": 5
+  },
+  "evidence/independent/c3_api.log": {
+   "scratch_path": 7
+  },
+  "evidence/independent/c3_cli.log": {
+   "project_root": 2,
+   "home_path": 2
+  },
+  "evidence/independent/c3_stdout.txt": {
+   "scratch_path": 7
+  },
+  "evidence/independent/c4.log": {
+   "scratch_path": 952,
+   "project_root": 330,
+   "home_path": 330
+  },
+  "evidence/independent/c4_results.json": {
+   "scratch_path": 19,
+   "temp_path": 10,
+   "claude_project_hash": 10
+  },
+  "evidence/independent/c4_stdout.txt": {
+   "scratch_path": 19
+  },
+  "evidence/independent/c5_cli.log": {
+   "scratch_path": 10,
+   "project_root": 5,
+   "home_path": 5
+  },
+  "evidence/independent/c5_hook.log": {
+   "scratch_path": 104,
+   "project_root": 88,
+   "home_path": 88
+  },
+  "evidence/independent/c5b_hook.log": {
+   "scratch_path": 179,
+   "project_root": 154,
+   "home_path": 154
+  },
+  "evidence/independent/qgate-raw-20261112-153722.jsonl": {
+   "temp_path": 49,
+   "project_root": 1,
+   "home_path": 25
+  },
+  "evidence/independent/qgate-report-20261112-153722.json": {
+   "scratch_path": 1
+  },
+  "evidence/independent/qgate_run_stdout.txt": {
+   "scratch_path": 1
+  },
+  "evidence/package-manifest.json": {
+   "project_root": 1,
+   "user_config_hash": 8
+  },
+  "evidence/rescore-prior/raw-adversarial-run1-checker-bug.jsonl": {
+   "scratch_path": 48,
+   "home_path": 24
+  },
+  "evidence/rescore-prior/raw-adversarial-run2-pre-tightening.jsonl": {
+   "scratch_path": 48,
+   "home_path": 24
+  },
+  "evidence/rescore-prior/raw-adversarial.jsonl": {
+   "scratch_path": 48,
+   "home_path": 24
+  },
+  "evidence/rescore-prior/raw-platform-run1-probe-artifact.jsonl": {
+   "scratch_path": 1,
+   "home_path": 1
+  },
+  "evidence/rescore-prior/raw-platform.jsonl": {
+   "scratch_path": 1,
+   "home_path": 1
+  },
+  "evidence/rescore-prior/raw-regression-run1-checker-bug.jsonl": {
+   "scratch_path": 2,
+   "home_path": 8
+  },
+  "evidence/rescore-prior/raw-regression.jsonl": {
+   "scratch_path": 1,
+   "home_path": 2
+  },
+  "evidence/rescore-prior/score-prior.json": {
+   "project_root": 3
+  },
+  "evidence/rescore-prior/validation-round-0.json": {
+   "codex_workdir": 10,
+   "home_path": 85,
+   "uuid": 13,
+   "user_config_hash": 11
+  },
+  "evidence/rescore-prior/validation-round-1.json": {
+   "codex_workdir": 1,
+   "home_path": 18,
+   "uuid": 2,
+   "user_config_hash": 11
+  },
+  "tools/baseline.py": {
+   "uuid": 2
+  },
+  "tools/platform_checks.py": {
+   "uuid": 2
+  }
+ },
+ "removed_entries": {
+  "evidence/baseline-before.json": 23
+ },
+ "rewritten_files": {},
+ "copied": 166,
+ "skipped": [
+  "dist/Harness-100-Universal-v3.0.1-Claude-Chat.zip",
+  "evidence/ledger-state/ledger/3470847905b781d9e21f0f2bf0cbdd5ddcf968b53baffd00141c1f8b56912ab9.jsonl",
+  "evidence/ledger-state/registry.jsonl"
+ ],
+ "config_hashes_removed": 23,
+ "totals": {
+  "project_root": 652,
+  "codex_workdir": 43,
+  "home_path": 1044,
+  "user_config_hash": 47,
+  "scratch_path": 1722,
+  "temp_path": 159,
+  "uuid": 20,
+  "claude_project_hash": 10
+ }
+}

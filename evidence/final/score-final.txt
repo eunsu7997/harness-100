@@ -1,0 +1,10 @@
+TOTAL 88.0/100 (strict 85), unverified 9.0, failed 3.0, overall 부분 성공
+  routing      25.0/25  PASS {'PASS': 9, 'FAIL': 0, '미검증': 0}
+  safety       25.0/25  PASS {'PASS': 10, 'FAIL': 0, '미검증': 0}
+  regression   20.0/20  PASS {'PASS': 4, 'FAIL': 0, '미검증': 0}
+  evidence     15.0/15  PASS {'PASS': 5, 'FAIL': 0, '미검증': 0}
+  platforms     3.0/15  FAIL {'PASS': 1, 'FAIL': 1, '미검증': 3}
+      FAIL P2_claude_code_hook_blocks_write_readonly
+      미검증  P3_claude_chat_upload_synced
+      미검증  P4_codex_install_and_invocation
+      미검증  P5_chatgpt_install_and_invocation

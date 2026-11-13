@@ -1,0 +1,346 @@
+[
+ {
+  "variant": "B2 new CLI process 5th record",
+  "cmd": "ledger record --task-id TASK-A (again)",
+  "exit": 3,
+  "result": "{\"rec\": {\"recorded\": false, \"reason\": \"Task-wide revalidation limit reached (1 initial + 2 revalidations)\"}, \"status_enforced\": true, \"status_rounds\": 3, \"status_json\": \"{\\\"enforced\\\": true, \\\"store\\\": \\\"<TMP>\\\\\\\\claude\\\\\\\\<PROJECT_HASH>\\\\\\\\4d0861c2-acb7-4",
+  "verdict": "PASS",
+  "note": ""
+ },
+ {
+  "variant": "B1a ValidationLedger('TASK-A') default store (env)",
+  "cmd": "B1a ValidationLedger('TASK-A') default store (env)",
+  "exit": "api",
+  "result": "\"EXC LimitReached Task-wide revalidation limit reached (1 initial + 2 revalidations)\"",
+  "verdict": "PASS",
+  "note": "raised (refused)"
+ },
+ {
+  "variant": "B1b ValidationLedger('TASK-A', rounds=0)",
+  "cmd": "B1b ValidationLedger('TASK-A', rounds=0)",
+  "exit": "api",
+  "result": "\"EXC LimitReached Task-wide revalidation limit reached (1 initial + 2 revalidations)\"",
+  "verdict": "PASS",
+  "note": "raised (refused)"
+ },
+ {
+  "variant": "B1c ValidationLedger('TASK-A', rounds=[])",
+  "cmd": "B1c ValidationLedger('TASK-A', rounds=[])",
+  "exit": "api",
+  "result": "\"EXC LimitReached Task-wide revalidation limit reached (1 initial + 2 revalidations)\"",
+  "verdict": "PASS",
+  "note": "raised (refused)"
+ },
+ {
+  "variant": "B1d ValidationLedger('TASK-A', store=fresh empty dir)",
+  "cmd": "B1d ValidationLedger('TASK-A', store=fresh empty dir)",
+  "exit": "api",
+  "result": "\"EXC AttributeError 'str' object has no attribute 'rounds'\"",
+  "verdict": "PASS",
+  "note": "raised (refused)"
+ },
+ {
+  "variant": "B3 id variant: lowercase 'task-a'",
+  "cmd": "ledger record --task-id 'task-a'",
+  "exit": 3,
+  "result": "{\"rec\": {\"recorded\": false, \"reason\": \"Task-wide revalidation limit reached (1 initial + 2 revalidations)\"}, \"status_enforced\": true, \"status_rounds\": 3, \"status_json\": \"{\\\"enforced\\\": true, \\\"store\\\": \\\"<TMP>\\\\\\\\claude\\\\\\\\<PROJECT_HASH>\\\\\\\\4d0861c2-acb7-4",
+  "verdict": "PASS",
+  "note": ""
+ },
+ {
+  "variant": "B3 id variant: trailing space 'TASK-A '",
+  "cmd": "ledger record --task-id 'TASK-A '",
+  "exit": 3,
+  "result": "{\"rec\": {\"recorded\": false, \"reason\": \"Task-wide revalidation limit reached (1 initial + 2 revalidations)\"}, \"status_enforced\": true, \"status_rounds\": 3, \"status_json\": \"{\\\"enforced\\\": true, \\\"store\\\": \\\"<TMP>\\\\\\\\claude\\\\\\\\<PROJECT_HASH>\\\\\\\\4d0861c2-acb7-4",
+  "verdict": "PASS",
+  "note": ""
+ },
+ {
+  "variant": "B3 id variant: leading space ' TASK-A'",
+  "cmd": "ledger record --task-id ' TASK-A'",
+  "exit": 3,
+  "result": "{\"rec\": {\"recorded\": false, \"reason\": \"Task-wide revalidation limit reached (1 initial + 2 revalidations)\"}, \"status_enforced\": true, \"status_rounds\": 3, \"status_json\": \"{\\\"enforced\\\": true, \\\"store\\\": \\\"<TMP>\\\\\\\\claude\\\\\\\\<PROJECT_HASH>\\\\\\\\4d0861c2-acb7-4",
+  "verdict": "PASS",
+  "note": ""
+ },
+ {
+  "variant": "B3 id variant: fullwidth '\\uff34\\uff21\\uff33\\uff2b\\uff0d\\uff21'",
+  "cmd": "ledger record --task-id '\\uff34\\uff21\\uff33\\uff2b\\uff0d\\uff21'",
+  "exit": 3,
+  "result": "{\"rec\": {\"recorded\": false, \"reason\": \"Task-wide revalidation limit reached (1 initial + 2 revalidations)\"}, \"status_enforced\": true, \"status_rounds\": 3, \"status_json\": \"{\\\"enforced\\\": true, \\\"store\\\": \\\"<TMP>\\\\\\\\claude\\\\\\\\<PROJECT_HASH>\\\\\\\\4d0861c2-acb7-4",
+  "verdict": "PASS",
+  "note": ""
+ },
+ {
+  "variant": "B3 id variant: zero-width space 'TASK-A\\u200b'",
+  "cmd": "ledger record --task-id 'TASK-A\\u200b'",
+  "exit": 0,
+  "result": "{\"rec\": {\"seq\": 0, \"kind\": \"initial\", \"status\": \"FAIL\", \"evidence\": \"<SCRATCH>\\\\independent\\\\c4\\\\ev.txt\", \"evidence_sha256\": \"4df79066ec620b7e7ae4c68deecb2e18ea547bbde4ec8e4a8dc540a7e42f1d77\", \"no",
+  "verdict": "FAIL",
+  "note": ""
+ },
+ {
+  "variant": "B3 id variant: trailing dot 'TASK-A.'",
+  "cmd": "ledger record --task-id 'TASK-A.'",
+  "exit": 0,
+  "result": "{\"rec\": {\"seq\": 0, \"kind\": \"initial\", \"status\": \"FAIL\", \"evidence\": \"<SCRATCH>\\\\independent\\\\c4\\\\ev.txt\", \"evidence_sha256\": \"4df79066ec620b7e7ae4c68deecb2e18ea547bbde4ec8e4a8dc540a7e42f1d77\", \"no",
+  "verdict": "FAIL",
+  "note": ""
+ },
+ {
+  "variant": "B3 id variant: dot-slash './TASK-A'",
+  "cmd": "ledger record --task-id './TASK-A'",
+  "exit": 0,
+  "result": "{\"rec\": {\"seq\": 0, \"kind\": \"initial\", \"status\": \"FAIL\", \"evidence\": \"<SCRATCH>\\\\independent\\\\c4\\\\ev.txt\", \"evidence_sha256\": \"4df79066ec620b7e7ae4c68deecb2e18ea547bbde4ec8e4a8dc540a7e42f1d77\", \"no",
+  "verdict": "FAIL",
+  "note": ""
+ },
+ {
+  "variant": "B3 id variant: trailing slash 'TASK-A/'",
+  "cmd": "ledger record --task-id 'TASK-A/'",
+  "exit": 0,
+  "result": "{\"rec\": {\"seq\": 0, \"kind\": \"initial\", \"status\": \"FAIL\", \"evidence\": \"<SCRATCH>\\\\independent\\\\c4\\\\ev.txt\", \"evidence_sha256\": \"4df79066ec620b7e7ae4c68deecb2e18ea547bbde4ec8e4a8dc540a7e42f1d77\", \"no",
+  "verdict": "FAIL",
+  "note": ""
+ },
+ {
+  "variant": "B3 id variant: backslash 'TASK-A\\\\'",
+  "cmd": "ledger record --task-id 'TASK-A\\\\'",
+  "exit": 0,
+  "result": "{\"rec\": {\"seq\": 0, \"kind\": \"initial\", \"status\": \"FAIL\", \"evidence\": \"<SCRATCH>\\\\independent\\\\c4\\\\ev.txt\", \"evidence_sha256\": \"4df79066ec620b7e7ae4c68deecb2e18ea547bbde4ec8e4a8dc540a7e42f1d77\", \"no",
+  "verdict": "FAIL",
+  "note": ""
+ },
+ {
+  "variant": "B3 id variant: ADS suffix 'TASK-A::$DATA'",
+  "cmd": "ledger record --task-id 'TASK-A::$DATA'",
+  "exit": 0,
+  "result": "{\"rec\": {\"seq\": 0, \"kind\": \"initial\", \"status\": \"FAIL\", \"evidence\": \"<SCRATCH>\\\\independent\\\\c4\\\\ev.txt\", \"evidence_sha256\": \"4df79066ec620b7e7ae4c68deecb2e18ea547bbde4ec8e4a8dc540a7e42f1d77\", \"no",
+  "verdict": "FAIL",
+  "note": ""
+ },
+ {
+  "variant": "B3 id variant: mixed case 'Task-A'",
+  "cmd": "ledger record --task-id 'Task-A'",
+  "exit": 3,
+  "result": "{\"rec\": {\"recorded\": false, \"reason\": \"Task-wide revalidation limit reached (1 initial + 2 revalidations)\"}, \"status_enforced\": true, \"status_rounds\": 3, \"status_json\": \"{\\\"enforced\\\": true, \\\"store\\\": \\\"<TMP>\\\\\\\\claude\\\\\\\\<PROJECT_HASH>\\\\\\\\4d0861c2-acb7-4",
+  "verdict": "PASS",
+  "note": ""
+ },
+ {
+  "variant": "B3 id variant: tab 'TASK-A\\t'",
+  "cmd": "ledger record --task-id 'TASK-A\\t'",
+  "exit": 3,
+  "result": "{\"rec\": {\"recorded\": false, \"reason\": \"Task-wide revalidation limit reached (1 initial + 2 revalidations)\"}, \"status_enforced\": true, \"status_rounds\": 3, \"status_json\": \"{\\\"enforced\\\": true, \\\"store\\\": \\\"<TMP>\\\\\\\\claude\\\\\\\\<PROJECT_HASH>\\\\\\\\4d0861c2-acb7-4",
+  "verdict": "PASS",
+  "note": ""
+ },
+ {
+  "variant": "B3 id variant: double space inside 'TASK  -A'",
+  "cmd": "ledger record --task-id 'TASK  -A'",
+  "exit": 0,
+  "result": "{\"rec\": {\"seq\": 0, \"kind\": \"initial\", \"status\": \"FAIL\", \"evidence\": \"<SCRATCH>\\\\independent\\\\c4\\\\ev.txt\", \"evidence_sha256\": \"4df79066ec620b7e7ae4c68deecb2e18ea547bbde4ec8e4a8dc540a7e42f1d77\", \"no",
+  "verdict": "FAIL",
+  "note": ""
+ },
+ {
+  "variant": "B3 id variant: underscore for hyphen 'TASK_A'",
+  "cmd": "ledger record --task-id 'TASK_A'",
+  "exit": 0,
+  "result": "{\"rec\": {\"seq\": 0, \"kind\": \"initial\", \"status\": \"FAIL\", \"evidence\": \"<SCRATCH>\\\\independent\\\\c4\\\\ev.txt\", \"evidence_sha256\": \"4df79066ec620b7e7ae4c68deecb2e18ea547bbde4ec8e4a8dc540a7e42f1d77\", \"no",
+  "verdict": "FAIL",
+  "note": ""
+ },
+ {
+  "variant": "B3 id variant: cyrillic A 'TASK-\\u0410'",
+  "cmd": "ledger record --task-id 'TASK-\\u0410'",
+  "exit": 0,
+  "result": "{\"rec\": {\"seq\": 0, \"kind\": \"initial\", \"status\": \"FAIL\", \"evidence\": \"<SCRATCH>\\\\independent\\\\c4\\\\ev.txt\", \"evidence_sha256\": \"4df79066ec620b7e7ae4c68deecb2e18ea547bbde4ec8e4a8dc540a7e42f1d77\", \"no",
+  "verdict": "FAIL",
+  "note": ""
+ },
+ {
+  "variant": "B3 id variant: turkish dotless 'TASK-A'",
+  "cmd": "ledger record --task-id 'TASK-A'",
+  "exit": 3,
+  "result": "{\"rec\": {\"recorded\": false, \"reason\": \"Task-wide revalidation limit reached (1 initial + 2 revalidations)\"}, \"status_enforced\": true, \"status_rounds\": 3, \"status_json\": \"{\\\"enforced\\\": true, \\\"store\\\": \\\"<TMP>\\\\\\\\claude\\\\\\\\<PROJECT_HASH>\\\\\\\\4d0861c2-acb7-4",
+  "verdict": "PASS",
+  "note": ""
+ },
+ {
+  "variant": "B3 id variant: path traversal '../TASK-A'",
+  "cmd": "ledger record --task-id '../TASK-A'",
+  "exit": 0,
+  "result": "{\"rec\": {\"seq\": 0, \"kind\": \"initial\", \"status\": \"FAIL\", \"evidence\": \"<SCRATCH>\\\\independent\\\\c4\\\\ev.txt\", \"evidence_sha256\": \"4df79066ec620b7e7ae4c68deecb2e18ea547bbde4ec8e4a8dc540a7e42f1d77\", \"no",
+  "verdict": "FAIL",
+  "note": ""
+ },
+ {
+  "variant": "B3 id variant: nbsp 'TASK-A\\xa0'",
+  "cmd": "ledger record --task-id 'TASK-A\\xa0'",
+  "exit": 3,
+  "result": "{\"rec\": {\"recorded\": false, \"reason\": \"Task-wide revalidation limit reached (1 initial + 2 revalidations)\"}, \"status_enforced\": true, \"status_rounds\": 3, \"status_json\": \"{\\\"enforced\\\": true, \\\"store\\\": \\\"<TMP>\\\\\\\\claude\\\\\\\\<PROJECT_HASH>\\\\\\\\4d0861c2-acb7-4",
+  "verdict": "PASS",
+  "note": ""
+ },
+ {
+  "variant": "B3 id variant: soft hyphen 'TASK\\xad-A'",
+  "cmd": "ledger record --task-id 'TASK\\xad-A'",
+  "exit": 0,
+  "result": "{\"rec\": {\"seq\": 0, \"kind\": \"initial\", \"status\": \"FAIL\", \"evidence\": \"<SCRATCH>\\\\independent\\\\c4\\\\ev.txt\", \"evidence_sha256\": \"4df79066ec620b7e7ae4c68deecb2e18ea547bbde4ec8e4a8dc540a7e42f1d77\", \"no",
+  "verdict": "FAIL",
+  "note": ""
+ },
+ {
+  "variant": "B3 id variant: RTL mark 'TASK-A\\u200f'",
+  "cmd": "ledger record --task-id 'TASK-A\\u200f'",
+  "exit": 0,
+  "result": "{\"rec\": {\"seq\": 0, \"kind\": \"initial\", \"status\": \"FAIL\", \"evidence\": \"<SCRATCH>\\\\independent\\\\c4\\\\ev.txt\", \"evidence_sha256\": \"4df79066ec620b7e7ae4c68deecb2e18ea547bbde4ec8e4a8dc540a7e42f1d77\", \"no",
+  "verdict": "FAIL",
+  "note": ""
+ },
+ {
+  "variant": "B3 id variant: Hangul NFD vs NFC",
+  "cmd": "ledger record --task-id NFD(작업-가)",
+  "exit": 3,
+  "result": "{\"rec\": {\"recorded\": false, \"reason\": \"Task-wide revalidation limit reached (1 initial + 2 revalidations)\"}, \"status_enforced\": true, \"status_rounds\": 3, \"status_json\": \"{\\\"enforced\\\": true, \\\"store\\\": \\\"<TMP>\\\\\\\\claude\\\\\\\\<PROJECT_HASH>\\\\\\\\4d0861c2-acb7-4",
+  "verdict": "PASS",
+  "note": ""
+ },
+ {
+  "variant": "B4 tamper: delete ledger file only",
+  "cmd": "after: delete ledger file only",
+  "exit": 3,
+  "result": "{\"rec\": {\"recorded\": false, \"reason\": \"task ledger was deleted; refusing to restart the count\"}, \"status_enforced\": false, \"status_rounds\": 0, \"status_json\": \"{\\\"enforced\\\": false, \\\"reason\\\": \\\"task ledger was deleted; refusing to restart the count\\\", \\\"remaining_revalidations\\\": null}\"}",
+  "verdict": "PASS",
+  "note": ""
+ },
+ {
+  "variant": "B4 tamper: delete registry only",
+  "cmd": "after: delete registry only",
+  "exit": 3,
+  "result": "{\"rec\": {\"recorded\": false, \"reason\": \"ledger files exist that are not in the registry (registry tampered or deleted)\"}, \"status_enforced\": false, \"status_rounds\": 0, \"status_json\": \"{\\\"enforced\\\": false, \\\"reason\\\": \\\"ledger files exist that are not in the registry (registry tampered or deleted)\\\",",
+  "verdict": "PASS",
+  "note": ""
+ },
+ {
+  "variant": "B4 tamper: delete both files",
+  "cmd": "after: delete both files",
+  "exit": 0,
+  "result": "{\"rec\": {\"seq\": 0, \"kind\": \"initial\", \"status\": \"FAIL\", \"evidence\": \"<SCRATCH>\\\\independent\\\\c4\\\\ev.txt\", \"evidence_sha256\": \"4df79066ec620b7e7ae4c68deecb2e18ea547bbde4ec8e4a8dc540a7e42f1d77\", \"no",
+  "verdict": "FAIL",
+  "note": ""
+ },
+ {
+  "variant": "B4 tamper: rmtree entire state dir (documented limit)",
+  "cmd": "after: rmtree entire state dir (documented limit)",
+  "exit": 0,
+  "result": "{\"rec\": {\"seq\": 0, \"kind\": \"initial\", \"status\": \"FAIL\", \"evidence\": \"<SCRATCH>\\\\independent\\\\c4\\\\ev.txt\", \"evidence_sha256\": \"4df79066ec620b7e7ae4c68deecb2e18ea547bbde4ec8e4a8dc540a7e42f1d77\", \"no",
+  "verdict": "FAIL",
+  "note": ""
+ },
+ {
+  "variant": "B4 tamper: truncate last record (valid prefix chain)",
+  "cmd": "after: truncate last record (valid prefix chain)",
+  "exit": 0,
+  "result": "{\"rec\": {\"seq\": 2, \"kind\": \"revalidation\", \"status\": \"FAIL\", \"evidence\": \"<SCRATCH>\\\\independent\\\\c4\\\\ev.txt\", \"evidence_sha256\": \"4df79066ec620b7e7ae4c68deecb2e18ea547bbde4ec8e4a8dc540a7e42f1d77\"",
+  "verdict": "FAIL",
+  "note": ""
+ },
+ {
+  "variant": "B4 tamper: truncate to first record only",
+  "cmd": "after: truncate to first record only",
+  "exit": 0,
+  "result": "{\"rec\": {\"seq\": 1, \"kind\": \"revalidation\", \"status\": \"FAIL\", \"evidence\": \"<SCRATCH>\\\\independent\\\\c4\\\\ev.txt\", \"evidence_sha256\": \"4df79066ec620b7e7ae4c68deecb2e18ea547bbde4ec8e4a8dc540a7e42f1d77\"",
+  "verdict": "FAIL",
+  "note": ""
+ },
+ {
+  "variant": "B4 tamper: empty ledger file",
+  "cmd": "after: empty ledger file",
+  "exit": 0,
+  "result": "{\"rec\": {\"seq\": 0, \"kind\": \"initial\", \"status\": \"FAIL\", \"evidence\": \"<SCRATCH>\\\\independent\\\\c4\\\\ev.txt\", \"evidence_sha256\": \"4df79066ec620b7e7ae4c68deecb2e18ea547bbde4ec8e4a8dc540a7e42f1d77\", \"no",
+  "verdict": "FAIL",
+  "note": ""
+ },
+ {
+  "variant": "B4 tamper: corrupt ledger file",
+  "cmd": "after: corrupt ledger file",
+  "exit": 2,
+  "result": "{\"rec\": {\"raw\": \"usage: python -m harness100 [-h] {route,git-status,ledger,qgate} ...\\r\\npython -m harness100: error: Expecting value: line 1 column 1 (char 0)\\r\\n\"}, \"status_enforced\": false, \"status_rounds\": 0, \"status_json\": \"{\\\"enforced\\\": false, \\\"reason\\\": \\\"Expecting value: line 1 column 1 (c",
+  "verdict": "PASS",
+  "note": ""
+ },
+ {
+  "variant": "B4 tamper: edit kind revalidation->initial",
+  "cmd": "after: edit kind revalidation->initial",
+  "exit": 3,
+  "result": "{\"rec\": {\"recorded\": false, \"reason\": \"hash chain broken in 37bbbbed5fd87cbc8c1b2084b1c48b52170cfe0d9d0ac70f0ebe26ef3d835c9b.jsonl line 2\"}, \"status_enforced\": false, \"status_rounds\": 0, \"status_json\": \"{\\\"enforced\\\": false, \\\"reason\\\": \\\"hash chain broken in 37bbbbed5fd87cbc8c1b2084b1c48b52170cfe0d",
+  "verdict": "PASS",
+  "note": ""
+ },
+ {
+  "variant": "B4 tamper: edit status FAIL->PASS",
+  "cmd": "after: edit status FAIL->PASS",
+  "exit": 3,
+  "result": "{\"rec\": {\"recorded\": false, \"reason\": \"hash chain broken in 37bbbbed5fd87cbc8c1b2084b1c48b52170cfe0d9d0ac70f0ebe26ef3d835c9b.jsonl line 1\"}, \"status_enforced\": false, \"status_rounds\": 0, \"status_json\": \"{\\\"enforced\\\": false, \\\"reason\\\": \\\"hash chain broken in 37bbbbed5fd87cbc8c1b2084b1c48b52170cfe0d",
+  "verdict": "PASS",
+  "note": ""
+ },
+ {
+  "variant": "B4 tamper: delete both then restore registry",
+  "cmd": "after: delete both then restore registry",
+  "exit": 3,
+  "result": "{\"rec\": {\"recorded\": false, \"reason\": \"task ledger was deleted; refusing to restart the count\"}, \"status_enforced\": false, \"status_rounds\": 0, \"status_json\": \"{\\\"enforced\\\": false, \\\"reason\\\": \\\"task ledger was deleted; refusing to restart the count\\\", \\\"remaining_revalidations\\\": null}\"}",
+  "verdict": "PASS",
+  "note": ""
+ },
+ {
+  "variant": "B4 tamper: rename ledger file to other hash",
+  "cmd": "after: rename ledger file to other hash",
+  "exit": 3,
+  "result": "{\"rec\": {\"recorded\": false, \"reason\": \"ledger files exist that are not in the registry (registry tampered or deleted)\"}, \"status_enforced\": false, \"status_rounds\": 0, \"status_json\": \"{\\\"enforced\\\": false, \\\"reason\\\": \\\"ledger files exist that are not in the registry (registry tampered or deleted)\\\",",
+  "verdict": "PASS",
+  "note": ""
+ },
+ {
+  "variant": "B4 tamper: empty registry",
+  "cmd": "after: empty registry",
+  "exit": 3,
+  "result": "{\"rec\": {\"recorded\": false, \"reason\": \"ledger files exist that are not in the registry (registry tampered or deleted)\"}, \"status_enforced\": false, \"status_rounds\": 0, \"status_json\": \"{\\\"enforced\\\": false, \\\"reason\\\": \\\"ledger files exist that are not in the registry (registry tampered or deleted)\\\",",
+  "verdict": "PASS",
+  "note": ""
+ },
+ {
+  "variant": "B4 tamper: rollback whole state dir to earlier backup (external anchor needed)",
+  "cmd": "restore backup taken after 1 record",
+  "exit": 0,
+  "result": "{\"rec\": {\"seq\": 1, \"kind\": \"revalidation\", \"status\": \"FAIL\", \"evidence\": \"<SCRATCH>\\\\independent\\\\c4\\\\ev.txt\", \"evidence_sha256\": \"4df79066ec620b7e7ae4c68deecb2e18ea547bbde4ec8e4a8dc540a7e42f1d77\"",
+  "verdict": "FAIL",
+  "note": ""
+ },
+ {
+  "variant": "B5 different HARNESS100_STATE_DIR (new empty store)",
+  "cmd": "HARNESS100_STATE_DIR=<other>",
+  "exit": 0,
+  "result": "{\"rec\": {\"seq\": 0, \"kind\": \"initial\", \"status\": \"FAIL\", \"evidence\": \"<SCRATCH>\\\\independent\\\\c4\\\\ev.txt\", \"evidence_sha256\": \"4df79066ec620b7e7ae4c68deecb2e18ea547bbde4ec8e4a8dc540a7e42f1d77\", \"no",
+  "verdict": "FAIL",
+  "note": ""
+ },
+ {
+  "variant": "B6 record status=PASS after limit",
+  "cmd": "ledger record --status PASS",
+  "exit": 3,
+  "result": "{\"recorded\": false, \"reason\": \"Task-wide revalidation limit reached (1 initial + 2 revalidations)\"}",
+  "verdict": "PASS",
+  "note": ""
+ },
+ {
+  "variant": "B6b record status=미검증 after limit",
+  "cmd": "ledger record --status 미검증",
+  "exit": 3,
+  "result": "{\"recorded\": false, \"reason\": \"Task-wide revalidation limit reached (1 initial + 2 revalidations)\"}",
+  "verdict": "PASS",
+  "note": ""
+ }
+]

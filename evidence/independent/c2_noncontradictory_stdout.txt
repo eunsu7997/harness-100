@@ -1,0 +1,7 @@
+배포는 하지 말고 로그인 버그를 고쳐줘 | scoped ['deploy', 'execute', 'read', 'write'] [] allow approval_required
+No deployment. Fix the login bug. | scoped ['execute', 'read', 'write'] [] allow deny
+production에는 올리지 마. 로그인 버그를 고쳐줘 | scoped ['execute', 'read', 'write'] [] allow deny
+수정은 하지 말아줘. 로그인 오류 원인을 분석해줘 | read_only ['read'] [] deny deny
+절대 바꾸지 마. 로그인 오류를 고쳐줘 | scoped ['execute', 'read', 'write'] [] allow deny
+Leave the files untouched and fix the login bug | scoped ['execute', 'read', 'write'] [] allow deny
+Run nothing. Fix the login bug by editing auth.py | scoped ['execute', 'read', 'write'] [] allow deny

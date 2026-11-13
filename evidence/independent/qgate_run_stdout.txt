@@ -1,0 +1,11 @@
+{
+  "total": 85.0,
+  "overall": "부분 성공",
+  "fail_count": 0,
+  "unverified_count": 5,
+  "raw_log": "<SCRATCH>\\independent\\qgate_out\\qgate-raw-20261112-153722.jsonl",
+  "raw_sha256": "937c9fd90dd856525dd5f5a2fd776498a937195feea56946f12886ee22d9310f",
+  "suite_sha256": "0a6445c66d4d0fe43bd908afa056d4dcf29ca8fa4e52681ec67fbb8e556a0c28",
+  "suite_pinned": null
+}
+EXIT 1

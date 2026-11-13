@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Runtime state (validation ledger, Claude Code hook sessions)
+evidence/ledger-state/
+**/ledger-state/
+**/hook-state/
+**/claude-code-sessions/
+hook-log.jsonl
+
+# Scratch / temporary
+scratch/
+scratchpad/
+tmp/
+*.tmp
+*.bak
+
+# Build artifacts: the Claude chat ZIP is attached to the GitHub Release instead
+*.zip

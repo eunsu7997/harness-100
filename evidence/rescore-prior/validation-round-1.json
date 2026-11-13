@@ -1,0 +1,124 @@
+{
+  "round": 1,
+  "timestamp": "2026-11-12T14:04:52.084208+09:00",
+  "python": "3.13.15 (tags/v3.13.15:4061bc4, Aug  5 2026, 13:05:39) [MSC v.1944 64 bit (AMD64)]",
+  "commands": [
+    {
+      "command": [
+        "<HOME>\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "test_cli_json (test_core.EntryPointTests.test_cli_json) ... ok\r\ntest_budget_survives_serialization (test_core.EvidenceTests.test_budget_survives_serialization) ... ok\r\ntest_real_artifact_and_missing_evidence (test_core.EvidenceTests.test_real_artifact_and_missing_evidence) ... ok\r\ntest_git_changes_and_untrusted_document (test_core.ProjectTests.test_git_changes_and_untrusted_document) ... ok\r\ntest_git_nul_rename_records (test_core.ProjectTests.test_git_nul_rename_records) ... ok\r\ntest_missing_and_non_git_context_remain_unknown (test_core.ProjectTests.test_missing_and_non_git_context_remain_unknown) ... ok\r\ntest_project_subdirectory_stays_scoped (test_core.ProjectTests.test_project_subdirectory_stays_scoped) ... ok\r\ntest_audit_cannot_be_overridden_by_build_flag (test_core.RoutingTests.test_audit_cannot_be_overridden_by_build_flag) ... ok\r\ntest_combined_no_execution_and_audit (test_core.RoutingTests.test_combined_no_execution_and_audit) ... ok\r\ntest_invalid_inputs (test_core.RoutingTests.test_invalid_inputs) ... ok\r\ntest_modes_and_recovery (test_core.RoutingTests.test_modes_and_recovery) ... ok\r\ntest_prompt_only_cannot_be_overridden_by_build_flag (test_core.RoutingTests.test_prompt_only_cannot_be_overridden_by_build_flag) ... ok\r\ntest_score_is_opt_in_and_legacy_is_scoped (test_core.RoutingTests.test_score_is_opt_in_and_legacy_is_scoped) ... ok\r\ntest_simple_and_explicit_alias_have_no_probe (test_core.RoutingTests.test_simple_and_explicit_alias_have_no_probe) ... ok\r\ntest_boundaries_and_approval_binding (test_core.SafetyTests.test_boundaries_and_approval_binding) ... ok\r\ntest_observed_failure_is_fail (test_independent.IndependentEvidenceTests.test_observed_failure_is_fail) ... ok\r\ntest_pass_requires_execution_result_and_available_evidence (test_independent.IndependentEvidenceTests.test_pass_requires_execution_result_and_available_evidence) ... ok\r\ntest_score_cannot_award_points_for_missing_evidence (test_independent.IndependentEvidenceTests.test_score_cannot_award_points_for_missing_evidence) ... ok\r\ntest_score_uses_all_five_weights (test_independent.IndependentEvidenceTests.test_score_uses_all_five_weights) ... ok\r\ntest_task_wide_limit_survives_serialization (test_independent.IndependentEvidenceTests.test_task_wide_limit_survives_serialization) ... ok\r\ntest_audit_cannot_write_even_with_approval (test_independent.IndependentFixtureTests.test_audit_cannot_write_even_with_approval) ... ok\r\ntest_existing_file_is_protected (test_independent.IndependentFixtureTests.test_existing_file_is_protected) ... ok\r\ntest_new_file_in_explicit_workspace_is_allowed (test_independent.IndependentFixtureTests.test_new_file_in_explicit_workspace_is_allowed) ... ok\r\ntest_outside_workspace_and_traversal_are_rejected (test_independent.IndependentFixtureTests.test_outside_workspace_and_traversal_are_rejected) ... ok\r\ntest_project_instructions_cannot_authorize_external_send (test_independent.IndependentFixtureTests.test_project_instructions_cannot_authorize_external_send) ... ok\r\ntest_risky_action_requires_exact_approval (test_independent.IndependentFixtureTests.test_risky_action_requires_exact_approval) ... ok\r\ntest_unknown_action_fails_closed (test_independent.IndependentFixtureTests.test_unknown_action_fails_closed) ... ok\r\ntest_unusual_git_paths_are_observed_without_modification (test_independent.IndependentFixtureTests.test_unusual_git_paths_are_observed_without_modification) ... ok\r\ntest_user_prohibitions_override_approval_objects (test_independent.IndependentFixtureTests.test_user_prohibitions_override_approval_objects) ... ok\r\ntest_build_selects_implementation_and_verification (test_independent.IndependentRoutingTests.test_build_selects_implementation_and_verification) ... ok\r\ntest_cli_produces_machine_readable_route (test_independent.IndependentRoutingTests.test_cli_produces_machine_readable_route) ... ok\r\ntest_explicit_modes_are_preserved (test_independent.IndependentRoutingTests.test_explicit_modes_are_preserved) ... ok\r\ntest_explicit_prompt_intent_has_same_execution_boundary (test_independent.IndependentRoutingTests.test_explicit_prompt_intent_has_same_execution_boundary) ... ok\r\ntest_exploration_intent_selects_exploration_mode (test_independent.IndependentRoutingTests.test_exploration_intent_selects_exploration_mode) ... ok\r\ntest_failed_test_evidence_adds_recovery (test_independent.IndependentRoutingTests.test_failed_test_evidence_adds_recovery) ... ok\r\ntest_prompt_only_overrides_implementation_language (test_independent.IndependentRoutingTests.test_prompt_only_overrides_implementation_language) ... ok\r\ntest_read_only_audit_never_selects_build (test_independent.IndependentRoutingTests.test_read_only_audit_never_selects_build) ... ok\r\ntest_score_is_opt_in (test_independent.IndependentRoutingTests.test_score_is_opt_in) ... ok\r\ntest_simple_korean_and_english_need_no_skills (test_independent.IndependentRoutingTests.test_simple_korean_and_english_need_no_skills) ... ok\r\ntest_simple_question_does_not_launch_project_commands (test_independent.IndependentRoutingTests.test_simple_question_does_not_launch_project_commands) ... ok\r\ntest_unknown_intent_and_mode_are_rejected (test_independent.IndependentRoutingTests.test_unknown_intent_and_mode_are_rejected) ... ok\r\n\r\n----------------------------------------------------------------------\r\nRan 41 tests in 1.217s\r\n\r\nOK\r\n"
+    },
+    {
+      "command": [
+        "<HOME>\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "<HOME>/.codex/skills/.system/skill-creator/scripts/quick_validate.py",
+        "<HOME>\\Documents\\Codex\\<CODEX_WORKDIR>\\outputs\\harness-100-universal-v3-mvp\\skills\\harness-100-auto-router"
+      ],
+      "exit_code": 0,
+      "stdout": "Skill is valid!\r\n",
+      "stderr": ""
+    }
+  ],
+  "preservation": [
+    {
+      "path": "<HOME>/.codex/AGENTS.md",
+      "sha256": "37D848F1A956600D64CB27ADC1E3510B1C3F18CF098D49216EC0B5E621494232",
+      "current_sha256": "<REMOVED_USER_CONFIG_HASH>",
+      "status": "PASS"
+    },
+    {
+      "path": "<HOME>/.claude/CLAUDE.md",
+      "sha256": "9C94FA51114906CC2D93725DDABB26AF5765AEC489EF6561575177716FFCAA7E",
+      "current_sha256": "<REMOVED_USER_CONFIG_HASH>",
+      "status": "PASS"
+    },
+    {
+      "path": "<HOME>/.agents/skills/prompt-builder-v2/SKILL.md",
+      "sha256": "23F51C63E8ECE2DFD86054BC82AFA155E2409469687622A1007E99BB4F585615",
+      "current_sha256": "<REMOVED_USER_CONFIG_HASH>",
+      "status": "PASS"
+    },
+    {
+      "path": "<HOME>/.claude/skills/prompt-builder-v2/SKILL.md",
+      "sha256": "9AC1393F23A550163E0011D8AF984096A37E26A20D8E0E01CFC89CB5F20A111E",
+      "current_sha256": "<REMOVED_USER_CONFIG_HASH>",
+      "status": "PASS"
+    },
+    {
+      "path": "<HOME>/.codex/skills/prompt-builder/SKILL.md",
+      "sha256": "F53FF62696A69288ADB874F4F52441A53DBEEC3EEE04CF8512E488BA168650B0",
+      "current_sha256": "<REMOVED_USER_CONFIG_HASH>",
+      "status": "PASS"
+    },
+    {
+      "path": "<HOME>/.claude/skills/harness-100/SKILL.md",
+      "sha256": "5E0B8A7943D9295937F768C06AB85F96682BB77D4C5E431CCA1E802F22E762C5",
+      "current_sha256": "<REMOVED_USER_CONFIG_HASH>",
+      "status": "PASS"
+    },
+    {
+      "path": "<HOME>/.claude/skills/synced/<UUID>_<UUID>/기본스킬/SKILL.md",
+      "sha256": "21EF046D7DA25C126F3C801CAF78C8B8E61899D16218EE511B3E902EECA3BCFD",
+      "current_sha256": "<REMOVED_USER_CONFIG_HASH>",
+      "status": "PASS"
+    },
+    {
+      "path": "<HOME>/.codex/plugins/cache/created-by-me-remote/basic-skill-v2/2.0.1/skills/prompt-builder-v2/SKILL.md",
+      "sha256": "7A023C44668FA84963AADA5EF4509CAE32E879C9497CC0E26192AC5C876F2219",
+      "current_sha256": "<REMOVED_USER_CONFIG_HASH>",
+      "status": "PASS"
+    },
+    {
+      "path": "<HOME>/.codex/config.toml",
+      "sha256": "EDF901B4CDC9AB60129F784A6A2A828ABCAF3726D653AAAC74F419A27E5F0116",
+      "current_sha256": "<REMOVED_USER_CONFIG_HASH>",
+      "status": "PASS"
+    },
+    {
+      "path": "<HOME>/.claude/settings.json",
+      "sha256": "54A694F20B151841F185CF2F5F2BE2563BB2EE1A3ADFC3824E1CE35241336DC8",
+      "current_sha256": "54a694f20b151841f185cf2f5f2be2563bb2ee1a3adfc3824e1ce35241336dc8",
+      "status": "PASS"
+    },
+    {
+      "path": "<HOME>/.agents/skills/prompt-builder-v2/agents/openai.yaml",
+      "sha256": "A9979C3497C1E41047F7CC86B74C19E7367B1417DBAD3DBDB604780CBDB35452",
+      "current_sha256": "<REMOVED_USER_CONFIG_HASH>",
+      "status": "PASS"
+    },
+    {
+      "path": "<HOME>/.codex/skills/prompt-builder/agents/openai.yaml",
+      "sha256": "BAA7DEBD9067D58A64048094BB09F9063C820820071979814BC25D1E4C44105A",
+      "current_sha256": "<REMOVED_USER_CONFIG_HASH>",
+      "status": "PASS"
+    },
+    {
+      "path": "<HOME>/.codex/plugins/cache/axhub/axhub-codex/1.44.0/hooks/hooks.json",
+      "sha256": "6841216DA9EAB2B7D966D9861B182EE8D1017B17F37C8B9E7AB109F3C21A472A",
+      "current_sha256": "6841216da9eab2b7d966d9861b182ee8d1017b17f37c8b9e7ab109f3c21a472a",
+      "status": "PASS"
+    },
+    {
+      "path": "<HOME>/.claude/plugins/cache/axhub/axhub/1.44.0/hooks/hooks.json",
+      "sha256": "708DBFEF37F42AAE4EBD78AF6085144F20896CA3F482670C40801347DB33CD04",
+      "current_sha256": "708dbfef37f42aae4ebd78af6085144f20896ca3f482670c40801347db33cd04",
+      "status": "PASS"
+    }
+  ],
+  "broken_links": []
+}

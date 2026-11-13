@@ -1,0 +1,27 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -I -B \"<RUNTIME 전체 경로>/hooks/claude_code_hook.py\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -I -B \"<RUNTIME 전체 경로>/hooks/claude_code_hook.py\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
