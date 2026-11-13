@@ -1,9 +1,9 @@
 ---
 name: harness-100-auto-router
-description: Harness-100 v3.0.1 Auto Router. 프로젝트 변경·Git diff·테스트 로그를 근거로 검수·수정·실패 분석·보안 점검을 하거나, 배포·삭제·권한 변경 전 승인 범위를 확인할 때 사용한다. 일반 질문과 프롬프트 작성은 제외한다.
+description: Harness-100 v3.0.2 Auto Router. 프로젝트 변경·Git diff·테스트 로그를 근거로 검수·수정·실패 분석·보안 점검을 하거나, 배포·삭제·권한 변경 전 승인 범위를 확인할 때 사용한다. 일반 질문과 프롬프트 작성은 제외한다.
 ---
 
-# Harness-100 Universal v3.0.1 · Claude Code
+# Harness-100 Universal v3.0.2 · Claude Code
 
 [공통 코어](references/CORE.md)가 단일 원본이다. 이 문서는 Claude Code에서 적용하는 방법만 덧붙인다.
 
@@ -30,6 +30,7 @@ description: Harness-100 v3.0.1 Auto Router. 프로젝트 변경·Git diff·테�
 ## Claude Code 강제 수준
 
 - hook 미설치: 지침 수준. 위반을 기술적으로 막지 못한다.
-- hook 설치(`settings.snippet.json`): UserPromptSubmit이 제한을 세션별로 저장하고 PreToolUse가 위반 도구 호출을 거부(deny)하거나 사용자 확인(ask)으로 돌린다. 제한은 사용자가 "제한 해제"를 입력할 때까지 유지된다.
+- hook 설치(`settings.snippet.json`): UserPromptSubmit이 제한을 세션별로 저장하고 PreToolUse가 위반 도구 호출을 거부(deny)하거나 사용자 확인(ask)으로 돌린다. 제한은 사용자가 "제한 해제"만 단독으로 입력할 때까지 유지되며, 인용·질문 속 언급은 해제가 아니다. 제한 중에는 Skill·MCP·알 수 없는 도구와 command 없는 Bash가 거부되고, 읽기 전용 Bash는 허용 목록 명령만 통과한다(리다이렉트·tee·sort -o·명령 치환 불가).
+- hook은 매 요청마다 라우터와 같은 작업 범위(읽기·쓰기·실행·배포)를 저장해, 질문·붙여넣기 검토처럼 변경이 없는 요청에서는 쓰기·실행을 거부한다. "계속해" 같은 모호한 후속 요청은 이전 범위를 넘지 않는다.
 - 읽기 전용에서는 Bash의 `git` 명령이 차단된다. Git 상태는 hook이 안전 모드로 관찰해 문맥에 넣는다.
 - hook이 막지 못하는 범위: 허용된 명령이 내부에서 하는 일, MCP 도구의 실제 부작용, hook 설정 자체를 사용자가 끈 경우.

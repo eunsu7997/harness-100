@@ -30,7 +30,20 @@ CATALOG = {
 }
 
 
-def score(logs):
+CATALOG_V302 = {k: list(v) for k, v in CATALOG.items()}
+CATALOG_V302["routing"] += ["D_R1_prompt_only_variants", "D_R2b_positive_part_not_overblocked", "D_R5_modify_verbs_not_underrouted"]
+CATALOG_V302["safety"] += ["D_R2_prohibition_phrases", "D_R3_confirm_first_phrases", "D_R4_unquoted_paste_is_data",
+                           "D_H1_unlock_only_exact", "D_H2_readonly_bash_write_forms", "D_H3_hook_catches_phrases",
+                           "D_H4_skill_mcp_unknown_missing_command", "D_G1_no_external_program_current_git",
+                           "D_G1b_old_git_below_2_36", "D_G2_worktree_config_repo", "D_G3_extra_layouts"]
+CATALOG_V302["regression"] += ["D_A2_unit_suite_on_linux"]
+CATALOG_V302["evidence"] += ["D_L1_ledger_truncation_detected", "D_L2_invisible_chars_same_task",
+                             "D_L3_corrupt_ledger_clean_cli_refusal", "D_A1_api_bad_input_no_crash"]
+CATALOGS = {"v3.0.1": CATALOG, "v3.0.2": CATALOG_V302}
+
+
+def score(logs, catalog=None):
+    catalog = catalog or CATALOG
     latest = {}
     sources = []
     for path in logs:
@@ -41,7 +54,7 @@ def score(logs):
                 row = json.loads(line)
                 latest[row["id"]] = row
     table = []
-    for criterion, ids in CATALOG.items():
+    for criterion, ids in catalog.items():
         share = WEIGHTS[criterion] / len(ids)
         counts = {"PASS": 0, "FAIL": 0, "미검증": 0}
         detail = []
@@ -75,7 +88,13 @@ def main(argv):
         i = argv.index("--json")
         out = argv[i + 1]
         argv = argv[:i] + argv[i + 2:]
-    result = score(argv)
+    name = "v3.0.1"
+    if "--catalog" in argv:
+        i = argv.index("--catalog")
+        name = argv[i + 1]
+        argv = argv[:i] + argv[i + 2:]
+    result = score(argv, CATALOGS[name])
+    result["catalog"] = name
     text = json.dumps(result, ensure_ascii=False, indent=1)
     if out:
         Path(out).write_text(text, encoding="utf-8")

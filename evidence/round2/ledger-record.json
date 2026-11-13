@@ -1,0 +1,9 @@
+{
+  "seq": 2,
+  "kind": "revalidation",
+  "status": "FAIL",
+  "evidence": "evidence/round2/holdoutC_stdout.txt",
+  "evidence_sha256": "5585f6e2bb6ae3217350a9632876f3e8f0eab30acc3badb56377682d771805c3",
+  "note": "round 2 (revalidation 2, final): hold-out C FAIL (gate FA 12, hook FA 11, false deny 28/115=24.3%); self 91.0 final 41.0; qgate 0 FAIL; P2 real session PASS; G1 external PASS (Linux VM, Git 2.34)",
+  "time": "2026-11-13T09:28:35.450952+09:00"
+}

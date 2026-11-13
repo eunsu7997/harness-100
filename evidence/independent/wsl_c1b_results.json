@@ -1,0 +1,102 @@
+[
+ {
+  "variant": "N1_alternates_local",
+  "control_fired": 4,
+  "control_sample": [
+   "fsmon 2 1794470244931380310",
+   "process",
+   "fsmon 2 1794470244952157251",
+   "process"
+  ],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "observed",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "observed",
+  "verdict": "PASS"
+ },
+ {
+  "variant": "N2_alternates_UNC",
+  "control_fired": 4,
+  "control_sample": [
+   "fsmon 2 1794470245157952923",
+   "process",
+   "fsmon 2 1794470245200118087",
+   "process"
+  ],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "unknown",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "unknown",
+  "verdict": "UNOBSERVED(safe, not PASS)"
+ },
+ {
+  "variant": "N3_symlinked_dotgit",
+  "control_fired": 4,
+  "control_sample": [
+   "fsmon 2 1794470245652659506",
+   "process",
+   "fsmon 2 1794470245691197598",
+   "process"
+  ],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "observed",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "observed",
+  "verdict": "PASS"
+ },
+ {
+  "variant": "N4_submodule_evil_config",
+  "control_fired": 4,
+  "control_sample": [
+   "fsmon 2 1794470246015746884",
+   "fsmon 2 1794470246026122382",
+   "fsmon 2 ",
+   "fsmon 2 "
+  ],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "observed",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "observed",
+  "verdict": "PASS"
+ },
+ {
+  "variant": "N7_core_worktree_in_config",
+  "control_fired": 4,
+  "control_sample": [
+   "fsmon 2 1794470246302804244",
+   "process",
+   "fsmon 2 1794470246321877003",
+   "process"
+  ],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "observed",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "observed",
+  "verdict": "PASS"
+ },
+ {
+  "variant": "N8_env_GIT_DIR_GIT_WORK_TREE",
+  "control_fired": 2,
+  "control_sample": [
+   "fsmon 2 1794470246552051951",
+   "fsmon 2 1794470246563578804"
+  ],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "observed",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "observed",
+  "verdict": "PASS"
+ }
+]

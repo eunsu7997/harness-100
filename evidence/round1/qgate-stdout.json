@@ -1,0 +1,10 @@
+{
+  "total": 83.81,
+  "overall": "부분 성공",
+  "fail_count": 0,
+  "unverified_count": 6,
+  "raw_log": "<PROJECT_ROOT>\\harness-100-universal-v3.0.2\\evidence\\round1\\qgate-raw-20261112-171523.jsonl",
+  "raw_sha256": "398fcca50a81b15ff1c5aea229740f49a0f52e2b3fc9594c7b941963fdc4e438",
+  "suite_sha256": "c07f7514dbe0b2d7677307bf26525cf541d157bca9c9a44f6bbe8891b4848eb3",
+  "suite_pinned": true
+}

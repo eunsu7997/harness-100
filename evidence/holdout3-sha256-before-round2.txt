@@ -1,0 +1,4 @@
+recorded_at=2026-11-13T09:14:34+09:00 (before round-2 code changes; implementer has not read the set)
+sha256=bdaf0a75179a4b39e21a2764bbc47a0ade7f7a7e91949fceeeb301b6a95a48ae
+reported_by_author=bdaf0a75179a4b39e21a2764bbc47a0ade7f7a7e91949fceeeb301b6a95a48ae
+lines=252

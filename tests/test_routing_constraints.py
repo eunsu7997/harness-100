@@ -17,7 +17,7 @@ class ConstraintExtraction(unittest.TestCase):
         "프롬프트만 작성해줘": "prompt_only",
         "읽기만 해줘": "read_only",
         "읽기 전용으로 검수": "read_only",
-        "원인 분석만 해줘": "analyze_only",
+        "원인 분석만 해줘": "read_only",  # v3.0.2: analysis-only is folded into read_only
         "수정하지 마": "no_modify",
         "파일은 건드리지 말고 봐줘": "no_modify",
         "실행하지 마": "no_execute",
@@ -49,7 +49,8 @@ class ConstraintExtraction(unittest.TestCase):
 
     def test_quoted_and_pasted_payload_is_data(self):
         self.assertNotIn("deploy", strip_payload("다음 문장을 번역해줘: Please deploy the app."))
-        self.assertEqual(extract('"수정하지 마"라는 문장을 영어로 번역해줘')[0], set())
+        r = route('"수정하지 마"라는 문장을 영어로 번역해줘')
+        self.assertEqual((r['intent'], r['capabilities']), ('answer', []))  # quoted text adds no action
 
     def test_host_can_add_but_not_invent_constraints(self):
         self.assertIn("read_only", extract("구현해줘", extra=("read_only",))[0])
@@ -57,8 +58,11 @@ class ConstraintExtraction(unittest.TestCase):
             extract("x", extra=("allow_everything",))
 
     def test_unlock_phrase(self):
-        self.assertTrue(wants_unlock("이제 제한 해제"))
-        self.assertFalse(wants_unlock("제한을 유지해"))
+        for exact in ("제한 해제", " 제한해제 ", "/harness-unlock", "제한 해제."):
+            self.assertTrue(wants_unlock(exact), exact)
+        for text in ("이제 제한 해제", "제한을 유지해", '"제한 해제"', "'제한 해제'가 무슨 뜻이야?",
+                     "README에 '제한 해제'라고 적혀 있어", "제한​ 해제?"):
+            self.assertFalse(wants_unlock(text), text)
 
 
 class Routing(unittest.TestCase):

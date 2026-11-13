@@ -12,7 +12,7 @@ def emit(data):
 
 
 def main():
-    parser = argparse.ArgumentParser(prog="python -m harness100", description="Harness-100 v3.0.1")
+    parser = argparse.ArgumentParser(prog="python -m harness100", description="Harness-100 v3.0.2")
     commands = parser.add_subparsers(dest="command", required=True)
     r = commands.add_parser("route", help="classify a request (no side effects except safe project reads)")
     r.add_argument("--request", required=True)
@@ -47,13 +47,14 @@ def main():
             from .ledger import LedgerStore, LedgerError
             store = LedgerStore()
             if args.action == "status":
-                emit(store.status(args.task_id))
-            else:
-                try:
-                    emit(store.record(args.task_id, args.status, args.evidence, args.note))
-                except LedgerError as error:
-                    emit({"recorded": False, "reason": str(error)})
-                    return 3
+                result = store.status(args.task_id)
+                emit(result)
+                return 0 if result.get("enforced") else 3
+            try:
+                emit(store.record(args.task_id, args.status, args.evidence, args.note))
+            except (LedgerError, ValueError, OSError) as error:
+                emit({"recorded": False, "enforced": False, "reason": str(error)})
+                return 3
         elif args.command == "qgate":
             from .qgate import run_gate
             report = run_gate(args.out, zip_path=args.zip, expect_suite=args.expect_suite_sha256)

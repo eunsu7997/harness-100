@@ -1,13 +1,15 @@
-"""Task-wide validation ledger stored outside the project (P1-2).
+"""Task-wide validation ledger stored outside the project (P1-2, v3.0.2).
 
-- One store per machine/user: $HARNESS100_STATE_DIR or %LOCALAPPDATA%/harness100/state (~/.local/state/harness100).
-- The file for a task is derived from the *normalised* task id (NFKC, trimmed, casefolded, collapsed
-  whitespace) — callers cannot choose a ledger path, so "new ledger file" bypasses are impossible.
-- Each line is hash-chained to the previous one; a registry (also chained) lists every task ever seen,
-  so a deleted or truncated task ledger is detected instead of silently restarting at zero.
-- Writes take an exclusive lock file. If the store is unreadable, inconsistent or locked, recording is
-  refused and status reports enforced=False — the limit is never claimed without a working store.
-Residual risk: deleting the *entire* store directory cannot be detected locally (needs an external anchor).
+- One store: $HARNESS100_STATE_DIR or %LOCALAPPDATA%/harness100/state (~/.local/state/harness100).
+- The ledger file name derives from the *normalised* task id: NFKC, Unicode format characters (Cf: zero-width
+  space, soft hyphen, bidi marks, BOM) removed, whitespace collapsed, leading './' and trailing '.', '/', '\\'
+  trimmed, casefolded. Callers cannot choose a path, so a "new ledger" cannot reset the count.
+- Every ledger line is hash-chained. The registry (also chained) records, after every write, the task's
+  record count and last hash. A ledger that is shorter, empty, edited, renamed or deleted no longer matches
+  the registry and is reported as tampering (enforced=False); recording is refused instead of restarting.
+- Corrupt files raise LedgerError with a clean message (never a raw parser traceback).
+Residual risk: rewriting BOTH files consistently, deleting the whole store, or restoring an old copy of it
+cannot be detected locally; that needs an external anchor (e.g. the hash pinned by the user elsewhere).
 """
 
 import hashlib
@@ -39,9 +41,15 @@ def default_state_dir():
 
 
 def normalize_task_id(task_id):
-    if not isinstance(task_id, str) or not task_id.strip():
+    if not isinstance(task_id, str):
+        raise ValueError("task_id must be a string")
+    text = unicodedata.normalize("NFKC", task_id)
+    text = "".join(ch for ch in text if unicodedata.category(ch) != "Cf")
+    text = re.sub(r"\s+", " ", text).strip()
+    text = re.sub(r"^(?:\.[/\\])+", "", text).rstrip("./\\ ").strip()
+    if not text:
         raise ValueError("task_id is required")
-    return re.sub(r"\s+", " ", unicodedata.normalize("NFKC", task_id).strip()).casefold()
+    return text.casefold()
 
 
 def _line_hash(prev, payload):
@@ -58,52 +66,70 @@ class LedgerStore:
     # ---- integrity ----
     @staticmethod
     def _read_chain(path):
+        """Return (entries, last_hash). Raises LedgerError on any corruption."""
         entries, prev = [], "genesis"
         if not path.exists():
-            return entries
-        for number, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            return entries, prev
+        try:
+            raw_lines = path.read_text(encoding="utf-8").splitlines()
+        except (OSError, UnicodeError) as error:
+            raise LedgerError(f"cannot read {path.name}: {type(error).__name__}") from error
+        for number, raw in enumerate(raw_lines, 1):
             if not raw.strip():
                 continue
-            row = json.loads(raw)
+            try:
+                row = json.loads(raw)
+            except ValueError as error:
+                raise LedgerError(f"corrupt line {number} in {path.name}") from error
+            if not isinstance(row, dict):
+                raise LedgerError(f"corrupt line {number} in {path.name}")
             stored = row.pop("hash", None)
             if row.get("prev") != prev or _line_hash(prev, row) != stored:
                 raise LedgerError(f"hash chain broken in {path.name} line {number}")
             entries.append(row)
             prev = stored
-        return entries
+        return entries, prev
 
-    @staticmethod
-    def _append(path, payload):
-        entries_prev = "genesis"
-        if path.exists():
-            lines = [line for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
-            if lines:
-                entries_prev = json.loads(lines[-1])["hash"]
-        payload = dict(payload, prev=entries_prev)
-        payload["hash"] = _line_hash(entries_prev, payload)
+    def _append(self, path, payload):
+        _, prev = self._read_chain(path)
+        payload = dict(payload, prev=prev)
+        payload["hash"] = _line_hash(prev, payload)
         with open(path, "a", encoding="utf-8") as stream:
             stream.write(json.dumps(payload, ensure_ascii=False, sort_keys=True) + "\n")
             stream.flush()
             os.fsync(stream.fileno())
+        return payload["hash"]
 
     def _key(self, task_id):
         return hashlib.sha256(normalize_task_id(task_id).encode("utf-8")).hexdigest()
 
-    def _check_consistency(self):
-        registered = {row["task"] for row in self._read_chain(self.registry)}
+    def _registry_state(self):
+        rows, _ = self._read_chain(self.registry)
+        latest = {}
+        for row in rows:
+            latest[row.get("task")] = row
         if self.dir.exists():
             present = {p.stem for p in self.dir.glob("*.jsonl")}
-            if present - registered:
+            if present - set(latest):
                 raise LedgerError("ledger files exist that are not in the registry (registry tampered or deleted)")
-        return registered
+        return latest
 
     def rounds(self, task_id):
         key = self._key(task_id)
-        registered = self._check_consistency()
+        latest = self._registry_state()
         path = self.dir / f"{key}.jsonl"
-        if key in registered and not path.exists():
+        entries, last = self._read_chain(path)
+        expected = latest.get(key)
+        if expected is None:
+            if entries:
+                raise LedgerError("task ledger exists without a registry record")
+            return entries
+        if not path.exists():
             raise LedgerError("task ledger was deleted; refusing to restart the count")
-        return self._read_chain(path)
+        if expected.get("count") != len(entries) or expected.get("last") != last:
+            raise LedgerError(f"task ledger does not match the registry (expected {expected.get('count')} records, "
+                              f"found {len(entries)}): truncated or edited")
+        return entries
 
     def status(self, task_id):
         try:
@@ -150,12 +176,12 @@ class LedgerStore:
             if len(rounds) >= MAX_ROUNDS:
                 raise LimitReached("Task-wide revalidation limit reached (1 initial + 2 revalidations)")
             self.dir.mkdir(parents=True, exist_ok=True)
-            if not rounds:
-                self._append(self.registry, {"task": key, "time": datetime.now().astimezone().isoformat()})
             entry = {"seq": len(rounds), "kind": "initial" if not rounds else "revalidation", "status": status,
                      "evidence": str(evidence) if evidence else None, "evidence_sha256": evidence_hash,
                      "note": note, "time": datetime.now().astimezone().isoformat()}
-            self._append(self.dir / f"{key}.jsonl", entry)
+            last = self._append(self.dir / f"{key}.jsonl", entry)
+            self._append(self.registry, {"task": key, "count": len(rounds) + 1, "last": last,
+                                         "time": datetime.now().astimezone().isoformat()})
             return entry
         finally:
             try:

@@ -1,0 +1,10 @@
+{
+ "compared": 66,
+ "unchanged": 64,
+ "changed": [
+  "<HOME>/.claude/settings.json",
+  "<HOME>/.codex/config.toml"
+ ],
+ "added": [],
+ "result": "FAIL"
+}

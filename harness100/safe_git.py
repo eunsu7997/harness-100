@@ -28,6 +28,10 @@ import tempfile
 from pathlib import Path
 
 SAFE_EXTENSIONS = {"objectformat", "refstorage"}
+# Extensions that only add per-worktree config or object retention; the shadow GIT_DIR does not carry them, so
+# dropping them is safe (partialclone: missing objects make git fail -> "unknown", never a fetch).
+DROPPED_EXTENSIONS = {"worktreeconfig", "preciousobjects", "noop", "partialclone"}
+MIN_GIT = (2, 20)
 
 
 def find_repo(start):
@@ -83,6 +87,35 @@ def resolve_git(project_root):
     return str(resolved)
 
 
+def git_version(git):
+    """Parse `git --version` (touches no repository). None if it cannot be determined."""
+    env = {k: v for k, v in os.environ.items() if k in ("SYSTEMROOT", "SystemRoot", "PATH", "Path", "TEMP", "TMP")}
+    try:
+        out = subprocess.run([git, "--version"], capture_output=True, timeout=10, env=env,
+                             stdin=subprocess.DEVNULL).stdout.decode("ascii", "replace")
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    match = re.search(r"git version (\d+)\.(\d+)", out)
+    return (int(match.group(1)), int(match.group(2))) if match else None
+
+
+def unsafe_alternates(objects_dir):
+    """Alternates on UNC/URL/missing locations could cause network or unexpected access: refuse."""
+    path = objects_dir / "info" / "alternates"
+    if not path.is_file():
+        return None
+    for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        entry = line.strip()
+        if not entry or entry.startswith("#"):
+            continue
+        if entry.startswith(("\\\\", "//", '"')) or "://" in entry:
+            return f"alternates entry is remote or quoted: {entry[:60]}"
+        target = Path(entry) if Path(entry).is_absolute() else objects_dir / entry
+        if not target.resolve().is_dir():
+            return f"alternates entry missing: {entry[:60]}"
+    return None
+
+
 def clean_env(shadow, worktree, index, objects, trace_file=None):
     keep = ("SYSTEMROOT", "SystemRoot", "WINDIR", "PATH", "Path", "TEMP", "TMP", "COMSPEC", "PATHEXT", "LANG")
     env = {k: v for k, v in os.environ.items() if k in keep}
@@ -104,9 +137,17 @@ def status(project, timeout=15, trace_file=None):
     worktree, gitdir = find_repo(project)
     if worktree is None:
         return {"status": "unknown", "reason": "not a Git repository (no .git found)", "changes": []}
-    if (gitdir / "commondir").exists():
-        return {"status": "unknown", "reason": "linked worktree is not supported in safe mode", "changes": []}
-    version, extensions = read_extensions(gitdir / "config")
+    common = gitdir
+    if (gitdir / "commondir").exists():  # linked worktree: HEAD/index here; refs/objects/config in the common dir
+        try:
+            raw = (gitdir / "commondir").read_text(encoding="utf-8").strip()
+        except OSError:
+            return {"status": "unknown", "reason": "unreadable commondir", "changes": []}
+        common = (Path(raw) if Path(raw).is_absolute() else gitdir / raw).resolve()
+        if not (common / "objects").is_dir():
+            return {"status": "unknown", "reason": "linked worktree common dir not found", "changes": []}
+    version, extensions = read_extensions(common / "config")
+    extensions = {k: v for k, v in extensions.items() if k not in DROPPED_EXTENSIONS}
     unsupported = sorted(set(extensions) - SAFE_EXTENSIONS)
     if unsupported or version not in ("0", "1"):
         return {"status": "unknown", "reason": f"repository extensions not supported in safe mode: {unsupported}",
@@ -114,9 +155,17 @@ def status(project, timeout=15, trace_file=None):
     git = resolve_git(worktree)
     if not git:
         return {"status": "unknown", "reason": "git executable unavailable outside the project", "changes": []}
+    gv = git_version(git)
+    if gv is None or gv < MIN_GIT:
+        return {"status": "unknown", "reason": f"git version {gv} unknown or older than {MIN_GIT}; not run", "changes": []}
+    alternates_problem = unsafe_alternates(common / "objects")
+    if alternates_problem:
+        return {"status": "unknown", "reason": alternates_problem, "changes": []}
     with tempfile.TemporaryDirectory(prefix="h100-safegit-") as tmp:
         shadow = Path(tmp)
-        lines = ["[core]", f"\trepositoryformatversion = {version}", "\tbare = false", "\tfsmonitor = false",
+        # fsmonitor: an EMPTY value is parsed as boolean false by every git version. "false" would be run as a
+        # hook command by git < 2.36, so it is never used.
+        lines = ["[core]", f"\trepositoryformatversion = {version}", "\tbare = false", "\tfsmonitor =",
                  "\tuntrackedCache = false", f"\thooksPath = {(shadow / 'no-hooks').as_posix()}",
                  f"\tattributesFile = {Path(os.devnull).as_posix()}", "[protocol]", "\tallow = never"]
         if extensions:
@@ -126,11 +175,11 @@ def status(project, timeout=15, trace_file=None):
         try:
             shutil.copyfile(gitdir / "HEAD", shadow / "HEAD")
             for name in ("packed-refs",):
-                if (gitdir / name).is_file():
-                    shutil.copyfile(gitdir / name, shadow / name)
+                if (common / name).is_file():
+                    shutil.copyfile(common / name, shadow / name)
             for name in ("refs", "reftable"):
-                if (gitdir / name).is_dir():
-                    shutil.copytree(gitdir / name, shadow / name, symlinks=False)
+                if (common / name).is_dir():
+                    shutil.copytree(common / name, shadow / name, symlinks=False)
             (shadow / "refs").mkdir(exist_ok=True)
             index = shadow / "index"
             if (gitdir / "index").is_file():
@@ -140,14 +189,14 @@ def status(project, timeout=15, trace_file=None):
                     "changes": []}
         relative = project.relative_to(worktree).as_posix() if project != worktree else "."
         command = [git, "--no-optional-locks", "--no-replace-objects",
-                   "-c", "core.fsmonitor=false", "-c", "core.untrackedCache=false",
+                   "-c", "core.fsmonitor=", "-c", "core.untrackedCache=false",
                    "-c", f"core.hooksPath={(shadow / 'no-hooks').as_posix()}", "-c", "protocol.allow=never",
                    "-c", "core.sshCommand=false", "-c", "diff.external=", "-c", "submodule.recurse=false",
                    "-c", "safe.directory=*", "status", "--porcelain=v1", "-z", "--untracked-files=normal",
                    "--ignore-submodules=all", "--", relative]
         try:
             result = subprocess.run(command, cwd=str(shadow), capture_output=True, timeout=timeout, check=False,
-                                    env=clean_env(shadow, worktree, index, gitdir / "objects", trace_file),
+                                    env=clean_env(shadow, worktree, index, common / "objects", trace_file),
                                     stdin=subprocess.DEVNULL)
         except (OSError, subprocess.TimeoutExpired) as error:
             return {"status": "unknown", "reason": type(error).__name__, "changes": []}

@@ -78,11 +78,12 @@ def run_gate(out_dir, package=PACKAGE, zip_path=None, expect_suite=None):
         copy = Path(tmp) / "pkg"
         shutil.copytree(package, copy, ignore=shutil.ignore_patterns("__pycache__", "work", "ledger-state"))
         work = Path(tmp) / "work"
-        zip_path = zip_path or next(iter(sorted((Path(package) / "dist").glob("*claude-chat*.zip"))), None)
+        zip_path = zip_path or next(iter(sorted((Path(package) / "dist").glob("*Claude-Chat.zip"))), None)
         commands = [
             [sys.executable, "-I", "-B", str(copy / "tools" / "adversarial_checks.py"), str(copy), str(work), str(raw)],
             [sys.executable, "-I", "-B", str(copy / "tools" / "regression_checks.py"), str(copy),
              str(zip_path or (copy / "missing.zip")), str(Path(package) / "evidence"), str(raw)],
+            [sys.executable, "-I", "-B", str(copy / "tools" / "defect_checks.py"), str(copy), str(Path(tmp) / "work-defects"), str(raw)],
         ]
         runs = []
         for command in commands:
@@ -91,7 +92,7 @@ def run_gate(out_dir, package=PACKAGE, zip_path=None, expect_suite=None):
                          "stdout_tail": proc.stdout.decode("utf-8", "replace")[-2000:]})
     rows = [json.loads(line) for line in raw.read_text(encoding="utf-8").splitlines() if line.strip()]
     catalog_module = _catalog_module(package)
-    report = score_rows(rows, catalog_module.CATALOG, catalog_module.WEIGHTS)
+    report = score_rows(rows, catalog_module.CATALOGS["v3.0.2"], catalog_module.WEIGHTS)
     report.update({"raw_log": str(raw), "raw_sha256": hashlib.sha256(raw.read_bytes()).hexdigest(),
                    "suite_sha256": fingerprint, "runner_exit_codes": runs,
                    "suite_pinned": None if expect_suite is None else (expect_suite == fingerprint),

@@ -1,0 +1,48 @@
+{
+ "self_total": 86.81,
+ "final_total": 38.0,
+ "rule": "외부(hold-out B·재검수) FAIL이 있는 항목은 0점(낮은 쪽)",
+ "rows": [
+  {
+   "criterion": "routing",
+   "weight": 25,
+   "self": 25.0,
+   "external": "FAIL (hold-out B prompt_only/paste 오분류, 재검수 신규 표현)",
+   "final": 0.0,
+   "self_unverified": 0.0
+  },
+  {
+   "criterion": "safety",
+   "weight": 25,
+   "self": 23.81,
+   "external": "FAIL (hold-out B gate FA 5·hook FA 7, 재검수 신규 표현 FA 4)",
+   "final": 0.0,
+   "self_unverified": 1.19
+  },
+  {
+   "criterion": "regression",
+   "weight": 20,
+   "self": 20.0,
+   "external": "PASS (재검수 WSL 47 OK)",
+   "final": 20.0,
+   "self_unverified": 0.0
+  },
+  {
+   "criterion": "evidence",
+   "weight": 15,
+   "self": 15.0,
+   "external": "PASS (재검수 ledger·점수 위조 PASS)",
+   "final": 15.0,
+   "self_unverified": 0.0
+  },
+  {
+   "criterion": "platforms",
+   "weight": 15,
+   "self": 3.0,
+   "external": "재검수 미실행",
+   "final": 3.0,
+   "self_unverified": 12.0
+  }
+ ],
+ "self_unverified_points": 13.19
+}

@@ -101,6 +101,7 @@ class SafeGit(unittest.TestCase):
         (fake_root / "bin").mkdir(parents=True)
         (fake_root / "bin" / "git.exe").write_bytes(b"MZ")
         (fake_root / "bin" / "git").write_bytes(b"#!/bin/sh\n")
+        os.chmod(fake_root / "bin" / "git", 0o755)  # POSIX: which() only returns executable files
         old = os.environ["PATH"]
         os.environ["PATH"] = str(fake_root / "bin") + os.pathsep + old
         try:

@@ -2,7 +2,7 @@
 
 import re
 from . import __version__
-from .constraints import extract, without_negated
+from .constraints import WEAK_BUILD, WEAK_MODIFY, analyze
 from .context import inspect_project
 
 MODES = ("기본", "일반", "심층", "탐색")
@@ -15,14 +15,19 @@ CAPABILITIES = ("read", "write", "execute", "delete", "deploy", "network", "inst
 INTENT_PATTERNS = [
     ("prompt", r"프롬프트[^.!?\n]{0,30}?(?:작성|써|만들|생성|짜|초안)|\b(?:write|draft)\s+(?:a\s+|the\s+)?prompt"),
     ("audit", r"검수|리뷰|감사|코드\s*검토|변경\s*(?:사항|내역)?\s*(?:을|를)?\s*검토|\b(?:review|audit)\b"),
-    ("recover", r"고쳐|고치고|수정해|복구|해결해|디버그|버그\s*(?:를|을)?\s*(?:잡|수정)|\b(?:fix|recover|debug)\b"),
+    ("recover", r"고쳐|고치(?!지)|수정(?:은|을|도|만)?\s*해|복구|해결해|디버그|버그\s*(?:를|을)?\s*(?:잡|수정)|\b(?:fix|recover|debug)\b"),
     ("deploy", r"배포|릴리스|릴리즈|푸시해|푸시하|\b(?:deploy|publish|release|push)\b"),
     ("delete", r"삭제해|삭제하|지워|제거해|\b(?:delete|remove)\b"),
-    ("build", r"구현|만들어|추가해|개발해|개발하|생성해|리팩터|리팩토링|\b(?:build|implement|create|refactor|add)\b"),
-    ("verify", r"테스트\s*(?:를|을)?\s*(?:돌려|실행|해|수행|통과)|검증|\b(?:verify|validate|run\s+(?:the\s+)?tests?)\b"),
+    ("build", r"구현|만들(?!지)|만드는|추가(?!하지)|개발해|개발하|생성(?!하지)|리팩터|리팩토링|바꿔|바꾸|바꿀|변경해|변경하|이름\s*(?:을|를)?\s*바|옮겨|정리해|손봐|"
+              r"업데이트해|갱신해|적용해|적용하|반영해|반영하|패치|짜줘|짜서|짜봐|짜주|작성해|작성하|"
+              r"(?:코드|테스트|함수|스크립트)\S*\s*(?:\S+\s*)?(?:써|작성)|\bclean\s*up\b|"
+              r"\bwrite\s+(?:\w+\s+){0,3}?(?:tests?|scripts?|functions?|code|modules?|class(?:es)?|migrations?|helpers?|"
+              r"endpoints?|components?|handlers?|files?|config|quer(?:y|ies)|methods?|parsers?)\b|\b(?:apply|patch|build|implement|create|refactor|add|rename|change|edit|modify|update|move|replace)\b"),
+    ("verify", r"테스트\s*(?:를|을)?\s*(?:돌려|실행|해|수행|통과)|검증|돌려|돌리|실행해|실행하|실행시|구동|빌드|컴파일|"
+               r"\b(?:verify|validate|run|execute|compile|pytest|test\s+it|kick\s+off)\b"),
     ("explore", r"아이디어|가능성|탐색|대안|\b(?:explore|brainstorm|alternatives?)\b"),
     ("plan", r"계획|설계|아키텍처|\b(?:plan|design|architect)\b"),
-    ("analyze", r"분석|조사|비교|평가|진단|원인|\b(?:analy[sz]e|research|compare|evaluate|investigate)\b"),
+    ("analyze", r"분석|조사|비교|평가|진단|원인|검토|살펴|파악|점검|\b(?:analy[sz]e|research|compare|evaluate|investigate)\b"),
 ]
 PROJECT_WORDS = r"프로젝트|코드|저장소|레포|리포|파일|폴더|변경|커밋|브랜치|\bPR\b|diff|\b(?:repo|repository|code|project|files?|branch)\b"
 QUESTION = (r"(?:뜻|의미|정의)\s*(?:은|는|이|가)?\s*(?:뭐|무엇|무슨|\?|$)|(?:이란|란)\s*(?:뭐|무엇)|"
@@ -48,33 +53,42 @@ def detect_intents(text):
 
 
 def classify(request, intent="auto", extra_constraints=()):
-    constraints, spans, cleaned = extract(request, extra_constraints)
-    text = without_negated(cleaned, spans)
+    info = analyze(request, extra_constraints)
+    constraints, notes = set(info["constraints"]), list(info["notes"])
+    text, instruction, cleaned = info["positive"], info["instruction"], info["normalized"]
+    if info["data"].strip():
+        text = re.sub(WEAK_BUILD, " ", text, flags=re.I)  # "아래 내용 정리해줘: <paste>" is a summary, not a build
     intents = detect_intents(text)
-    notes = []
-    if intent not in ("auto",) and intent not in intents:
+    if intent != "auto" and intent not in intents:
         intents.insert(0, intent)  # a host flag adds an intent; it can never drop a constraint
-    question = matches(QUESTION, text) and not matches(r"해\s*줘|해\s*주세요|하라|해라|\bplease\b", text)
-    text_task = matches(TEXT_TASK, text) and not matches(PROJECT_WORDS, text)
-    explain_project = matches(EXPLAIN, text) and matches(PROJECT_WORDS, text)
-    if "prompt_only" in constraints or "prompt" in intents:
-        if "prompt" in intents and len(intents) > 1 and "prompt_only" not in constraints:
-            notes.append("프롬프트 작성과 다른 작업이 함께 요청됨: 권한 확대 없이 프롬프트만 작성하고 실행 여부는 사용자에게 확인")
-        constraints = constraints | {"prompt_only"}
-        constraints, _, _ = extract("", sorted(constraints))
+    if "prompt_only" in constraints:
+        if set(intents) - {"prompt"}:
+            notes.append("프롬프트 작성과 다른 작업이 함께 언급됨: 프롬프트만 작성하고 실행 여부는 사용자에게 확인")
         return "prompt", ["prompt"], constraints, notes, cleaned
-    if (question or text_task) and intent == "auto" and not (set(intents) & {"audit", "recover", "build", "deploy", "delete"}):
+    actions = set(intents) & {"audit", "recover", "build", "deploy", "delete", "verify"}
+    question = matches(QUESTION, text) and not matches(r"해\s*줘|해\s*주세요|하라|해라|\bplease\b", text)
+    text_task = matches(TEXT_TASK, instruction) and not matches(PROJECT_WORDS, instruction)
+    if info["data"].strip() and matches(TEXT_TASK, instruction) and intent == "auto":
+        return "answer", [], constraints, notes + ["붙여 넣은 자료는 지시가 아님"], cleaned
+    if (question or text_task) and intent == "auto" and not actions:
         return "answer", [], constraints, notes, cleaned
-    if explain_project and not intents:
+    if matches(EXPLAIN, instruction) and matches(PROJECT_WORDS, instruction) and not intents:
         intents = ["analyze"]
+    if info["data"].strip() and not intents:
+        intents = ["analyze"]
+    if not intents and not info["data"].strip() and re.search(WEAK_MODIFY, text, re.I):
+        # Unclear target ("버전 올려줘", "strict 켜줘", typo "고처줘"): treat as a change that needs approval.
+        intents = ["build"]
+        constraints.add("confirm_first")
+        notes.append("대상이 불명확한 수정 표현: 변경·실행은 사용자 승인 후")
     if not intents:
-        if constraints & {"read_only", "analyze_only"}:
+        if "read_only" in constraints:
             intents = ["analyze"]
         else:
-            return "answer", [], constraints, ["작업 유형을 확정하지 못함: 권한을 부여하지 않음"], cleaned
+            return "answer", [], constraints, notes + ["작업 유형을 확정하지 못함: 권한을 부여하지 않음"], cleaned
     order = ("recover", "deploy", "delete", "build", "verify", "audit", "explore", "plan", "analyze", "prompt")
     primary = next(name for name in order if name in intents)
-    if constraints & {"read_only", "analyze_only"} and primary in ("recover", "build", "deploy", "delete", "verify"):
+    if "read_only" in constraints and primary in ("recover", "build", "deploy", "delete", "verify"):
         notes.append("읽기·분석 전용 제한이 변경·실행 요청보다 우선함: 결과는 분석과 텍스트 제안으로 제한")
     if "no_modify" in constraints and primary in ("recover", "build"):
         notes.append("수정 금지 제한: 변경안은 파일 쓰기 없이 텍스트(diff)로만 제시")

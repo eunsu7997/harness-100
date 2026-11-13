@@ -1,0 +1,4 @@
+recorded_at=2026-11-12T17:09:05+09:00 (before round-1 code changes)
+sha256=c0a4716f08aefd6cb000dcb94f5a92bc07701fb2169ad975c0a2cd15a23c65d3
+reported_by_author=c0a4716f08aefd6cb000dcb94f5a92bc07701fb2169ad975c0a2cd15a23c65d3
+lines=252

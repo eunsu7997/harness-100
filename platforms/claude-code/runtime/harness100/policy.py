@@ -50,6 +50,8 @@ def gate(action, decision, target=None, workspace=None, approvals=()):
         if blocker in constraints:
             return result("deny", f"User constraint {blocker} forbids this action")
         return result("deny", "Action is outside the capabilities of the selected task")
+    if action in ("create_file", "overwrite_existing") and "no_create" in constraints:
+        return result("deny", "User constraint no_create forbids creating new files")
     if workspace is None or target is None:
         return result("deny", "An exact target and workspace are required")
     root = Path(workspace).resolve()

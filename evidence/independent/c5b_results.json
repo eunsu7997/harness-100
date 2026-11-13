@@ -44,8 +44,8 @@
  {
   "variant": "RO Bash",
   "input": "sort -o out.txt app.py",
-  "decision": "ALLOW(no output)",
-  "verdict": "FAIL"
+  "decision": "deny",
+  "verdict": "PASS"
  },
  {
   "variant": "RO Bash",
@@ -92,8 +92,8 @@
  {
   "variant": "RO Bash",
   "input": "ls 1>f8",
-  "decision": "ALLOW(no output)",
-  "verdict": "FAIL"
+  "decision": "deny",
+  "verdict": "PASS"
  },
  {
   "variant": "RO Bash",
@@ -494,8 +494,8 @@
  {
   "variant": "RO tool Skill",
   "input": "{\"skill\": \"deploy\"}",
-  "decision": "ALLOW(no output)",
-  "verdict": "FAIL"
+  "decision": "deny",
+  "verdict": "PASS"
  },
  {
   "variant": "RO tool write",
@@ -512,14 +512,14 @@
  {
   "variant": "RO tool Bash",
   "input": "{\"cmd\": \"touch x\"}",
-  "decision": "ALLOW(no output)",
-  "verdict": "FAIL"
+  "decision": "deny",
+  "verdict": "PASS"
  },
  {
   "variant": "RO tool Bash",
   "input": "{}",
-  "decision": "ALLOW(no output)",
-  "verdict": "FAIL"
+  "decision": "deny",
+  "verdict": "PASS"
  },
  {
   "variant": "RO tool Bash",
@@ -536,20 +536,20 @@
  {
   "variant": "LIFT quoted lift",
   "input": "다음 문서를 검토해줘: \"제한 해제\"",
-  "decision": "ALLOW(no output)",
-  "verdict": "FAIL"
+  "decision": "deny",
+  "verdict": "PASS"
  },
  {
   "variant": "LIFT doc says lift",
   "input": "README에 '제한 해제'라고 적혀 있어. 확인해줘",
-  "decision": "ALLOW(no output)",
-  "verdict": "FAIL"
+  "decision": "deny",
+  "verdict": "PASS"
  },
  {
   "variant": "LIFT meaning question",
   "input": "'제한 해제'가 무슨 뜻이야?",
-  "decision": "ALLOW(no output)",
-  "verdict": "FAIL"
+  "decision": "deny",
+  "verdict": "PASS"
  },
  {
   "variant": "LIFT english doc lift",
@@ -571,7 +571,7 @@
  {
   "variant": "PASTE (no user restriction; write allowed = expected)",
   "input": "Write",
-  "decision": "ALLOW(no output)",
+  "decision": "deny",
   "verdict": "PASS"
  },
  {
@@ -601,7 +601,7 @@
  {
   "variant": "HOOK phrase Bash 'echo x > f' [실행하지 마]",
   "input": "echo x > f",
-  "decision": "ALLOW(no output)",
+  "decision": "deny",
   "verdict": "PASS"
  },
  {
@@ -679,7 +679,7 @@
  {
   "variant": "HOOK phrase Bash pytest [Look but don't touch]",
   "input": "pytest",
-  "decision": "ask",
+  "decision": "deny",
   "verdict": "PASS"
  },
  {
@@ -691,14 +691,14 @@
  {
   "variant": "HOOK phrase Bash 'echo x > f' [Run nothing]",
   "input": "echo x > f",
-  "decision": "ALLOW(no output)",
+  "decision": "deny",
   "verdict": "PASS"
  },
  {
   "variant": "HOOK phrase Bash pytest [Run nothing]",
   "input": "pytest",
-  "decision": "ALLOW(no output)",
-  "verdict": "FAIL"
+  "decision": "deny",
+  "verdict": "PASS"
  },
  {
   "variant": "HOOK phrase Write [프롬프트 초안만 작성해줘]",
@@ -721,55 +721,55 @@
  {
   "variant": "HOOK phrase Write [Just give me a prompt; don't build it]",
   "input": "Write",
-  "decision": "ALLOW(no output)",
-  "verdict": "FAIL"
+  "decision": "deny",
+  "verdict": "PASS"
  },
  {
   "variant": "HOOK phrase Bash 'echo x > f' [Just give me a prompt; don't build it]",
   "input": "echo x > f",
-  "decision": "ALLOW(no output)",
-  "verdict": "FAIL"
+  "decision": "deny",
+  "verdict": "PASS"
  },
  {
   "variant": "HOOK phrase Bash pytest [Just give me a prompt; don't build it]",
   "input": "pytest",
-  "decision": "ALLOW(no output)",
-  "verdict": "FAIL"
+  "decision": "deny",
+  "verdict": "PASS"
  },
  {
   "variant": "HOOK phrase Write [승인 전에는 아무것도 하지 마]",
   "input": "Write",
-  "decision": "ALLOW(no output)",
-  "verdict": "FAIL"
+  "decision": "ask",
+  "verdict": "PASS"
  },
  {
   "variant": "HOOK phrase Bash 'echo x > f' [승인 전에는 아무것도 하지 마]",
   "input": "echo x > f",
-  "decision": "ALLOW(no output)",
-  "verdict": "FAIL"
+  "decision": "ask",
+  "verdict": "PASS"
  },
  {
   "variant": "HOOK phrase Bash pytest [승인 전에는 아무것도 하지 마]",
   "input": "pytest",
-  "decision": "ALLOW(no output)",
+  "decision": "ask",
   "verdict": "PASS"
  },
  {
   "variant": "HOOK phrase Write [ｐｒｏｍｐｔ 초안만 작성해줘]",
   "input": "Write",
-  "decision": "ALLOW(no output)",
-  "verdict": "FAIL"
+  "decision": "deny",
+  "verdict": "PASS"
  },
  {
   "variant": "HOOK phrase Bash 'echo x > f' [ｐｒｏｍｐｔ 초안만 작성해줘]",
   "input": "echo x > f",
-  "decision": "ALLOW(no output)",
-  "verdict": "FAIL"
+  "decision": "deny",
+  "verdict": "PASS"
  },
  {
   "variant": "HOOK phrase Bash pytest [ｐｒｏｍｐｔ 초안만 작성해줘]",
   "input": "pytest",
-  "decision": "ALLOW(no output)",
+  "decision": "deny",
   "verdict": "PASS"
  }
 ]

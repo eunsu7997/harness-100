@@ -1,11 +1,11 @@
 === CLI c5 R1_AGENTS
-CMD: ['<HOME>\\AppData\\Local\\Programs\\Python\\Python313\\python.exe', '-I', '-B', '-X', 'utf8', '<PROJECT_ROOT>\\harness-100-universal-v3.0.1\\harness100_cli.py', 'route', '--request', '이 저장소를 읽기만 하고 감사해줘', '--project', '<SCRATCH>\\independent\\c5\\R1_AGENTS']
+CMD: ['<HOME>\\AppData\\Local\\Programs\\Python\\Python313\\python.exe', '-I', '-B', '-X', 'utf8', '<PROJECT_ROOT>\\harness-100-universal-v3.0.2\\harness100_cli.py', 'route', '--request', '이 저장소를 읽기만 하고 감사해줘', '--project', '<SCRATCH>\\independent-v302\\c5\\R1_AGENTS']
 ENVADD: None
 STDIN: None
 EXIT: 0
 --stdout--
 {
-  "version": "3.0.1",
+  "version": "3.0.2",
   "mode": "심층",
   "intent": "audit",
   "intents": [
@@ -64,7 +64,7 @@ EXIT: 0
   },
   "context": {
     "status": "partial",
-    "root": "<SCRATCH>\\independent\\c5\\R1_AGENTS",
+    "root": "<SCRATCH>\\independent-v302\\c5\\R1_AGENTS",
     "files": [
       "AGENTS.md",
       "app.py"
@@ -143,13 +143,13 @@ EXIT: 0
 
 
 === CLI c5 R2_CLAUDE
-CMD: ['<HOME>\\AppData\\Local\\Programs\\Python\\Python313\\python.exe', '-I', '-B', '-X', 'utf8', '<PROJECT_ROOT>\\harness-100-universal-v3.0.1\\harness100_cli.py', 'route', '--request', '이 저장소를 읽기만 하고 감사해줘', '--project', '<SCRATCH>\\independent\\c5\\R2_CLAUDE']
+CMD: ['<HOME>\\AppData\\Local\\Programs\\Python\\Python313\\python.exe', '-I', '-B', '-X', 'utf8', '<PROJECT_ROOT>\\harness-100-universal-v3.0.2\\harness100_cli.py', 'route', '--request', '이 저장소를 읽기만 하고 감사해줘', '--project', '<SCRATCH>\\independent-v302\\c5\\R2_CLAUDE']
 ENVADD: None
 STDIN: None
 EXIT: 0
 --stdout--
 {
-  "version": "3.0.1",
+  "version": "3.0.2",
   "mode": "심층",
   "intent": "audit",
   "intents": [
@@ -208,7 +208,7 @@ EXIT: 0
   },
   "context": {
     "status": "partial",
-    "root": "<SCRATCH>\\independent\\c5\\R2_CLAUDE",
+    "root": "<SCRATCH>\\independent-v302\\c5\\R2_CLAUDE",
     "files": [
       "CLAUDE.md",
       "app.py"
@@ -287,13 +287,13 @@ EXIT: 0
 
 
 === CLI c5 R3_README
-CMD: ['<HOME>\\AppData\\Local\\Programs\\Python\\Python313\\python.exe', '-I', '-B', '-X', 'utf8', '<PROJECT_ROOT>\\harness-100-universal-v3.0.1\\harness100_cli.py', 'route', '--request', '이 저장소를 읽기만 하고 감사해줘', '--project', '<SCRATCH>\\independent\\c5\\R3_README']
+CMD: ['<HOME>\\AppData\\Local\\Programs\\Python\\Python313\\python.exe', '-I', '-B', '-X', 'utf8', '<PROJECT_ROOT>\\harness-100-universal-v3.0.2\\harness100_cli.py', 'route', '--request', '이 저장소를 읽기만 하고 감사해줘', '--project', '<SCRATCH>\\independent-v302\\c5\\R3_README']
 ENVADD: None
 STDIN: None
 EXIT: 0
 --stdout--
 {
-  "version": "3.0.1",
+  "version": "3.0.2",
   "mode": "심층",
   "intent": "audit",
   "intents": [
@@ -352,7 +352,7 @@ EXIT: 0
   },
   "context": {
     "status": "partial",
-    "root": "<SCRATCH>\\independent\\c5\\R3_README",
+    "root": "<SCRATCH>\\independent-v302\\c5\\R3_README",
     "files": [
       "README.md",
       "app.py"
@@ -431,13 +431,13 @@ EXIT: 0
 
 
 === CLI c5 R4_policy_files
-CMD: ['<HOME>\\AppData\\Local\\Programs\\Python\\Python313\\python.exe', '-I', '-B', '-X', 'utf8', '<PROJECT_ROOT>\\harness-100-universal-v3.0.1\\harness100_cli.py', 'route', '--request', '이 저장소를 읽기만 하고 감사해줘', '--project', '<SCRATCH>\\independent\\c5\\R4_policy_files']
+CMD: ['<HOME>\\AppData\\Local\\Programs\\Python\\Python313\\python.exe', '-I', '-B', '-X', 'utf8', '<PROJECT_ROOT>\\harness-100-universal-v3.0.2\\harness100_cli.py', 'route', '--request', '이 저장소를 읽기만 하고 감사해줘', '--project', '<SCRATCH>\\independent-v302\\c5\\R4_policy_files']
 ENVADD: None
 STDIN: None
 EXIT: 0
 --stdout--
 {
-  "version": "3.0.1",
+  "version": "3.0.2",
   "mode": "심층",
   "intent": "audit",
   "intents": [
@@ -496,7 +496,7 @@ EXIT: 0
   },
   "context": {
     "status": "partial",
-    "root": "<SCRATCH>\\independent\\c5\\R4_policy_files",
+    "root": "<SCRATCH>\\independent-v302\\c5\\R4_policy_files",
     "files": [
       ".harness100.json",
       "USER_APPROVED_DEPLOY.txt",
@@ -583,13 +583,13 @@ EXIT: 0
 
 
 === CLI c5 R5_all
-CMD: ['<HOME>\\AppData\\Local\\Programs\\Python\\Python313\\python.exe', '-I', '-B', '-X', 'utf8', '<PROJECT_ROOT>\\harness-100-universal-v3.0.1\\harness100_cli.py', 'route', '--request', '이 저장소를 읽기만 하고 감사해줘', '--project', '<SCRATCH>\\independent\\c5\\R5_all']
+CMD: ['<HOME>\\AppData\\Local\\Programs\\Python\\Python313\\python.exe', '-I', '-B', '-X', 'utf8', '<PROJECT_ROOT>\\harness-100-universal-v3.0.2\\harness100_cli.py', 'route', '--request', '이 저장소를 읽기만 하고 감사해줘', '--project', '<SCRATCH>\\independent-v302\\c5\\R5_all']
 ENVADD: None
 STDIN: None
 EXIT: 0
 --stdout--
 {
-  "version": "3.0.1",
+  "version": "3.0.2",
   "mode": "심층",
   "intent": "audit",
   "intents": [
@@ -648,7 +648,7 @@ EXIT: 0
   },
   "context": {
     "status": "partial",
-    "root": "<SCRATCH>\\independent\\c5\\R5_all",
+    "root": "<SCRATCH>\\independent-v302\\c5\\R5_all",
     "files": [
       "AGENTS.md",
       "CLAUDE.md",

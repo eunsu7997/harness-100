@@ -1,0 +1,4 @@
+recorded_at=2026-11-12T16:26:37+09:00 (before any v3.0.2 implementation change)
+sha256=e875f17ea60be0d1c1b2bbb806e32f3e413739d94111e96f39602a8191c8a475
+reported_by_author=e875f17ea60be0d1c1b2bbb806e32f3e413739d94111e96f39602a8191c8a475
+lines=221

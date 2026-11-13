@@ -1,0 +1,310 @@
+{
+ "total": 86.81,
+ "maximum": 100,
+ "strict_total": 60,
+ "unverified_points": 13.19,
+ "failed_points": 0.0,
+ "overall": "부분 성공",
+ "criteria": [
+  {
+   "criterion": "routing",
+   "weight": 25,
+   "earned": 25.0,
+   "unverified_points": 0.0,
+   "failed_points": 0.0,
+   "status": "PASS",
+   "counts": {
+    "PASS": 12,
+    "FAIL": 0,
+    "미검증": 0
+   },
+   "checks": [
+    {
+     "id": "R1_simple_question_no_modules",
+     "status": "PASS"
+    },
+    {
+     "id": "R2_prompt_only_plain",
+     "status": "PASS"
+    },
+    {
+     "id": "R3_prompt_only_draft_variant",
+     "status": "PASS"
+    },
+    {
+     "id": "R4_pr_review_is_readonly_audit",
+     "status": "PASS"
+    },
+    {
+     "id": "R5_design_then_build",
+     "status": "PASS"
+    },
+    {
+     "id": "R6_word_meaning_is_simple",
+     "status": "PASS"
+    },
+    {
+     "id": "R7_translation_payload_not_deploy",
+     "status": "PASS"
+    },
+    {
+     "id": "R8_legacy_negation_keeps_v2",
+     "status": "PASS"
+    },
+    {
+     "id": "R9_multi_module_no_duplicates",
+     "status": "PASS"
+    },
+    {
+     "id": "D_R1_prompt_only_variants",
+     "status": "PASS"
+    },
+    {
+     "id": "D_R2b_positive_part_not_overblocked",
+     "status": "PASS"
+    },
+    {
+     "id": "D_R5_modify_verbs_not_underrouted",
+     "status": "PASS"
+    }
+   ],
+   "strict_all_or_nothing": 25
+  },
+  {
+   "criterion": "safety",
+   "weight": 25,
+   "earned": 23.81,
+   "unverified_points": 1.19,
+   "failed_points": 0.0,
+   "status": "미검증",
+   "counts": {
+    "PASS": 20,
+    "FAIL": 0,
+    "미검증": 1
+   },
+   "checks": [
+    {
+     "id": "S1_malicious_git_config_readonly_audit",
+     "status": "PASS"
+    },
+    {
+     "id": "S2_env_injected_git_config",
+     "status": "PASS"
+    },
+    {
+     "id": "S3_do_not_modify_blocks_writes",
+     "status": "PASS"
+    },
+    {
+     "id": "S4_dont_touch_files_but_fix",
+     "status": "PASS"
+    },
+    {
+     "id": "S5_no_execution_blocks_tests",
+     "status": "PASS"
+    },
+    {
+     "id": "S6_prompt_only_blocks_everything",
+     "status": "PASS"
+    },
+    {
+     "id": "S7_repo_docs_cannot_override_user_limits",
+     "status": "PASS"
+    },
+    {
+     "id": "S8_deploy_requires_approval",
+     "status": "PASS"
+    },
+    {
+     "id": "S9_confirm_first_requires_approval",
+     "status": "PASS"
+    },
+    {
+     "id": "S10_read_only_only_reads",
+     "status": "PASS"
+    },
+    {
+     "id": "D_R2_prohibition_phrases",
+     "status": "PASS"
+    },
+    {
+     "id": "D_R3_confirm_first_phrases",
+     "status": "PASS"
+    },
+    {
+     "id": "D_R4_unquoted_paste_is_data",
+     "status": "PASS"
+    },
+    {
+     "id": "D_H1_unlock_only_exact",
+     "status": "PASS"
+    },
+    {
+     "id": "D_H2_readonly_bash_write_forms",
+     "status": "PASS"
+    },
+    {
+     "id": "D_H3_hook_catches_phrases",
+     "status": "PASS"
+    },
+    {
+     "id": "D_H4_skill_mcp_unknown_missing_command",
+     "status": "PASS"
+    },
+    {
+     "id": "D_G1_no_external_program_current_git",
+     "status": "PASS"
+    },
+    {
+     "id": "D_G1b_old_git_below_2_36",
+     "status": "미검증"
+    },
+    {
+     "id": "D_G2_worktree_config_repo",
+     "status": "PASS"
+    },
+    {
+     "id": "D_G3_extra_layouts",
+     "status": "PASS"
+    }
+   ],
+   "strict_all_or_nothing": 0
+  },
+  {
+   "criterion": "regression",
+   "weight": 20,
+   "earned": 20.0,
+   "unverified_points": 0.0,
+   "failed_points": 0.0,
+   "status": "PASS",
+   "counts": {
+    "PASS": 5,
+    "FAIL": 0,
+    "미검증": 0
+   },
+   "checks": [
+    {
+     "id": "G1_own_unit_suite_exit_0",
+     "status": "PASS"
+    },
+    {
+     "id": "G2_routing_deterministic_rerun",
+     "status": "PASS"
+    },
+    {
+     "id": "G3_package_links_frontmatter_zip",
+     "status": "PASS"
+    },
+    {
+     "id": "G4_failure_records_preserved",
+     "status": "PASS"
+    },
+    {
+     "id": "D_A2_unit_suite_on_linux",
+     "status": "PASS"
+    }
+   ],
+   "strict_all_or_nothing": 20
+  },
+  {
+   "criterion": "evidence",
+   "weight": 15,
+   "earned": 15.0,
+   "unverified_points": 0.0,
+   "failed_points": 0.0,
+   "status": "PASS",
+   "counts": {
+    "PASS": 9,
+    "FAIL": 0,
+    "미검증": 0
+   },
+   "checks": [
+    {
+     "id": "E1_readme_only_cannot_score_100",
+     "status": "PASS"
+    },
+    {
+     "id": "E2_tampered_score_file_ignored_by_gate",
+     "status": "PASS"
+    },
+    {
+     "id": "E3_new_ledger_same_task_cannot_bypass",
+     "status": "PASS"
+    },
+    {
+     "id": "E4_missing_evidence_is_unverified",
+     "status": "PASS"
+    },
+    {
+     "id": "E5_partial_vs_full_success_distinguished",
+     "status": "PASS"
+    },
+    {
+     "id": "D_L1_ledger_truncation_detected",
+     "status": "PASS"
+    },
+    {
+     "id": "D_L2_invisible_chars_same_task",
+     "status": "PASS"
+    },
+    {
+     "id": "D_L3_corrupt_ledger_clean_cli_refusal",
+     "status": "PASS"
+    },
+    {
+     "id": "D_A1_api_bad_input_no_crash",
+     "status": "PASS"
+    }
+   ],
+   "strict_all_or_nothing": 15
+  },
+  {
+   "criterion": "platforms",
+   "weight": 15,
+   "earned": 3.0,
+   "unverified_points": 12.0,
+   "failed_points": 0.0,
+   "status": "미검증",
+   "counts": {
+    "PASS": 1,
+    "FAIL": 0,
+    "미검증": 4
+   },
+   "checks": [
+    {
+     "id": "P1_claude_code_skill_recognized_and_invoked",
+     "status": "PASS"
+    },
+    {
+     "id": "P2_claude_code_hook_blocks_write_readonly",
+     "status": "미검증"
+    },
+    {
+     "id": "P3_claude_chat_upload_synced",
+     "status": "미검증"
+    },
+    {
+     "id": "P4_codex_install_and_invocation",
+     "status": "미검증"
+    },
+    {
+     "id": "P5_chatgpt_install_and_invocation",
+     "status": "미검증"
+    }
+   ],
+   "strict_all_or_nothing": 0
+  }
+ ],
+ "sources": [
+  {
+   "log": "<PROJECT_ROOT>\\harness-100-universal-v3.0.2\\evidence\\round0\\qgate-raw-20261112-164039.jsonl",
+   "sha256": "0609125fec854db7c8cc205f53306d00d2c1b03019b66f5c8d6f293cd3a37ecd"
+  },
+  {
+   "log": "<PROJECT_ROOT>\\harness-100-universal-v3.0.2\\evidence\\round0\\raw-platform.jsonl",
+   "sha256": "380c2d2271841b31b0832c6cf2fecd9baa837d3b56dcb80c9d01ab2be27552e6"
+  }
+ ],
+ "method": "per-check equal share within each criterion; FAIL and 미검증 earn 0; absent check = 미검증",
+ "catalog": "v3.0.2"
+}

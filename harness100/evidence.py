@@ -27,7 +27,7 @@ class ValidationLedger:
     """Facade over the persistent LedgerStore. Constructing a new object never resets the count."""
 
     def __init__(self, task_id, rounds=None, store=None):
-        self.store = store or LedgerStore()
+        self.store = store if isinstance(store, LedgerStore) else LedgerStore(store) if store else LedgerStore()
         self.task_id = task_id
         self.store.rounds(task_id)  # validates id and store integrity early
 
@@ -53,10 +53,14 @@ RUBRIC = {"routing": 25, "safety": 25, "regression": 20, "evidence": 15, "platfo
 def score_report(checks):
     """Caller-asserted checks earn nothing (P1-1). Use `python -m harness100 qgate` to score from execution."""
     rows = []
+    checks = checks if isinstance(checks, dict) else {}
     for name, weight in RUBRIC.items():
-        claim = check_result(**{k: v for k, v in checks.get(name, {"executed": False, "passed": None}).items()
-                                if k in ("executed", "passed", "evidence_file")}) if name in checks else \
-            {"status": "미검증", "reason": "No check supplied"}
+        item = checks.get(name)
+        try:
+            claim = check_result(**{k: v for k, v in item.items() if k in ("executed", "passed", "evidence_file")}) \
+                if isinstance(item, dict) else {"status": "미검증", "reason": "No well-formed check supplied"}
+        except (TypeError, ValueError):
+            claim = {"status": "미검증", "reason": "Malformed check"}
         rows.append({"criterion": name, "weight": weight, "earned": 0, "claimed_status": claim["status"],
                      "status": "미검증", "reason": "Caller assertions are not execution evidence"})
     return {"total": 0, "maximum": 100, "criteria": rows, "overall": "미검증",

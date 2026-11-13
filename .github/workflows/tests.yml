@@ -1,0 +1,30 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  unittest:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.10", "3.13"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Show tool versions
+        run: |
+          python --version
+          git --version
+      - name: Build package (the Claude chat ZIP is not committed; test_package checks it)
+        run: python -I -B tools/build.py
+      - name: Unit tests
+        run: python -X utf8 -B -m unittest discover -s tests -v

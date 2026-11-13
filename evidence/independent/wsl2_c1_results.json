@@ -1,0 +1,245 @@
+[
+ {
+  "variant": "V1_kitchen_sink_tracked_attrs_modified_future",
+  "control_fired": 4,
+  "control_sample": [
+   "fsmon 2 1794470362721561189",
+   "process",
+   "fsmon 2 1794470362743474183",
+   "process"
+  ],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "observed",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "observed",
+  "verdict": "PASS"
+ },
+ {
+  "variant": "V2_info_attributes_same_content_mtime_touch",
+  "control_fired": 4,
+  "control_sample": [
+   "fsmon 2 1794470362949568799",
+   "process",
+   "fsmon 2 1794470362972070937",
+   "process"
+  ],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "observed",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "observed",
+  "verdict": "PASS"
+ },
+ {
+  "variant": "V3_fsmonitor_only",
+  "control_fired": 2,
+  "control_sample": [
+   "fsmon 2 1794470363162541052",
+   "fsmon 2 "
+  ],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "observed",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "observed",
+  "verdict": "PASS"
+ },
+ {
+  "variant": "V4_hooksPath_only",
+  "control_fired": 0,
+  "control_sample": [],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "observed",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "observed",
+  "verdict": "VACUOUS-미검증"
+ },
+ {
+  "variant": "V5_config_include_file",
+  "control_fired": 7,
+  "control_sample": [
+   "fsmon 2 1794470363570825950",
+   "clean",
+   "fsmon 2 ",
+   "clean"
+  ],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "observed",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "observed",
+  "verdict": "PASS"
+ },
+ {
+  "variant": "V6_includeIf_gitdir",
+  "control_fired": 7,
+  "control_sample": [
+   "fsmon 2 1794470363868691226",
+   "clean",
+   "fsmon 2 ",
+   "clean"
+  ],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "observed",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "observed",
+  "verdict": "PASS"
+ },
+ {
+  "variant": "V7_worktreeConfig_extension",
+  "control_fired": 7,
+  "control_sample": [
+   "fsmon 2 1794470364216882757",
+   "clean",
+   "fsmon 2 ",
+   "clean"
+  ],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "observed",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "observed",
+  "verdict": "PASS"
+ },
+ {
+  "variant": "V8_dotgit_is_gitfile_external_gitdir",
+  "control_fired": 4,
+  "control_sample": [
+   "fsmon 2 1794470364510406176",
+   "process",
+   "fsmon 2 1794470364534899824",
+   "process"
+  ],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "observed",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "observed",
+  "verdict": "PASS"
+ },
+ {
+  "variant": "V9_core_attributesFile_in_config",
+  "control_fired": 2,
+  "control_sample": [
+   "process",
+   "process"
+  ],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "observed",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "observed",
+  "verdict": "PASS"
+ },
+ {
+  "variant": "E1_env_GIT_CONFIG_COUNT",
+  "control_fired": 8,
+  "control_sample": [
+   "fsmon 2 1794470364969618547",
+   "clean",
+   "fsmon 2 ",
+   "clean"
+  ],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "observed",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "observed",
+  "verdict": "PASS"
+ },
+ {
+  "variant": "E2_env_GIT_CONFIG_PARAMETERS",
+  "control_fired": 8,
+  "control_sample": [
+   "fsmon 2 1794470365417966524",
+   "clean",
+   "fsmon 2 ",
+   "clean"
+  ],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "observed",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "observed",
+  "verdict": "PASS"
+ },
+ {
+  "variant": "E3_env_GIT_CONFIG_GLOBAL_SYSTEM",
+  "control_fired": 8,
+  "control_sample": [
+   "fsmon 2 1794470365954770192",
+   "clean",
+   "fsmon 2 ",
+   "clean"
+  ],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "observed",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "observed",
+  "verdict": "PASS"
+ },
+ {
+  "variant": "E4_env_HOME_gitconfig",
+  "control_fired": 8,
+  "control_sample": [
+   "fsmon 2 1794470366250380927",
+   "clean",
+   "fsmon 2 ",
+   "clean"
+  ],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "observed",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "observed",
+  "verdict": "PASS"
+ },
+ {
+  "variant": "E5_env_GIT_EXTERNAL_DIFF_PAGER",
+  "control_fired": 1,
+  "control_sample": [
+   "extdiff a.txt /tmp/git-blob-h649Pr/a.txt 94954abda49de8615a048f8d2e64b5de848e27a1 100644 a.txt 0000000000000000000000000000000000000000 100644"
+  ],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "observed",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "observed",
+  "verdict": "PASS"
+ },
+ {
+  "variant": "E6_english_request_V1",
+  "control_fired": 4,
+  "control_sample": [
+   "fsmon 2 1794470366898040254",
+   "process",
+   "fsmon 2 1794470367007127372",
+   "process"
+  ],
+  "marker_after_target": [],
+  "tree_changed": [],
+  "route_exit": 0,
+  "route_git_status": "observed",
+  "gitstatus_exit": 0,
+  "gitstatus_status": "observed",
+  "verdict": "PASS"
+ }
+]

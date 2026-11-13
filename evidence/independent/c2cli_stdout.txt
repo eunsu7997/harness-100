@@ -1,0 +1,6 @@
+0 로그인 기능을 구현할 프롬프트 초안만 작성해줘 [] prompt prompt_only [] ['no_commit', 'no_delete', 'no_deploy', 'no_execute', 'no_install', 'no_modify', 'no_network', 'prompt_only']
+0 로그인 기능을 구현할 프롬프트 초안만 작성해줘 ['--intent', 'build'] prompt prompt_only [] ['no_commit', 'no_delete', 'no_deploy', 'no_execute', 'no_install', 'no_modify', 'no_network', 'prompt_only']
+0 Write only a draft prompt for implementing a login feature ['--intent', 'build'] prompt prompt_only [] ['no_commit', 'no_delete', 'no_deploy', 'no_execute', 'no_install', 'no_modify', 'no_network', 'prompt_only']
+0 Just give me a prompt to build a login page; don't build it [] prompt prompt_only [] ['no_commit', 'no_delete', 'no_deploy', 'no_execute', 'no_install', 'no_modify', 'no_network', 'prompt_only']
+0 Just give me a prompt to build a login page; don't build it ['--intent', 'build'] prompt prompt_only [] ['no_commit', 'no_delete', 'no_deploy', 'no_execute', 'no_install', 'no_modify', 'no_network', 'prompt_only']
+DONE

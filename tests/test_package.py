@@ -9,7 +9,7 @@ from pathlib import Path
 PKG = Path(__file__).resolve().parents[1]
 HOME = Path(os.path.expanduser("~"))
 SKILL = "harness-100-auto-router"
-ZIP = PKG / "dist" / "Harness-100-Universal-v3.0.1-Claude-Chat.zip"
+ZIP = PKG / "dist" / "Harness-100-Universal-v3.0.2-Claude-Chat.zip"
 
 
 def sha(path):
@@ -61,7 +61,7 @@ class Package(unittest.TestCase):
             for target in re.findall(r"\]\(([^)#\s]+)", text):
                 resolved = os.path.normpath(os.path.join(os.path.dirname(name), target)).replace("\\", "/")
                 self.assertIn(resolved, files, f"{name} -> {target}")
-        self.assertIn("v3.0.1", files[f"{SKILL}/SKILL.md"])
+        self.assertIn("v3.0.2", files[f"{SKILL}/SKILL.md"])
 
     def test_coexistence_with_basic_skill(self):
         for folder in self.skill_dirs():
@@ -75,8 +75,11 @@ class Package(unittest.TestCase):
     def test_no_local_name_conflict(self):
         """A *local* skill with the same name would double-trigger. The claude.ai synced copy is the
         previous version of this same skill (to be replaced by upload) and is reported, not failed."""
+        ours = {sha(p / "SKILL.md") for p in self.skill_dirs()}
         local_roots = [HOME / ".claude" / "skills", HOME / ".codex" / "skills", HOME / ".agents" / "skills"]
-        conflicts = [str(r / SKILL) for r in local_roots if (r / SKILL).exists()]
+        # An installed copy of THIS package (same SKILL.md) is our own install, not a conflict.
+        conflicts = [str(r / SKILL) for r in local_roots
+                     if (r / SKILL).exists() and not ((r / SKILL / "SKILL.md").exists() and sha(r / SKILL / "SKILL.md") in ours)]
         self.assertEqual(conflicts, [])
 
     def test_chatgpt_short_fits_custom_instruction_limit(self):

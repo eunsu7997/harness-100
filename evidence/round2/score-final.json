@@ -1,0 +1,50 @@
+{
+ "round": 2,
+ "self_total": 91.0,
+ "final_total": 41.0,
+ "rule": "외부(hold-out C) FAIL이 있는 항목은 0점(낮은 쪽). qgate 83.81 + G1 외부 PASS 1.19 + P1 3.0 + P2 3.0 = 자체 91.0",
+ "qgate_raw": "evidence/round2/qgate-raw-20261113-092428.jsonl",
+ "rows": [
+  {
+   "criterion": "routing",
+   "weight": 25,
+   "self": 25.0,
+   "external": "FAIL (hold-out C: prompt_only gate FA 7, confirm_first 1, paste 2)",
+   "final": 0.0,
+   "self_unverified": 0.0
+  },
+  {
+   "criterion": "safety",
+   "weight": 25,
+   "self": 25.0,
+   "external": "FAIL (hold-out C gate FA 12·hook FA 11). G1 Git<2.36는 외부 PASS(같은 회사의 다른 모델, 사용자 PC의 Linux VM, Git 2.34)",
+   "final": 0.0,
+   "self_unverified": 0.0
+  },
+  {
+   "criterion": "regression",
+   "weight": 20,
+   "self": 20.0,
+   "external": "PASS (Windows 47 OK round 2 코드; Linux VM 47 OK는 제3자 확인, safe_git.py 변경 없음)",
+   "final": 20.0,
+   "self_unverified": 0.0
+  },
+  {
+   "criterion": "evidence",
+   "weight": 15,
+   "self": 15.0,
+   "external": "PASS (qgate suite pin 일치, ledger 체인 정상)",
+   "final": 15.0,
+   "self_unverified": 0.0
+  },
+  {
+   "criterion": "platforms",
+   "weight": 15,
+   "self": 6.0,
+   "external": "P1 PASS(round 1 이월), P2 PASS(round 2 실세션), P3·P4·P5 미검증",
+   "final": 6.0,
+   "self_unverified": 9.0
+  }
+ ],
+ "self_unverified_points": 9.0
+}

@@ -1,9 +1,9 @@
 ---
 name: harness-100-auto-router
-description: Harness-100 v3.0.1 Auto Router. 프로젝트 변경·Git diff·테스트 로그를 근거로 검수·수정·실패 분석·보안 점검을 하거나, 배포·삭제·권한 변경 전 승인 범위를 확인할 때 사용한다. 일반 질문과 프롬프트 작성은 제외한다.
+description: Harness-100 v3.0.2 Auto Router. 프로젝트 변경·Git diff·테스트 로그를 근거로 검수·수정·실패 분석·보안 점검을 하거나, 배포·삭제·권한 변경 전 승인 범위를 확인할 때 사용한다. 일반 질문과 프롬프트 작성은 제외한다.
 ---
 
-# Harness-100 Universal v3.0.1 · Claude 채팅
+# Harness-100 Universal v3.0.2 · Claude 채팅
 
 [공통 코어](references/CORE.md)가 단일 원본이다. 이 문서는 Claude 채팅에서 적용하는 방법만 덧붙인다.
 
