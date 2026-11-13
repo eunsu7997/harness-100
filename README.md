@@ -139,7 +139,7 @@ flowchart LR
 
 ## 8. 설치·사용법
 
-표준 라이브러리만 사용합니다. 패키지 문서 기준 실행 요건은 Python 3.12 이상이며, CI는 3.10과 3.13에서 실행합니다(결과는 Actions 배지 참고). 상세 설치 절차는 [docs/PACKAGE-README.md](docs/PACKAGE-README.md)에 있습니다.
+표준 라이브러리만 사용합니다. 실행 요건은 **Python 3.12 이상**입니다(`harness100/context.py`가 3.12에 추가된 `Path.is_junction()`을 사용). CI는 3.12와 3.13에서 실행합니다(결과는 Actions 배지 참고). 상세 설치 절차는 [docs/PACKAGE-README.md](docs/PACKAGE-README.md)에 있습니다.
 
 ```bash
 python -I -B harness100_cli.py route --request "이 PR의 변경사항을 리뷰해줘" --project <프로젝트 경로>
@@ -166,6 +166,16 @@ python -X utf8 -B -m unittest discover -s tests              # 단위 테스트
 - 치환이 필요 없던 hold-out C 세트(`evidence/holdout3/holdoutC-set.jsonl`)는 원본 그대로라 기록된 해시와 일치합니다. A·B 세트 원본 파일은 패키지 폴더에 없었고, 실행 결과 파일(문장 포함)만 공개합니다.
 - **사용자 설정 정보 제거:** `~/.claude`·`~/.codex`·`~/.agents` 파일의 경로·해시는 기준선 파일에서 뺐습니다(`<REMOVED_USER_CONFIG_HASH>`). 남긴 사실은 "사용자 설정 변경 감지, 원인 미확인(추정: Codex 앱 또는 Claude Code 앱 자체의 기록)"뿐입니다.
 - **제외:** ledger·hook 상태 폴더(`evidence/ledger-state/`), 캐시, Claude 채팅 ZIP(Release 첨부로 대신함). 따라서 ledger 해시 체인 원본은 공개본에 없으며, 기록 내용은 보고서 1절에 요약돼 있습니다.
+
+## 10. 알려진 한계
+
+상세 목록은 [보고서 8절](evidence/VERIFICATION-REPORT.md)에 있습니다.
+
+- 자연어 제한 인식: 처음 보는 표현에서 권한 확대 발생(hold-out C gate 12 · hook 11). 인식 실패 시 기본값이 "허용"
+- 과잉 차단 28/115 = 24.3% (hold-out C)
+- Claude 채팅·Codex·ChatGPT 플랫폼 동작은 미검증이며, 이 플랫폼들에서는 지침일 뿐 강제력이 없음
+- ledger 폴더 전체 삭제·백업 복원·다른 상태 폴더 사용은 외부 기준점 없이 막을 수 없음
+- 단위 테스트가 하위 폴더가 있는 프로젝트 탐색을 다루지 않음
 
 ## 라이선스
 
